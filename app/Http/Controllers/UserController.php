@@ -29,7 +29,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect("/profile", ['user' => $user]);
     }
 
     public function login(Request $request) {
@@ -40,11 +40,65 @@ class UserController extends Controller
 
         $user = User::Where('email', $request->email)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
+        if ($user) {
+            if (!Hash::check($request->password, $user->password)) {
+                return redirect('/login')->with('password_error', 'Invalid password try another time');
+            }
+            Auth::login($user);
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect("/profile", ['user' => $user]);
+        }
+        
+        return redirect('/login')->with('email_error', 'Invalid email try another time');
+    }
+
+    public function logOut(){
+        Auth::logout();
+        return redirect('/login');
+    }
+
+    public function updateProfile(Request $request){
+        $user = Auth::user();
+        if (!$user) {
+            return redirect('/login')->with('error', 'Unothorized');
         }
 
-        return redirect('/login')->with('error', 'zabba');
+        $request->validate([
+            'first_name' => 'required|string|max:20|min:5',
+            'user_name' => 'required|string|max:50|min:7',
+            'email' => 'required|string|max:250',
+            'bio' => 'required|string',
+        ]);
+
+        $user->update([
+            'name' => $request->first_name,
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'bio' => $request->bio,
+        ]);
+
+        return redirect('/profile');
     }
+    
+    public function deleteAccount(Request $request) {
+        $user = Auth::user();
+        $request->validate([
+            'email' => 'required|string|max:250',
+            'password' => 'required|string|max:250|min:8'
+        ]);
+
+        $user = User::Where('email', $request->email)->first();
+
+        if ($user) {
+            if (!Hash::check($request->password, $user->password)) {
+                return 'Invalid password try another time';
+            }
+            $user->forceDelete();
+            return redirect('/login');
+        }
+
+        return 'Invalid email try another time';
+    }
+
+
 }

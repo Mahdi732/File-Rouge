@@ -25,3 +25,27 @@ Route::post('/login/checking', [UserController::class, 'login'])->name('login');
 
 Route::post('/register/chacking', [UserController::class, 'register'])->name('register');
 
+Route::post('/logOut', [UserController::class, 'logOut'])->name('logOut');
+Route::get('/friend', function () {
+    return view('friends');
+});
+
+Route::get('/profile', function () {
+    return view('user');
+});
+
+Route::put('/update/profile', [UserController::class, 'updateProfile'])->name('editProfile');
+
+Route::delete('/delete/profile', [UserController::class, 'deleteAccount'])->name('deleteAccount');
+
+Route::get('/admin', function () {
+    return view('admin');
+});
+
+Route::get('/biblio', function () {
+    return view('biblio');
+});
+
+Route::get('/recipe', function () {
+    return view('recipe');
+});

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CookNShare - My Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -45,11 +46,10 @@
         }
     </style>
 </head>
-<body class="bg-white">
+<body id="all_content" class="bg-white">
     @if (View::exists('partial.nav'))
         @include('partial.nav')
     @endif
-
     <!-- Profile Header Section -->
     <section class="bg-[#FEFCE8] py-8 px-8">
         <div class="container mx-auto">
@@ -312,14 +312,10 @@
                     <form class="space-y-4" action="{{ route('editProfile') }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                                <input name="first_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="Sarah">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                                <input name="last_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="Johnson">
+                                <input name="first_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="noihnoubiuh">
                             </div>
                         </div>
                         
@@ -441,6 +437,7 @@
                             <button @click="showForm = !showForm"  class="bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50">Delete Account</button>
                             <form 
                                 hx-post="{{ route('deleteAccount') }}"  
+                                hx-target="#all_content"
                                 x-show="showForm" 
                                 x-transition:enter="transition ease-out duration-300"
                                 x-transition:enter-start="opacity-0 transform scale-95"
@@ -453,17 +450,19 @@
                             @csrf
                             @method('DELETE')
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Name:</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
                                     <input 
-                                        type="text" 
+                                        name="email"
+                                        type="email" 
                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
                                         placeholder="Enter your name"
                                     >
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
                                     <input 
-                                        type="email" 
+                                        name="password"
+                                        type="password" 
                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
                                         placeholder="Enter your email"
                                     >

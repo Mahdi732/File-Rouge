@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en" x-data="portfolio()" :class="{ 'dark': darkMode, 'overflow-hidden': menuOpen }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Portfolio | Next-Level Developer Showcase</title>
+    
+    <!-- Tailwind CSS with Custom Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#6366f1',
+                            DEFAULT: '#4f46e5',
+                            dark: '#4338ca'
+                        },
+                        secondary: {
+                            light: '#f59e0b',
+                            DEFAULT: '#f97316',
+                            dark: '#ea580c'
+                        },
+                        dark: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
+                        },
+                        light: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+                        display: ['"Lexend"', 'Inter', 'system-ui', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-reverse': 'floatReverse 6s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        floatReverse: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(20px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    
+    <!-- Alpine.js with Plugins -->
+    <script defer src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/@alpinejs/intersect@3.12.0/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/@alpinejs/morph@3.12.0/dist/cdn.min.js"></script>
+    
+    <!-- GSAP with ScrollTrigger and SplitText -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/SplitText.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style type="text/tailwindcss">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap');
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+        @layer utilities {
+            .text-gradient {
+            @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+        }
+            .bg-gradient {
+                @apply bg-gradient-to-r from-primary to-secondary;
+            }
+            .section-title {
+                @apply text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-12 text-gradient;
+            }
+            .card-hover {
+                @apply transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl;
+            }
+            .blob {
+                @apply absolute rounded-full filter blur-3xl opacity-20 -z-10;
+            }
+            .glass {
+                @apply bg-white/10 dark:bg-dark-800/20 backdrop-blur-md border border-white/20 dark:border-dark-700/20;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .text-shadow-dark {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            @apply bg-light-200 dark:bg-dark-800;
+        }
+        ::-webkit-scrollbar-thumb {
+            @apply bg-primary rounded-full;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            @apply bg-primary-dark;
+        }
+        
+        /* Custom Animations */
+        .animate-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .grid-mask {
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+        
+        /* Hero Section Glow Effect */
+        .hero-glow {
+            box-shadow: 0 0 80px rgba(79, 70, 229, 0.3);
+        }
+        
+        /* 3D Card Effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.02);
+        }
+        
+        /* Underline Animation */
+        .underline-animate {
+            position: relative;
+        }
+        .underline-animate::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            @apply bg-gradient-to-r from-primary to-secondary;
+            transition: width 0.3s ease;
+        }
+        .underline-animate:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased bg-light-50 text-dark-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300 overflow-x-hidden">
+    <!-- Cursor Follower -->
+    <div id="cursorFollower" class="fixed w-8 h-8 rounded-full bg-primary/20 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 z-50 transition-transform duration-100 ease-out mix-blend-difference"></div>
+    
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-dark-900 z-50 flex items-center justify-center transition-opacity duration-1000">
+        <div class="relative w-24 h-24">
+            <div class="absolute inset-0 rounded-full border-4 border-t-primary border-r-secondary border-b-transparent border-l-transparent animate-spin"></div>
+            <div class="absolute inset-4 rounded-full border-4 border-t-secondary border-r-primary border-b-transparent border-l-transparent animate-spin-slow"></div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav x-data="{ scrolled: false }" 
+         @scroll.window="scrolled = window.scrollY > 50" 
+         class="fixed w-full py-6 px-6 md:px-12 flex justify-between items-center z-40 transition-all duration-500"
+         :class="{
+             'glass shadow-lg py-4': scrolled,
+             'bg-transparent': !scrolled
+         }">
+        <a href="#" class="text-2xl font-display font-bold text-gradient">PortfolioX</a>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex space-x-8 items-center">
+            <template x-for="(item, index) in navItems">
+                <a :href="item.link" 
+                   class="font-medium underline-animate relative"
+                   x-text="item.name"
+                   @mouseenter="hoveredNav = index"
+                   @mouseleave="hoveredNav = null"></a>
+            </template>
+            <div class="relative h-8 w-8 ml-4">
+                <div class="absolute inset-0 bg-gradient rounded-full transform transition-all duration-300"
+                     :class="{
+                         'scale-100 opacity-100': hoveredNav !== null,
+                         'scale-0 opacity-0': hoveredNav === null
+                     }"
+                     :style="`transform: translateX(${(hoveredNav || 0) * 60}px)`"></div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <button @click="menuOpen = !menuOpen" class="lg:hidden text-dark-900 dark:text-light-100 z-50">
+            <div class="relative w-8 h-8 flex items-center justify-center">
+                <span class="absolute h-0.5 w-6 bg-current transform transition duration-300"
+                      :class="{
+                          'rotate-45 translate-y-0': menuOpen,
+                          '-translate-y-2': !menuOpen
+                      }"></span>
+                <span class="absolute h-0.5 w-6 bg-current transition-all duration-300"
+                      :class="{
+                          'opacity-0': menuOpen,
+                          'opacity-100': !menuOpen
+                      }"></span>
+                <span class="absolute h-0.5 w-6 bg-current transform transition duration-300"
+                      :class="{
+                          '-rotate-45 translate-y-0': menuOpen,
+                          'translate-y-2': !menuOpen
+                      }"></span>
+            </div>
+        </button>
+        
+        <!-- Theme toggle -->
+        <button @click="toggleTheme" class="ml-4 p-2 rounded-full glass hover:bg-light-200 dark:hover:bg-dark-800 transition">
+            <i x-show="!darkMode" class="fas fa-moon text-dark-700"></i>
+            <i x-show="darkMode" class="fas fa-sun text-yellow-400"></i>
+        </button>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div x-show="menuOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-4"
+         class="fixed inset-0 bg-dark-900/95 dark:bg-dark-900/95 z-30 flex items-center justify-center lg:hidden">
+        <div class="text-center space-y-8">
+            <template x-for="item in navItems">
+                <a :href="item.link" 
+                   class="block text-3xl font-display font-bold text-light-100 hover:text-primary-light transition"
+                   x-text="item.name"
+                   @click="menuOpen = false"></a>
+            </template>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-16 px-6 md:px-12 relative overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="blob w-96 h-96 bg-primary-light top-1/4 -left-40 animate-float"></div>
+        <div class="blob w-80 h-80 bg-secondary bottom-1/3 -right-40 animate-float-reverse"></div>
+        
+        <div class="container mx-auto relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 animate-in" id="heroText">
+                    <div class="mb-6">
+                        <span class="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-medium mb-4">
+                            <span class="relative inline-flex h-3 w-3 mr-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/80 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                            </span>
+                            Available for work
+                        </span>
+                    </div>
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight mb-6">
+                        <span class="text-gradient">Innovative</span> 
+                        <br>Digital Experiences
+                    </h1>
+                    <p class="text-xl md:text-2xl text-dark-600 dark:text-light-400 mb-8 max-w-2xl">
+                        I craft immersive web experiences with cutting-edge technology and pixel-perfect design.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#contact" class="px-8 py-4 bg-gradient rounded-lg text-white font-medium hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            Get in Touch <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                        <a href="#projects" class="px-8 py-4 glass rounded-lg font-medium hover:bg-light-200 dark:hover:bg-dark-800 transition">
+                            View My Work
+                        </a>
+                    </div>
+                    
+                    <div class="mt-12 flex items-center space-x-6">
+                        <div class="flex -space-x-3">
+                            <template x-for="(client, index) in clients" :key="index">
+                                <img :src="client.logo" :alt="client.name" 
+                                     class="w-12 h-12 rounded-full border-2 border-white dark:border-dark-800 shadow-md hover:z-10 hover:scale-110 transition-transform duration-300"
+                                     :class="{ '-ml-3': index > 0 }">
+                            </template>
+                        </div>
+                        <div>
+                            <div class="flex items-center">
+                                <template x-for="i in 5">
+                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                </template>
+                            </div>
+                            <p class="text-sm text-dark-500 dark:text-light-500">
+                                Trusted by <span x-text="clients.length"></span>+ global brands
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 animate-in" id="heroVisual">
+                    <div class="relative">
+                        <div class="relative z-10 hero-glow">
+                            <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                 alt="Developer working" 
+                                 class="w-full h-auto rounded-2xl shadow-2xl transform rotate-1">
+                        </div>
+                        <div class="absolute -bottom-8 -right-8 w-full h-full rounded-2xl border-2 border-primary/30 -z-10"></div>
+                        
+                        <!-- Floating Tech Badges -->
+                        <div class="absolute -top-6 -left-6 bg-white dark:bg-dark-800 p-3 rounded-full shadow-lg">
+                            <i class="fab fa-react text-3xl text-cyan-400"></i>
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 bg-white dark:bg-dark-800 p-3 rounded-full shadow-lg">
+                            <i class="fab fa-js text-3xl text-yellow-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#about" class="w-10 h-16 rounded-full border-2 border-primary/50 flex items-center justify-center">
+                <div class="w-1 h-4 bg-primary rounded-full animate-pulse"></div>
+            </a>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-28 px-6 md:px-12 relative overflow-hidden">
+        <div class="blob w-96 h-96 bg-secondary/30 -top-40 -right-40 animate-float"></div>
+        
+        <div class="container mx-auto relative z-10">
+            <h2 class="section-title text-center" id="aboutTitle">About Me</h2>
+            
+            <div class="flex flex-col lg:flex-row gap-16 items-center">
+                <div class="lg:w-1/3 animate-in">
+                    <div class="relative group">
+                        <div class="absolute -inset-4 bg-gradient rounded-2xl opacity-0 group-hover:opacity-100 blur-lg transition duration-500"></div>
+                        <div class="relative rounded-2xl overflow-hidden card-3d">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" 
+                                 alt="Profile" 
+                                 class="w-full h-auto">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark-900/80 via-transparent to-transparent flex items-end p-6">
+                                <div>
+                                    <h3 class="text-2xl font-display font-bold text-white">Alex Johnson</h3>
+                                    <p class="text-light-300">Senior Frontend Developer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 grid grid-cols-2 gap-4">
+                        <div class="glass p-4 rounded-xl">
+                            <div class="text-primary text-xl mb-2">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <h4 class="font-medium mb-1">Experience</h4>
+                            <p class="text-sm text-dark-500 dark:text-light-500">5+ Years</p>
+                        </div>
+                        <div class="glass p-4 rounded-xl">
+                            <div class="text-primary text-xl mb-2">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <h4 class="font-medium mb-1">Projects</h4>
+                            <p class="text-sm text-dark-500 dark:text-light-500">40+ Completed</p>
+                        </div>
+                        <div class="glass p-4 rounded-xl">
+                            <div class="text-primary text-xl mb-2">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h4 class="font-medium mb-1">Location</h4>
+                            <p class="text-sm text-dark-500 dark:text-light-500">San Francisco</p>
+                        </div>
+                        <div class="glass p-4 rounded-xl">
+                            <div class="text-primary text-xl mb-2">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h4 class="font-medium mb-1">Email</h4>
+                            <p class="text-sm text-dark-500 dark:text-light-500">alex@example.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-2/3 animate-in">
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-display font-bold mb-4">Professional Profile</h3>
+                        <p class="text-lg text-dark-600 dark:text-light-400 mb-6">
+                            I'm a passionate frontend architect with expertise in modern JavaScript frameworks and 
+                            cutting-edge web technologies. My focus is on creating performant, accessible, and 
+                            visually stunning digital experiences.
+                        </p>
+                        <p class="text-lg text-dark-600 dark:text-light-400">
+                            With a background in both design and development, I bridge the gap between aesthetics 
+                            and functionality, delivering products that users love to interact with.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-display font-bold mb-4">My Journey</h3>
+                        <div class="space-y-6">
+                            <div class="relative pl-8 border-l-2 border-primary/20">
+                                <div class="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-primary"></div>
+                                <h4 class="font-bold text-lg">Lead Frontend Developer</h4>
+                                <p class="text-dark-500 dark:text-light-500 mb-2">TechCorp • 2021 - Present</p>
+                                <p class="text-dark-600 dark:text-light-400">
+                                    Leading a team of 5 developers to build enterprise-level web applications with React and TypeScript.
+                                </p>
+                            </div>
+                            <div class="relative pl-8 border-l-2 border-primary/20">
+                                <div class="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-primary"></div>
+                                <h4 class="font-bold text-lg">Senior UI Developer</h4>
+                                <p class="text-dark-500 dark:text-light-500 mb-2">DesignHub • 2018 - 2021</p>
+                                <p class="text-dark-600 dark:text-light-400">
+                                    Created design systems and component libraries used across multiple products.
+                                </p>
+                            </div>
+                            <div class="relative pl-8 border-l-2 border-primary/20">
+                                <div class="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-primary"></div>
+                                <h4 class="font-bold text-lg">Frontend Developer</h4>
+                                <p class="text-dark-500 dark:text-light-500 mb-2">StartUp Inc • 2016 - 2018</p>
+                                <p class="text-dark-600 dark:text-light-400">
+                                    Built the company's flagship product from scratch using Vue.js and Node.js.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-display font-bold mb-4">Education</h3>
+                        <div class="relative pl-8 border-l-2 border-primary/20">
+                            <div class="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-primary"></div>
+                            <h4 class="font-bold text-lg">M.Sc. Computer Science</h4>
+                            <p class="text-dark-500 dark:text-light-500 mb-2">Stanford University • 2014 - 2016</p>
+                            <p class="text-dark-600 dark:text-light-400">
+                                Specialized in Human-Computer Interaction and Web Technologies.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Skills Section -->
+    <section id="skills" class="py-28 px-6 md:px-12 bg-light-100 dark:bg-dark-800 relative overflow-hidden">
+        <div class="blob w-96 h-96 bg-primary/30 -bottom-40 -left-40 animate-float-reverse"></div>
+        
+        <div class="container mx-auto relative z-10">
+            <h2 class="section-title text-center" id="skillsTitle">My Expertise</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <template x-for="category in skillCategories">
+                    <div class="bg-white dark:bg-dark-700 p-8 rounded-2xl shadow-lg card-hover animate-in">
+                        <div class="text-4xl mb-6 text-gradient" x-html="category.icon"></div>
+                        <h3 class="text-2xl font-display font-bold mb-4" x-text="category.name"></h3>
+                        <div class="space-y-4">
+                            <template x-for="skill in category.skills">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium" x-text="skill.name"></span>
+                                        <span class="text-primary font-medium" x-text="skill.level + '%'"></span>
+                                    </div>
+                                    <div class="w-full bg-light-200 dark:bg-dark-600 rounded-full h-2">
+                                        <div class="bg-gradient h-2 rounded-full" 
+                                             :style="'width: ' + skill.level + '%'"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <!-- Tech Stack Carousel -->
+            <div class="mt-20">
+                <h3 class="text-2xl font-display font-bold mb-8 text-center">Technologies I Work With</h3>
+                <div class="relative">
+                    <div class="overflow-hidden">
+                        <div class="flex space-x-12 animate-marquee whitespace-nowrap">
+                            <template x-for="tech in technologies">
+                                <div class="flex items-center glass px-6 py-4 rounded-xl">
+                                    <i class="text-3xl mr-4" :class="tech.icon"></i>
+                                    <span class="text-lg font-medium" x-text="tech.name"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects" class="py-28 px-6 md:px-12 relative overflow-hidden">
+        <div class="container mx-auto relative z-10">
+            <h2 class="section-title text-center" id="projectsTitle">Featured Work</h2>
+            
+            <div class="flex justify-center mb-12">
+                <div class="inline-flex rounded-lg glass p-1">
+                    <template x-for="(filter, index) in projectFilters">
+                        <button @click="activeFilter = filter" 
+                                class="px-6 py-2 rounded-md font-medium transition"
+                                :class="{
+                                    'bg-gradient text-white': activeFilter === filter,
+                                    'text-dark-600 dark:text-light-400 hover:text-dark-900 dark:hover:text-light-100': activeFilter !== filter
+                                }"
+                                x-text="filter"></button>
+                    </template>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <template x-for="project in filteredProjects">
+                    <div class="group relative overflow-hidden rounded-2xl shadow-xl card-hover animate-in">
+                        <div class="relative h-80 overflow-hidden">
+                            <img :src="project.image" :alt="project.name" 
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark-900/90 via-dark-900/30 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6 w-full">
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    <template x-for="tag in project.tags">
+                                        <span class="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full" 
+                                              x-text="tag"></span>
+                                    </template>
+                                </div>
+                                <h3 class="text-2xl font-display font-bold text-white" x-text="project.name"></h3>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-dark-700 p-6">
+                            <p class="text-dark-600 dark:text-light-400 mb-4" x-text="project.description"></p>
+                            <div class="flex justify-between items-center">
+                                <a :href="project.link" target="_blank" 
+                                   class="text-primary font-medium hover:underline flex items-center">
+                                    View Project <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                                <div class="flex space-x-2">
+                                    <a :href="project.github" target="_blank" 
+                                       class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-light-200 dark:hover:bg-dark-600 transition">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                    <a :href="project.link" target="_blank" 
+                                       class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-light-200 dark:hover:bg-dark-600 transition">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-flex items-center px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary/10 transition">
+                    View All Projects <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-28 px-6 md:px-12 bg-light-100 dark:bg-dark-800 relative overflow-hidden">
+        <div class="blob w-96 h-96 bg-secondary/30 -top-40 -right-40 animate-float"></div>
+        
+        <div class="container mx-auto relative z-10">
+            <h2 class="section-title text-center" id="testimonialsTitle">Client Testimonials</h2>
+            
+            <div class="mt-16">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <template x-for="testimonial in testimonials">
+                            <div class="swiper-slide">
+                                <div class="bg-white dark:bg-dark-700 p-8 rounded-2xl shadow-lg h-full">
+                                    <div class="flex items-center mb-6">
+                                        <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
+                                            <img :src="testimonial.avatar" :alt="testimonial.name" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h4 class="font-display font-bold text-lg" x-text="testimonial.name"></h4>
+                                            <p class="text-dark-500 dark:text-light-500" x-text="testimonial.position"></p>
+                                        </div>
+                                    </div>
+                                    <p class="text-lg italic text-dark-600 dark:text-light-400 mb-6" x-text="testimonial.quote"></p>
+                                    <div class="flex items-center">
+                                        <template x-for="i in 5">
+                                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-28 px-6 md:px-12 relative overflow-hidden">
+        <div class="blob w-96 h-96 bg-primary/30 -bottom-40 -left-40 animate-float-reverse"></div>
+        
+        <div class="container mx-auto relative z-10">
+            <h2 class="section-title text-center" id="contactTitle">Get In Touch</h2>
+            
+            <div class="flex flex-col lg:flex-row gap-12 mt-16">
+                <div class="lg:w-1/2 animate-in">
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block mb-2 font-medium">Your Name</label>
+                                <input type="text" id="name" 
+                                       class="w-full px-5 py-4 rounded-xl glass focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-2 font-medium">Your Email</label>
+                                <input type="email" id="email" 
+                                       class="w-full px-5 py-4 rounded-xl glass focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="subject" class="block mb-2 font-medium">Subject</label>
+                            <input type="text" id="subject" 
+                                   class="w-full px-5 py-4 rounded-xl glass focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label for="message" class="block mb-2 font-medium">Your Message</label>
+                            <textarea id="message" rows="5" 
+                                      class="w-full px-5 py-4 rounded-xl glass focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"></textarea>
+                        </div>
+                        <button type="submit" 
+                                class="px-8 py-4 bg-gradient rounded-xl text-white font-medium hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 w-full">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="lg:w-1/2 animate-in">
+                    <div class="bg-white dark:bg-dark-700 p-8 rounded-2xl shadow-lg h-full glass">
+                        <h3 class="text-2xl font-display font-bold mb-6">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="text-primary text-xl mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg mb-1">Location</h4>
+                                    <p class="text-dark-600 dark:text-light-400">San Francisco, California, USA</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-primary text-xl mr-4 mt-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg mb-1">Email</h4>
+                                    <p class="text-dark-600 dark:text-light-400">alex@example.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-primary text-xl mr-4 mt-1">
+                                                                        <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg mb-1">Phone</h4>
+                                    <p class="text-dark-600 dark:text-light-400">+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-primary text-xl mr-4 mt-1">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg mb-1">Working Hours</h4>
+                                    <p class="text-dark-600 dark:text-light-400">Monday - Friday: 9AM - 5PM PST</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-medium text-lg mb-4">Follow Me</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-primary/10 hover:text-primary transition">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-primary/10 hover:text-primary transition">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-primary/10 hover:text-primary transition">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-primary/10 hover:text-primary transition">
+                                    <i class="fab fa-dribbble"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-dark-900 text-light-100 py-12 px-6 md:px-12 relative">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#" class="text-2xl font-display font-bold text-gradient">PortfolioX</a>
+                    <p class="mt-2 text-light-400">Crafting digital experiences that matter</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row md:space-x-12 space-y-4 md:space-y-0">
+                    <div>
+                        <h4 class="font-display font-bold text-lg mb-4">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <template x-for="item in navItems">
+                                <li>
+                                    <a :href="item.link" class="text-light-400 hover:text-primary transition" x-text="item.name"></a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-display font-bold text-lg mb-4">Services</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-light-400 hover:text-primary transition">Web Development</a></li>
+                            <li><a href="#" class="text-light-400 hover:text-primary transition">UI/UX Design</a></li>
+                            <li><a href="#" class="text-light-400 hover:text-primary transition">Mobile Apps</a></li>
+                            <li><a href="#" class="text-light-400 hover:text-primary transition">Consulting</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-display font-bold text-lg mb-4">Contact</h4>
+                        <ul class="space-y-2">
+                            <li><a href="mailto:alex@example.com" class="text-light-400 hover:text-primary transition">alex@example.com</a></li>
+                            <li><a href="tel:+15551234567" class="text-light-400 hover:text-primary transition">+1 (555) 123-4567</a></li>
+                            <li class="text-light-400">San Francisco, CA</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-dark-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-light-500 mb-4 md:mb-0">© 2023 PortfolioX. All rights reserved.</p>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-light-400 hover:text-primary transition">Privacy Policy</a>
+                    <a href="#" class="text-light-400 hover:text-primary transition">Terms of Service</a>
+                    <a href="#" class="text-light-400 hover:text-primary transition">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <button id="backToTop" 
+            class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center opacity-0 invisible transition-all duration-300 z-40">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- JavaScript -->
+    <script>
+        // Portfolio Data
+        function portfolio() {
+            return {
+                darkMode: localStorage.getItem('darkMode') === 'true' || 
+                         (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                menuOpen: false,
+                hoveredNav: null,
+                activeFilter: 'All',
+                projectFilters: ['All', 'Web', 'Mobile', 'Design'],
+                
+                navItems: [
+                    { name: 'Home', link: '#home' },
+                    { name: 'About', link: '#about' },
+                    { name: 'Skills', link: '#skills' },
+                    { name: 'Projects', link: '#projects' },
+                    { name: 'Testimonials', link: '#testimonials' },
+                    { name: 'Contact', link: '#contact' }
+                ],
+                
+                clients: [
+                    { name: 'Google', logo: 'https://logo.clearbit.com/google.com' },
+                    { name: 'Microsoft', logo: 'https://logo.clearbit.com/microsoft.com' },
+                    { name: 'Amazon', logo: 'https://logo.clearbit.com/amazon.com' },
+                    { name: 'Netflix', logo: 'https://logo.clearbit.com/netflix.com' },
+                    { name: 'Spotify', logo: 'https://logo.clearbit.com/spotify.com' }
+                ],
+                
+                skillCategories: [
+                    {
+                        name: 'Frontend',
+                        icon: '<i class="fas fa-laptop-code"></i>',
+                        skills: [
+                            { name: 'HTML/CSS', level: 95 },
+                            { name: 'JavaScript', level: 90 },
+                            { name: 'React', level: 85 },
+                            { name: 'Vue.js', level: 80 },
+                            { name: 'Tailwind CSS', level: 90 }
+                        ]
+                    },
+                    {
+                        name: 'Backend',
+                        icon: '<i class="fas fa-server"></i>',
+                        skills: [
+                            { name: 'Node.js', level: 85 },
+                            { name: 'Express', level: 80 },
+                            { name: 'MongoDB', level: 75 },
+                            { name: 'Firebase', level: 70 },
+                            { name: 'REST APIs', level: 85 }
+                        ]
+                    },
+                    {
+                        name: 'Design',
+                        icon: '<i class="fas fa-paint-brush"></i>',
+                        skills: [
+                            { name: 'UI/UX', level: 90 },
+                            { name: 'Figma', level: 85 },
+                            { name: 'Adobe XD', level: 80 },
+                            { name: 'Photoshop', level: 75 },
+                            { name: 'Illustrator', level: 70 }
+                        ]
+                    }
+                ],
+                
+                technologies: [
+                    { name: 'React', icon: 'fab fa-react text-cyan-400' },
+                    { name: 'Vue.js', icon: 'fab fa-vuejs text-emerald-400' },
+                    { name: 'JavaScript', icon: 'fab fa-js text-yellow-400' },
+                    { name: 'TypeScript', icon: 'fas fa-code text-blue-400' },
+                    { name: 'Node.js', icon: 'fab fa-node text-green-500' },
+                    { name: 'HTML5', icon: 'fab fa-html5 text-orange-500' },
+                    { name: 'CSS3', icon: 'fab fa-css3-alt text-blue-500' },
+                    { name: 'Sass', icon: 'fab fa-sass text-pink-500' },
+                    { name: 'Git', icon: 'fab fa-git-alt text-orange-600' },
+                    { name: 'Docker', icon: 'fab fa-docker text-blue-300' }
+                ],
+                
+                projects: [
+                    {
+                        name: 'E-Commerce Platform',
+                        description: 'A full-featured e-commerce solution with payment integration and admin dashboard.',
+                        tags: ['Web', 'React', 'Node.js'],
+                        image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                        link: '#',
+                        github: '#',
+                        category: 'Web'
+                    },
+                    {
+                        name: 'Fitness Mobile App',
+                        description: 'Cross-platform mobile application for tracking workouts and nutrition.',
+                        tags: ['Mobile', 'React Native', 'Firebase'],
+                        image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                        link: '#',
+                        github: '#',
+                        category: 'Mobile'
+                    },
+                    {
+                        name: 'Corporate Website Redesign',
+                        description: 'Modern redesign of a corporate website with improved UX and performance.',
+                        tags: ['Web', 'Design', 'Vue.js'],
+                        image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80',
+                        link: '#',
+                        github: '#',
+                        category: 'Design'
+                    },
+                    {
+                        name: 'Task Management Tool',
+                        description: 'Productivity application for teams to manage projects and tasks.',
+                        tags: ['Web', 'React', 'Node.js'],
+                        image: 'https://images.unsplash.com/photo-1579389083078-4e7018379f7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                        link: '#',
+                        github: '#',
+                        category: 'Web'
+                    }
+                ],
+                
+                testimonials: [
+                    {
+                        name: 'Sarah Johnson',
+                        position: 'CEO, TechStart Inc',
+                        avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+                        quote: 'Alex transformed our digital presence with his innovative approach and technical expertise. The results exceeded our expectations!'
+                    },
+                    {
+                        name: 'Michael Chen',
+                        position: 'Product Manager, DesignHub',
+                        avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+                        quote: 'Working with Alex was a game-changer for our product. His attention to detail and problem-solving skills are exceptional.'
+                    },
+                    {
+                        name: 'Emily Rodriguez',
+                        position: 'Marketing Director, BrandCo',
+                        avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
+                        quote: 'The website Alex built for us has significantly improved our conversion rates. Highly recommend his services!'
+                    },
+                    {
+                        name: 'David Kim',
+                        position: 'CTO, Startup Ventures',
+                        avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+                        quote: 'Alex delivered our mobile app ahead of schedule and under budget. His technical skills are matched only by his professionalism.'
+                    }
+                ],
+                
+                toggleTheme() {
+                    this.darkMode = !this.darkMode;
+                    localStorage.setItem('darkMode', this.darkMode);
+                },
+                
+                get filteredProjects() {
+                    if (this.activeFilter === 'All') return this.projects;
+                    return this.projects.filter(project => project.category === this.activeFilter);
+                }
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            setTimeout(() => {
+                gsap.to('#loadingScreen', {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                        document.getElementById('loadingScreen').style.display = 'none';
+                    }
+                });
+            }, 1500);
+            
+            // Cursor follower
+            const cursorFollower = document.getElementById('cursorFollower');
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursorFollower, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTop.classList.remove('opacity-0', 'invisible');
+                    backToTop.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTop.classList.remove('opacity-100', 'visible');
+                    backToTop.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Animate elements on scroll
+            gsap.utils.toArray('.animate-in').forEach(element => {
+                gsap.from(element, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: element,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+            
+            // Section title animations
+            gsap.utils.toArray('.section-title').forEach(title => {
+                const split = new SplitText(title, { type: 'chars' });
+                gsap.from(split.chars, {
+                    opacity: 0,
+                    y: 20,
+                    rotationX: 90,
+                    duration: 1,
+                    ease: 'back.out',
+                    stagger: 0.05,
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+            
+            // Initialize Swiper for testimonials
+            new Swiper('.swiper-container', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 1,
+                        spaceBetween: 20
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30
+                    }
+                }
+            });
+        });
+    </script>
+    
+    
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</body>
+</html>

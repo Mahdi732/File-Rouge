@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr" x-data="authApp()" x-cloak>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GainZone Manager - Connexion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+        body { font-family: 'Montserrat', sans-serif; }
+        .bg-primary { background-color: #CDFB47; }
+        .text-primary { color: #CDFB47; }
+        .border-primary { border-color: #CDFB47; }
+        .bg-dark { background-color: #000000; }
+        .bg-gray { background-color: #5B5B5B; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float { animation: float 6s ease-in-out infinite; }
+        .float-delay { animation: float 6s ease-in-out 1.5s infinite; }
+        
+        .auth-transition { transition: all 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-dark text-white">
+<div class="min-h-screen flex flex-col md:flex-row">
+    <!-- Left Side - Sports Background -->
+    <div class="md:w-1/2 bg-[url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center bg-blend-overlay bg-opacity-90 bg-black flex flex-col justify-center items-center p-8 text-white">
+        <div class="max-w-md text-center">
+            <div class="float">
+                <span class="text-primary text-[10rem]"><i class="fas fa-dumbbell"></i></span>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">GainZone Manager</h1>
+            <p class="text-xl mb-6">La plateforme ultime pour gérer votre club sportif et maximiser les performances</p>
+            
+            <div class="flex space-x-4 justify-center mb-8">
+                <div class="bg-gray bg-opacity-40 p-4 rounded-lg backdrop-blur-sm">
+                    <i class="fas fa-users text-primary text-2xl mb-2"></i>
+                    <p>Gestion des membres</p>
+                </div>
+                <div class="bg-gray bg-opacity-40 p-4 rounded-lg backdrop-blur-sm">
+                    <i class="fas fa-chart-line text-primary text-2xl mb-2"></i>
+                    <p>Suivi des progrès</p>
+                </div>
+                <div class="bg-gray bg-opacity-40 p-4 rounded-lg backdrop-blur-sm">
+                    <i class="fas fa-calendar-alt text-primary text-2xl mb-2"></i>
+                    <p>Planning intelligent</p>
+                </div>
+            </div>
+            
+            <div class="float-delay hidden md:block">
+                <div class="bg-gray bg-opacity-60 p-6 rounded-xl backdrop-blur-sm">
+                    <p class="italic">"GainZone a transformé la gestion de notre club. Tout est maintenant fluide et efficace."</p>
+                    <p class="font-semibold mt-2">- Yacine M., Fondateur</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side - Auth Forms -->
+    <div class="md:w-1/2 flex items-center justify-center p-8 bg-dark">
+        <div class="max-w-md w-full auth-transition" :class="{ 'opacity-0 scale-95': isAnimating }">
+            <!-- Mobile Logo -->
+            <div class="md:hidden flex justify-center mb-8">
+                <i class="fas fa-dumbbell text-primary text-6xl"></i>
+            </div>
+
+            <!-- Auth Toggle -->
+            <div class="flex justify-center mb-10">
+                <div class="bg-gray rounded-full p-1 inline-flex">
+                    <button @click="switchView('login')" :class="{ 'bg-primary text-black': isLogin, 'text-gray-300': !isLogin }" class="px-6 py-2 rounded-full font-bold transition-all">
+                        Connexion
+                    </button>
+                    <button @click="switchView('register')" :class="{ 'bg-primary text-black': !isLogin, 'text-gray-300': isLogin }" class="px-6 py-2 rounded-full font-bold transition-all">
+                        Inscription
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div x-show="isLogin" x-transition class="auth-transition">
+                <h2 class="text-3xl font-bold mb-2 text-center">Content de vous revoir</h2>
+                <p class="text-gray-400 text-center mb-8">Connectez-vous pour accéder à votre espace</p>
+                
+                <form @submit.prevent="login" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" x-model="loginForm.email" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="votre@email.com">
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-medium">Mot de passe</label>
+                            <a href="#" class="text-sm text-primary hover:underline">Mot de passe oublié ?</a>
+                        </div>
+                        <input type="password" x-model="loginForm.password" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="••••••••">
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" class="h-4 w-4 text-primary focus:ring-primary border-gray-700 rounded">
+                        <label for="remember" class="ml-2 text-sm">Se souvenir de moi</label>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3 px-4 bg-primary text-black font-bold rounded-lg hover:bg-opacity-90 transition transform hover:scale-[1.02]">
+                        Se connecter
+                    </button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div x-show="!isLogin" x-transition class="auth-transition">
+                <h2 class="text-3xl font-bold mb-2 text-center">Rejoignez-nous</h2>
+                <p class="text-gray-400 text-center mb-8">Créez votre compte pour commencer</p>
+                
+                <form @submit.prevent="register" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Nom complet</label>
+                        <input type="text" x-model="registerForm.name" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Jean Dupont">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" x-model="registerForm.email" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="votre@email.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Mot de passe</label>
+                        <input type="password" x-model="registerForm.password" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="••••••••">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+                        <input type="password" x-model="registerForm.confirmPassword" required class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="••••••••">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Vous êtes</label>
+                        <select x-model="registerForm.role" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="user">Membre</option>
+                            <option value="coach">Coach</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" required class="h-4 w-4 text-primary focus:ring-primary border-gray-700 rounded">
+                        <label for="terms" class="ml-2 text-sm">J'accepte les <a href="#" class="text-primary hover:underline">conditions d'utilisation</a></label>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3 px-4 bg-primary text-black font-bold rounded-lg hover:bg-opacity-90 transition transform hover:scale-[1.02]">
+                        S'inscrire
+                    </button>
+                </form>
+            </div>
+
+            <!-- Social Auth -->
+            <div class="mt-8">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-dark text-gray-400">Ou continuer avec</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-3 gap-3">
+                    <button class="py-2 px-4 border border-gray-700 rounded-lg hover:bg-gray-800 flex justify-center">
+                        <i class="fab fa-google text-red-500"></i>
+                    </button>
+                    <button class="py-2 px-4 border border-gray-700 rounded-lg hover:bg-gray-800 flex justify-center">
+                        <i class="fab fa-facebook-f text-blue-500"></i>
+                    </button>
+                    <button class="py-2 px-4 border border-gray-700 rounded-lg hover:bg-gray-800 flex justify-center">
+                        <i class="fab fa-apple text-gray-300"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Auth Toggle Link -->
+            <div class="text-center mt-8">
+                <p class="text-gray-400">
+                    <span x-text="isLogin ? 'Nouveau sur GainZone ?' : 'Déjà membre ?'"></span>
+                    <button @click="switchView(isLogin ? 'register' : 'login')" class="text-primary font-bold hover:underline ml-2">
+                        <span x-text="isLogin ? 'Créer un compte' : 'Se connecter'"></span>
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('authApp', () => ({
+            isLogin: true,
+            isAnimating: false,
+            loginForm: {
+                email: '',
+                password: ''
+            },
+            registerForm: {
+                name: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+                role: 'user'
+            },
+            
+            switchView(view) {
+                if ((view === 'login' && this.isLogin) || (view === 'register' && !this.isLogin)) return;
+                
+                this.isAnimating = true;
+                setTimeout(() => {
+                    this.isLogin = view === 'login';
+                    this.isAnimating = false;
+                }, 300);
+            },
+            
+            login() {
+                // Simulate API call
+                console.log('Login attempt:', this.loginForm);
+                alert('Connexion simulée - Vérifiez la console pour les détails');
+            },
+            
+            register() {
+                if (this.registerForm.password !== this.registerForm.confirmPassword) {
+                    alert('Les mots de passe ne correspondent pas');
+                    return;
+                }
+                
+                // Simulate API call
+                console.log('Registration attempt:', this.registerForm);
+                alert('Inscription réussie - Vérifiez la console pour les détails');
+                this.isLogin = true;
+                this.registerForm = {
+                    name: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    role: 'user'
+                };
+            }
+        }));
+    });
+</script>
+</body>
+</html>

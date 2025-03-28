@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/htmx.org@1.8.4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .bg-food-pattern {
             background-image: url('/api/placeholder/1024/768');
@@ -39,12 +40,8 @@
     <!-- Left Side - Food Background -->
     <div class="md:w-1/2 bg-food-pattern bg-orange-500 bg-opacity-90 flex flex-col justify-center items-center p-8 text-white">
         <div class="max-w-md">
-            <div class="float">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-            </div>
-            <h1 class="text-4xl font-bold mb-4">FoodHub</h1>
+            <span class="text-white text-[10rem] mr-1"><i class="fas fa-utensils"></i></span>
+            <h1 class="text-4xl font-bold mb-4">CookNShare</h1>
             <p class="text-xl mb-6">Discover culinary delights from around the world, all at your fingertips.</p>
             <div class="float-delay">
                 <div class="flex space-x-4 mb-8">
