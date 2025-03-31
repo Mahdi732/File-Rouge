@@ -122,97 +122,58 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    
-    <!-- Community Highlights -->
-    <section>
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-2xl font-bold text-gray-800">Community Highlights</h3>
-        <a href="#" class="text-orange-500 hover:text-orange-600 transition-colors">Explore Community</a>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Community Card 1 -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="relative">
-            <img src="{{asset('picture/pizza.webp')}}" alt="Community Event" class="w-full h-40 object-cover">
-            <div class="absolute top-2 right-2 bg-orange-500 text-white px-2 py-1 rounded-full text-xs">
-              Upcoming
-            </div>
-          </div>
+          <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
           <div class="p-4">
-            <h4 class="font-semibold text-gray-800 mb-2">Summer BBQ Meetup</h4>
+            <h4 class="font-semibold text-gray-800 mb-2">Spicy Thai Noodles</h4>
             <div class="flex items-center text-sm text-gray-600 mb-2">
-              <i class="fas fa-calendar mr-2"></i>
-              July 15, 2024
+              <i class="fas fa-clock mr-2"></i>
+              45 mins
+              <span class="mx-2">•</span>
+              <i class="fas fa-fire mr-2"></i>
+              Medium
             </div>
             <div class="flex items-center">
-              <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-              <span class="text-sm text-gray-700">Houston, TX</span>
+              <img src="{{asset('picture/pizza.webp')}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+              <span class="text-sm text-gray-700">Sarah Johnson</span>
             </div>
           </div>
         </div>
         
-        <!-- Community Card 2 -->
+        <!-- Recipe Card 2 -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="relative">
-            <img src="{{asset('picture/pizza.webp')}}" alt="Community Challenge" class="w-full h-40 object-cover">
-            <div class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs">
-              Active
-            </div>
-          </div>
+          <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
           <div class="p-4">
-            <h4 class="font-semibold text-gray-800 mb-2">Vegan Recipe Challenge</h4>
+            <h4 class="font-semibold text-gray-800 mb-2">Classic Beef Burger</h4>
             <div class="flex items-center text-sm text-gray-600 mb-2">
-              <i class="fas fa-trophy mr-2"></i>
-              Top Prize: $500
+              <i class="fas fa-clock mr-2"></i>
+              30 mins
+              <span class="mx-2">•</span>
+              <i class="fas fa-fire mr-2"></i>
+              Easy
             </div>
             <div class="flex items-center">
-              <i class="fas fa-users mr-2 text-orange-500"></i>
-              <span class="text-sm text-gray-700">125 Participants</span>
+              <img src="{{asset('picture/pizza.webp')}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+              <span class="text-sm text-gray-700">Michael Chen</span>
             </div>
           </div>
         </div>
         
-        <!-- Community Card 3 -->
+        <!-- Recipe Card 3 -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="relative">
-            <img src="{{asset('picture/pizza.webp')}}" alt="Community Workshop" class="w-full h-40 object-cover">
-            <div class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
-              Ongoing
-            </div>
-          </div>
+          <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
           <div class="p-4">
-            <h4 class="font-semibold text-gray-800 mb-2">Pastry Masterclass</h4>
+            <h4 class="font-semibold text-gray-800 mb-2">Vegan Buddha Bowl</h4>
             <div class="flex items-center text-sm text-gray-600 mb-2">
-              <i class="fas fa-chalkboard-teacher mr-2"></i>
-              Online Workshop
+              <i class="fas fa-clock mr-2"></i>
+              60 mins
+              <span class="mx-2">•</span>
+              <i class="fas fa-fire mr-2"></i>
+              Challenging
             </div>
             <div class="flex items-center">
-              <i class="fas fa-user-tie mr-2 text-orange-500"></i>
-              <span class="text-sm text-gray-700">Chef Sarah Johnson</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Community Card 4 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="relative">
-            <img src="{{asset('picture/pizza.webp')}}" alt="Community Group" class="w-full h-40 object-cover">
-            <div class="absolute top-2 right-2 bg-purple-500 text-white px-2 py-1 rounded-full text-xs">
-              Growing
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="font-semibold text-gray-800 mb-2">Global Cuisine Group</h4>
-            <div class="flex items-center text-sm text-gray-600 mb-2">
-              <i class="fas fa-globe mr-2"></i>
-              International Cooking
-            </div>
-            <div class="flex items-center">
-              <i class="fas fa-users mr-2 text-orange-500"></i>
-              <span class="text-sm text-gray-700">3,500 Members</span>
+              <img src="{{asset('picture/pizza.webp')}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+              <span class="text-sm text-gray-700">Emma Rodriguez</span>
             </div>
           </div>
         </div>
