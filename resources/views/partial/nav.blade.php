@@ -13,9 +13,9 @@
   <div class="flex gap-4">
       <nav class="hidden md:flex space-x-6">
           <a href="/" class="text-gray-600 hover:text-orange-500">Home</a>
-          <a href="/recipe" class="text-gray-600 hover:text-orange-500">Recipes</a>
+          <a href="/biblio" class="text-gray-600 hover:text-orange-500">Recipes</a>
           <a href="/Market" class="text-gray-600 hover:text-orange-500">Shop</a>
-          <a href="Media" class="text-gray-600 hover:text-orange-500">Community</a>
+          <a href="/media" class="text-gray-600 hover:text-orange-500">Community</a>
           <a href="/friend" class="text-gray-600 hover:text-orange-500">Friend</a>
       </nav>
       <div class="flex space-x-2">
@@ -39,28 +39,19 @@
 
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex space-x-8">
-              <a href="/home" class="text-gray-600 hover:text-orange-500 transition-colors">Home</a>
-              <a href="/recipe" class="text-gray-600 hover:text-orange-500 transition-colors">Recipes</a>
-              <a href="/Market" class="text-gray-600 hover:text-orange-500 transition-colors">Shop</a>
-              <a href="/Media" class="text-gray-600 hover:text-orange-500 transition-colors">Community</a>
-              <a href="/friend" class="text-gray-600 hover:text-orange-500">Friend</a>
+            <a href="/" class="text-gray-600 hover:text-orange-500">Home</a>
+            <a href="/biblio" class="text-gray-600 hover:text-orange-500">Recipes</a>
+            <a href="/Market" class="text-gray-600 hover:text-orange-500">Shop</a>
+            <a href="/media" class="text-gray-600 hover:text-orange-500">Community</a>
+            <a href="/friend" class="text-gray-600 hover:text-orange-500">Friend</a>
           </nav>
 
           <!-- User Menu -->
           <div class="flex items-center space-x-4">
-              <!-- Notifications -->
-              <div class="relative">
-                  <button class="text-gray-600 hover:text-orange-500 transition-colors">
-                      <i class="fas fa-bell text-xl"></i>
-                      <span class="absolute -top-1 -right-1 bg-orange-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                  </button>
-              </div>
-
               <!-- Messages -->
               <div class="relative">
                   <button class="text-gray-600 hover:text-orange-500 transition-colors">
                       <i class="fas fa-envelope text-xl"></i>
-                      <span class="absolute -top-1 -right-1 bg-orange-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
                   </button>
               </div>
 
@@ -95,10 +86,10 @@
   <!-- Mobile menu -->
   <div x-show="mobileMenu" class="md:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
-          <a href="/home" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Home</a>
-          <a href="/recipe" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Recipes</a>
+          <a href="/" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Home</a>
+          <a href="/biblio" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Recipes</a>
           <a href="/Market" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Shop</a>
-          <a href="/Media" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Community</a>
+          <a href="/media" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Community</a>
           <a href="/friend" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Friend</a>
       </div>
   </div>

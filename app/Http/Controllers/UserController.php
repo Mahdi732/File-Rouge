@@ -18,8 +18,6 @@ class UserController extends Controller
             'password' => 'required|string|min:8'
         ]);
 
-
-
         $user = User::create([
             'user_name' => $request->user_name,
             'name' => $request->name,
@@ -29,7 +27,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return redirect("/profile", ['user' => $user]);
+        return redirect("/");
     }
 
     public function login(Request $request) {
@@ -46,7 +44,7 @@ class UserController extends Controller
             }
             Auth::login($user);
             $request->session()->regenerate();
-            return redirect("/profile", ['user' => $user]);
+            return redirect("/");
         }
         
         return redirect('/login')->with('email_error', 'Invalid email try another time');
@@ -59,13 +57,14 @@ class UserController extends Controller
 
     public function updateProfile(Request $request){
         $user = Auth::user();
+        
         if (!$user) {
             return redirect('/login')->with('error', 'Unothorized');
         }
 
         $request->validate([
             'first_name' => 'required|string|max:20|min:5',
-            'user_name' => 'required|string|max:50|min:7',
+            'user_name' => 'required|string|max:50|min:5',
             'email' => 'required|string|max:250',
             'bio' => 'required|string',
         ]);
@@ -77,7 +76,7 @@ class UserController extends Controller
             'bio' => $request->bio,
         ]);
 
-        return redirect('/profile');
+        return view("partial.errorHandler");
     }
     
     public function deleteAccount(Request $request) {
@@ -100,5 +99,9 @@ class UserController extends Controller
         return 'Invalid email try another time';
     }
 
+    public function getUserInfo(){
+        $user = Auth::user();
+        return view("user", ['user' => $user]);
+    }
 
 }

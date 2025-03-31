@@ -160,9 +160,9 @@
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" 
+                    <img src="" 
                          alt="Profile" 
-                         class="w-8 h-8 rounded-full object-cover">
+                         class="w-8 h-8 rounded-full bg-red-600 object-cover">
                     <span class="font-medium">Admin</span>
                 </div>
             </div>
@@ -173,9 +173,9 @@
             <div x-show="activeSection === 'dashboard'" x-cloak>
                 <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h1>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid w-[22rem] md:w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <!-- Stats Cards -->
-                    <div class="admin-card p-6">
+                    <div class="admin-card p-6 ">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500">Total Recipes</p>
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     
-                    <div class="admin-card p-6">
+                    <div class="admin-card p-6 ">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500">Total Posts</p>
@@ -201,7 +201,7 @@
                         </div>
                     </div>
                     
-                    <div class="admin-card p-6">
+                    <div class="admin-card p-6 ">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500">Active Users</p>
@@ -214,7 +214,7 @@
                         </div>
                     </div>
                     
-                    <div class="admin-card p-6">
+                    <div class="admin-card p-6 ">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500">Pending Orders</p>
@@ -223,43 +223,6 @@
                             </div>
                             <div class="bg-purple-100 p-3 rounded-full">
                                 <i class="fas fa-shopping-cart text-purple-500 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recent Activity -->
-                <div class="admin-card p-6 mb-8">
-                    <h2 class="text-xl font-bold mb-4">Recent Activity</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-start pb-4 border-b">
-                            <div class="bg-orange-100 p-2 rounded-full mr-4">
-                                <i class="fas fa-book-open text-orange-500"></i>
-                            </div>
-                            <div>
-                                <p class="font-medium">New recipe added</p>
-                                <p class="text-gray-500 text-sm">"Spicy Thai Basil Chicken" was added by Chef Maria</p>
-                                <p class="text-gray-400 text-xs mt-1">2 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start pb-4 border-b">
-                            <div class="bg-blue-100 p-2 rounded-full mr-4">
-                                <i class="fas fa-newspaper text-blue-500"></i>
-                            </div>
-                            <div>
-                                <p class="font-medium">New blog post</p>
-                                <p class="text-gray-500 text-sm">"10 Tips for Perfect Pasta Every Time" was published</p>
-                                <p class="text-gray-400 text-xs mt-1">5 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start pb-4 border-b">
-                            <div class="bg-green-100 p-2 rounded-full mr-4">
-                                <i class="fas fa-user-plus text-green-500"></i>
-                            </div>
-                            <div>
-                                <p class="font-medium">New user registered</p>
-                                <p class="text-gray-500 text-sm">JohnDoe42 joined the community</p>
-                                <p class="text-gray-400 text-xs mt-1">1 day ago</p>
                             </div>
                         </div>
                     </div>
@@ -313,7 +276,6 @@
                                         <th class="py-3 text-left font-medium text-gray-700">Image</th>
                                         <th class="py-3 text-left font-medium text-gray-700">Name</th>
                                         <th class="py-3 text-left font-medium text-gray-700">Description</th>
-                                        <th class="py-3 text-left font-medium text-gray-700">Recipes Count</th>
                                         <th class="py-3 text-right font-medium text-gray-700">Actions</th>
                                     </tr>
                                 </thead>
@@ -326,9 +288,8 @@
                                         </td>
                                         <td class="py-4 font-medium">Appetizers</td>
                                         <td class="py-4 text-gray-600">Small dishes before main course</td>
-                                        <td class="py-4 text-gray-600">128</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -340,9 +301,7 @@
                                         </td>
                                         <td class="py-4 font-medium">Main Dishes</td>
                                         <td class="py-4 text-gray-600">Primary meal courses</td>
-                                        <td class="py-4 text-gray-600">452</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -354,9 +313,8 @@
                                         </td>
                                         <td class="py-4 font-medium">Desserts</td>
                                         <td class="py-4 text-gray-600">Sweet final course</td>
-                                        <td class="py-4 text-gray-600">198</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -385,7 +343,6 @@
                                     <tr class="border-b">
                                         <th class="py-3 text-left font-medium text-gray-700">Name</th>
                                         <th class="py-3 text-left font-medium text-gray-700">Color</th>
-                                        <th class="py-3 text-left font-medium text-gray-700">Usage Count</th>
                                         <th class="py-3 text-right font-medium text-gray-700">Actions</th>
                                     </tr>
                                 </thead>
@@ -395,9 +352,8 @@
                                         <td class="py-4">
                                             <span class="inline-block w-6 h-6 rounded-full bg-green-500"></span>
                                         </td>
-                                        <td class="py-4 text-gray-600">324</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -406,9 +362,8 @@
                                         <td class="py-4">
                                             <span class="inline-block w-6 h-6 rounded-full bg-blue-500"></span>
                                         </td>
-                                        <td class="py-4 text-gray-600">156</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -417,9 +372,8 @@
                                         <td class="py-4">
                                             <span class="inline-block w-6 h-6 rounded-full bg-orange-500"></span>
                                         </td>
-                                        <td class="py-4 text-gray-600">278</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -464,7 +418,7 @@
                                         <td class="py-4 text-gray-600">grams</td>
                                         <td class="py-4 text-gray-600">Seasonings</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -478,7 +432,7 @@
                                         <td class="py-4 text-gray-600">milliliters</td>
                                         <td class="py-4 text-gray-600">Oils</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -492,7 +446,7 @@
                                         <td class="py-4 text-gray-600">pieces</td>
                                         <td class="py-4 text-gray-600">Meat</td>
                                         <td class="py-4 text-right">
-                                            <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                            
                                             <button class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -536,7 +490,7 @@
                                         <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Published</span>
                                     </td>
                                     <td class="py-4 text-right">
-                                        <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-edit"></i></button>
+                                        
                                         <button class="text-red-500 hover:text-red-700 mr-3"><i class="fas fa-trash"></i></button>
                                         <button class="text-purple-500 hover:text-purple-700"><i class="fas fa-eye"></i></button>
                                     </td>
@@ -550,41 +504,59 @@
             <div x-show="activeSection === 'settings'" x-cloak>
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-3xl font-bold text-gray-800">Recipe Management</h1>
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add New Recipe
+                    </button>
                 </div>
-
-                <!-- Posts Table -->
-                <div class="admin-card p-6">
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="py-3 text-left font-medium text-gray-700">Title</th>
-                                    <th class="py-3 text-left font-medium text-gray-700">Author</th>
-                                    <th class="py-3 text-left font-medium text-gray-700">Categories</th>
-                                    <th class="py-3 text-left font-medium text-gray-700">Tags</th>
-                                    <th class="py-3 text-right font-medium text-gray-700">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                <tr class="hover:bg-gray-50">
-                                    <td class="py-4 font-medium">10 Tips for Perfect Pasta Every Time</td>
-                                    <td class="py-4 text-gray-600">Chef Maria</td>
-                                    <td class="py-4 text-gray-600">
-                                        <span class="bg-gray-100 px-2 py-1 rounded text-sm mr-1">Cooking</span>
-                                        <span class="bg-gray-100 px-2 py-1 rounded text-sm">Tips</span>
-                                    </td>
-                                    <td class="py-4 text-gray-600">
-                                        <span class="bg-gray-100 px-2 py-1 rounded text-sm mr-1">Cooking</span>
-                                        <span class="bg-gray-100 px-2 py-1 rounded text-sm">Tips</span>
-                                    </td>
-                                    <td class="py-4 text-right">
-                                        <button class="text-red-500 hover:text-red-700 mr-3"><i class="fas fa-trash"></i></button>
-                                        <button class="text-purple-500 hover:text-purple-700"><i class="fas fa-eye"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            
+                <!-- Recipe Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Recipe Card -->
+                    <div class="admin-card p-0 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <!-- Recipe Image -->
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141" 
+                                 alt="Perfect Pasta" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        
+                        <!-- Recipe Content -->
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold text-gray-800">10 Tips for Perfect Pasta Every Time</h3>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Published</span>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" 
+                                     alt="Chef Maria" 
+                                     class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-gray-600">Chef Maria</span>
+                                <span class="text-gray-400 mx-2">•</span>
+                                <span class="text-gray-500 text-sm">May 15, 2023</span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Italian</span>
+                                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Pasta</span>
+                                    <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">Cooking Tips</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Stats -->
+                            <div class="flex justify-between text-sm text-gray-500 border-t pt-3">
+                                <div class="flex items-center">
+                                    <i class="fas fa-comment text-blue-400 mr-1"></i>
+                                    <span>42 reviews</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-end space-x-3 mt-4 border-t pt-3">
+                                <button class="text-red-500 hover:text-red-700" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                </div>
             </div>
         </main>
     </div>

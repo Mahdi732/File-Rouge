@@ -309,29 +309,31 @@
                 <!-- Edit Profile Form -->
                 <div x-show="showEditProfile" class="bg-white p-6 rounded-lg shadow-sm mb-8">
                     <h3 class="font-bold text-lg mb-4">Edit Profile</h3>
-                    <form class="space-y-4" action="{{ route('editProfile') }}" method="POST">
+                    <form class="space-y-4" 
+                    hx-post="{{ route('editProfile') }}"
+                    hx-target="#accepted_update">
                         @csrf
                         @method('PUT')
                         <div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                                <input name="first_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="noihnoubiuh">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input name="first_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="{{$user->name}}">
                             </div>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <input name="user_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="sarahcooks">
+                            <input name="user_name" type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="{{$user->user_name}}">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input name="email" type="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="sarah@example.com">
+                            <input name="email" type="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" value="{{$user->email}}">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                            <textarea name="bio" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" rows="4">Passionate home cook who loves experimenting with global cuisines. Sharing my kitchen adventures with fellow food enthusiasts!</textarea>
+                            <textarea name="bio" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" rows="4">{{$user->bio}}</textarea>
                         </div>
                         
                         <div class="flex justify-end space-x-3">
@@ -339,6 +341,9 @@
                             <button type="submit" class="orange-button text-white px-5 py-2 rounded-lg">Save Changes</button>
                         </div>
                     </form>
+                    <div id="accepted_update">
+                       
+                    </div>
                 </div>
                 
                 <!-- Password Settings -->
@@ -489,7 +494,6 @@
 @if (View::exists("partial.fotter"))
     @include('partial.fotter')
 @endif
-
 </body>
 </html>
 
