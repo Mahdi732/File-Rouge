@@ -6,13 +6,17 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     public function register(Request $request) {
+        if(Auth::check()) {
+            return redirect()->route('profile');
+        }
 
         $request->validate([
-            'user_name' => 'required|string|max:20|min:5',
+            'user_name' => 'required|string|max:20|min:3',
             'name' => 'required|string|max:50|min:7',
             'email' => 'required|string|max:250',
             'password' => 'required|string|min:8'
@@ -31,6 +35,10 @@ class UserController extends Controller
     }
 
     public function login(Request $request) {
+        if(Auth::check()) {
+            return redirect()->route('profile');
+        }
+        
         $request->validate([
             'email' => 'required|string|max:250',
             'password' => 'required|string|max:250|min:8'
@@ -50,10 +58,14 @@ class UserController extends Controller
         return redirect('/login')->with('email_error', 'Invalid email try another time');
     }
 
-    public function logOut(){
+    public function logOut(Request $request) {
         Auth::logout();
-        return redirect('/login');
+        $request->session()->invalidate(); 
+        $request->session()->regenerateToken(); 
+        
+        return redirect('/auth/login');
     }
+    
 
     public function updateProfile(Request $request){
         $user = Auth::user();
@@ -64,16 +76,26 @@ class UserController extends Controller
 
         $request->validate([
             'first_name' => 'required|string|max:20|min:5',
-            'user_name' => 'required|string|max:50|min:5',
+            'user_name' => 'required|string|max:50|min:3',
             'email' => 'required|string|max:250',
             'bio' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
+        if ($request->hasFile('image')) {
+            if ($user->profile_picture && Storage::exists($user->profile_picture)) {
+                Storage::delete($user->profile_picture);
+            }
+        }
+
+        $imagePath = $request->file('image')->store('images', 'public');
+        // $user->profile_picture
         $user->update([
             'name' => $request->first_name,
             'user_name' => $request->user_name,
             'email' => $request->email,
             'bio' => $request->bio,
+            'profile_picture' => $imagePath,
         ]);
 
         return view("partial.errorHandler");

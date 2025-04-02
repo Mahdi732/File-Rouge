@@ -17,7 +17,7 @@ class AuthenticateAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-            return redirect('/login/admin')->with('error', 'login bebe');
+            return redirect('auth/login/admin')->with('error', 'login bebe');
         }
         return $next($request);
     }
