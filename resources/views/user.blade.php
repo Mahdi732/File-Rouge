@@ -54,24 +54,39 @@
     <section class="bg-[#FEFCE8] py-8 px-8">
         <div class="container mx-auto">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <div x-data="{ showUpload: false}" class="relative inline-block">
                 <!-- Profile Image -->
                 <div x-data="{ showUpload: false }" class="relative">
                     <div class="w-36 h-36 rounded-full overflow-hidden bg-white border-4 border-white shadow-lg">
-                        <img src="{{ asset('picture/profile-placeholder.png') }}" alt="Profile Picture" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="w-full h-full object-cover">
                     </div>
                     <button @click="showUpload = !showUpload" class="absolute bottom-0 right-0 bg-orange-500 text-white rounded-full p-2 shadow-lg">
                         <i class="fas fa-camera"></i>
                     </button>
                     <div x-show="showUpload" @click.away="showUpload = false" class="absolute mt-2 right-0 bg-white p-3 rounded-lg shadow-lg z-10">
-                        <input type="file" class="text-sm">
+                        <form id="profileImageForm" 
+                        hx-post="{{ route('profile.update.picture') }}"
+                        hx-target="#picture_update" 
+                        enctype="multipart/form-data"
+                        >
+                        @csrf
+                        @method('PUT')
+                        <input name="image" type="file" class="text-sm">
                         <button class="orange-button text-white px-3 py-1 rounded text-sm mt-2 w-full">Upload</button>
+                    </form>
+
+                    <div id="picture_update">
+                       
                     </div>
+
+                    </div>
+                </div>
                 </div>
                 
                 <!-- Profile Info -->
                 <div class="flex-grow text-center md:text-left">
-                    <h1 class="text-2xl font-bold mb-2">Sarah Johnson</h1>
-                    <p class="text-gray-600 mb-3">@sarahcooks</p>
+                    <h1 class="text-2xl font-bold mb-2">{{$user->name}}</h1>
+                    <p class="text-gray-600 mb-3">{{'@' . $user->user_name}}</p>
                     <div class="flex flex-wrap gap-3 justify-center md:justify-start">
                         <span class="bg-orange-100 text-orange-500 px-3 py-1 rounded-full text-sm">
                             <i class="fas fa-utensils mr-1"></i> 24 Recipes
@@ -79,11 +94,8 @@
                         <span class="bg-orange-100 text-orange-500 px-3 py-1 rounded-full text-sm">
                             <i class="fas fa-heart mr-1"></i> 45 Favorites
                         </span>
-                        <span class="bg-orange-100 text-orange-500 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-users mr-1"></i> 120 Followers
-                        </span>
                     </div>
-                    <p class="mt-4 text-gray-700">Passionate home cook who loves experimenting with global cuisines. Sharing my kitchen adventures with fellow food enthusiasts!</p>
+                    <p class="mt-4 text-gray-700">{{ $user->bio }}</p>
                 </div>
                 
                 <!-- Edit Profile Button -->
@@ -122,7 +134,7 @@
                     <!-- Recipe Card 1 -->
                     <div class="bg-white rounded-lg overflow-hidden recipe-card" x-data="{ showOptions: false }">
                         <div class="relative">
-                            <img src="{{ asset('picture/loli.png') }}" alt="Pumpkin Oats" class="w-full h-48 object-cover">
+                            <img src="{{asset('picture/pizza.webp')}}" alt="Pumpkin Oats" class="w-full h-48 object-cover">
                             <button @click="showOptions = !showOptions" class="absolute top-2 right-2 bg-white rounded-full p-2 text-gray-600 hover:text-orange-500">
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
@@ -148,7 +160,7 @@
                     <!-- Recipe Card 2 -->
                     <div class="bg-white rounded-lg overflow-hidden recipe-card" x-data="{ showOptions: false }">
                         <div class="relative">
-                            <img src="{{ asset('picture/loli.png') }}" alt="Pasta" class="w-full h-48 object-cover">
+                            <img src="{{asset('picture/pizza.webp')}}" alt="Pasta" class="w-full h-48 object-cover">
                             <button @click="showOptions = !showOptions" class="absolute top-2 right-2 bg-white rounded-full p-2 text-gray-600 hover:text-orange-500">
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
@@ -174,7 +186,7 @@
                     <!-- Recipe Card 3 -->
                     <div class="bg-white rounded-lg overflow-hidden recipe-card" x-data="{ showOptions: false }">
                         <div class="relative">
-                            <img src="{{ asset('picture/loli.png') }}" alt="Smoothie" class="w-full h-48 object-cover">
+                            <img src="{{asset('picture/pizza.webp')}}" alt="Smoothie" class="w-full h-48 object-cover">
                             <button @click="showOptions = !showOptions" class="absolute top-2 right-2 bg-white rounded-full p-2 text-gray-600 hover:text-orange-500">
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
@@ -239,7 +251,7 @@
                                 <i class="fas fa-heart"></i>
                             </button>
                         </div>
-                        <img src="{{ asset('picture/loli.png') }}" alt="Recipe" class="w-full h-48 object-cover">
+                        <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <h3 class="font-bold mb-2">Honey Glazed Salmon</h3>
                             <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">ChefMike</span></p>
@@ -260,7 +272,7 @@
                                 <i class="fas fa-heart"></i>
                             </button>
                         </div>
-                        <img src="{{ asset('picture/loli.png') }}" alt="Recipe" class="w-full h-48 object-cover">
+                        <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <h3 class="font-bold mb-2">Avocado Toast with Poached Eggs</h3>
                             <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">HealthyEats</span></p>
@@ -282,7 +294,7 @@
                                 <i class="fas fa-heart"></i>
                             </button>
                         </div>
-                        <img src="{{ asset('picture/loli.png') }}" alt="Recipe" class="w-full h-48 object-cover">
+                        <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <h3 class="font-bold mb-2">Thai Green Curry</h3>
                             <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">AsianFusion</span></p>
@@ -310,7 +322,7 @@
                 <div x-show="showEditProfile" class="bg-white p-6 rounded-lg shadow-sm mb-8">
                     <h3 class="font-bold text-lg mb-4">Edit Profile</h3>
                     <form class="space-y-4" 
-                    hx-post="{{ route('editProfile') }}"
+                    hx-post="{{ route('profile.update') }}"
                     hx-target="#accepted_update">
                         @csrf
                         @method('PUT')
@@ -349,10 +361,25 @@
                 <!-- Password Settings -->
                 <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
                     <h3 class="font-bold text-lg mb-4">Change Password</h3>
-                    <form class="space-y-4">
+                    <form class="space-y-4"
+                    hx-post="{{ route('password.update') }}"
+                    hx-target="#password_respond">
+                    @csrf
+                    @method("PATCH")
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                            <label name="old_password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                             <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
+                        </div>
+
+                        <div id="success-notification">
+                            <div class="mt-2 bg-green-50 border-l-4 border-green-500 text-green-700 p-3 rounded-r-lg">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span id="password_respond" class="text-green-800 font-medium"></span>
+                                </div>
+                            </div>
                         </div>
                         
                         <div>
@@ -361,7 +388,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                            <label name="new_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
                             <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
@@ -441,7 +468,7 @@
                             <p class="text-sm text-gray-600 mb-3">Permanently delete your account and all your data. This action cannot be undone.</p>
                             <button @click="showForm = !showForm"  class="bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50">Delete Account</button>
                             <form 
-                                hx-post="{{ route('deleteAccount') }}"  
+                                hx-post="{{ route('profile.delete') }}"  
                                 hx-target="#all_content"
                                 x-show="showForm" 
                                 x-transition:enter="transition ease-out duration-300"
@@ -494,6 +521,12 @@
 @if (View::exists("partial.fotter"))
     @include('partial.fotter')
 @endif
+
+<script>
+    setTimeout(() => {
+      document.getElementById('success-notification').innerHTML = '';
+    }, 5000);
+</script>
 </body>
 </html>
 
