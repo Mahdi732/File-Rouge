@@ -132,7 +132,6 @@ class UserController extends Controller
             $user->forceDelete();
             if ($request->header('HX-Request')) {
                 $redirectUrl = route('login.auth') . '?success=' . urlencode('Your account has been successfully deleted.');
-                
                 return response()->json([
                     'redirect' => $redirectUrl
                 ])->withHeaders([
@@ -145,9 +144,27 @@ class UserController extends Controller
     }
 
     public function updatePassword(Request $request) {
-        if ($request->old_password !== '123456') {
-            return view("partial.errorHandler")->with('error', 'This password is not the correct password ' . $request);
+
+        $request->validate([
+            "old_password" => "required|string|min:8",
+            "new_password" => "required|string|min:8",
+            "new_password_confirm" => "required|string|min:8",
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return view("partial.errorHandler")->with('error', 'This password is not the correct password ');
         }
+
+        if ($request->new_password !== $request->new_password_confirm) {
+            return view("partial.errorHandler")->with('error', 'the new password that you enter is not the same.');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password_confirm),
+        ]);
+        
         return view('partial.updated')->with('update', 'your password has been successfully updated! 🤞🤞🤞');
     }
 

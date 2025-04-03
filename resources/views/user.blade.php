@@ -360,6 +360,9 @@
                 
                 <!-- Password Settings -->
                 <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+                    <div id="password_respond">
+                            
+                    </div>
                     <h3 class="font-bold text-lg mb-4">Change Password</h3>
                     <form class="space-y-4"
                     hx-post="{{ route('password.update') }}"
@@ -367,22 +370,18 @@
                     @csrf
                     @method("PATCH")
                         <div>
-                            <label name="old_password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                            <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
-                        </div>
-
-                        <div id="password_respond">
-                            
+                            <label  class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                            <input name="old_password" type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                            <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
+                            <input name="new_password" type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
                         <div>
                             <label name="new_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                            <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
+                            <input name="new_password_confirm" type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
                         <div class="flex justify-end">
