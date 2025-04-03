@@ -20,4 +20,8 @@ class friendController extends Controller
         
         return view('friends', compact('users'));
     }
+
+    public function searchFriend(Request $request) {
+        
+    }
 }

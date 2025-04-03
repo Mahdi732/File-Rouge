@@ -207,7 +207,7 @@
         <h2 class="text-xl font-semibold text-gray-800">People You May Know</h2>
         <div class="flex flex-col sm:flex-row gap-3">
             <form 
-            hx-get="{{ route('search.friend') }}"
+            hx-post="{{ route('search.friend') }}"
             hx-target="#fiend_add_response"
             hx-swap="innerHTML"
             hx-trigger="keyup changed delay:200ms"
