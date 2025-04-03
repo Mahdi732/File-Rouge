@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\friendController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -63,9 +64,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->group(function () {
 });
 
 Route::prefix('friend')->group(function () {
-    Route::get('/friends', function () {
-        return view('friends');
-    })->name('app.friends');
+    Route::get('/', [FriendController::class, 'index'])->name('app.friends');
 });
 
 // Application Routes
