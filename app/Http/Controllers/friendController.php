@@ -9,12 +9,22 @@ use Illuminate\Support\Facades\Auth;
 class friendController extends Controller
 {
     public function index() {
-        $user = Auth::user();
+        $authUser = Auth::user();
 
-        $users = User::Where('id', '!==', $user->id)
-        ->orderBy('name')
-        ->limit(6);
-
-        return view('partial.friends', compact('users'));
+        if (!$authUser) {
+            $users = User::where()
+                    ->orderBy('name')
+                    ->take(6)
+                    ->get();
+        
+        return view('friends', ['users' => $users]);
+        }
+        
+        $users = User::where('id', '!=', $authUser->id)
+                    ->orderBy('name')
+                    ->take(6)
+                    ->get();
+        
+        return view('friends', ['users' => $users]);
     }
 }
