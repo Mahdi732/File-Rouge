@@ -48,14 +48,14 @@ class UserController extends Controller
 
         if ($user) {
             if (!Hash::check($request->password, $user->password)) {
-                return redirect('/login')->with('password_error', 'Invalid password try another time');
+                return redirect('auth/login')->with('password_error', 'Invalid password try another time');
             }
             Auth::login($user);
             $request->session()->regenerate();
             return redirect("/");
         }
         
-        return redirect('/login')->with('email_error', 'Invalid email try another time');
+        return redirect('/auth/login')->with('email_error', 'Invalid email try another time');
     }
 
     public function logOut(Request $request) {
@@ -71,7 +71,7 @@ class UserController extends Controller
         $user = Auth::user();
         
         if (!$user) {
-            return redirect('/login')->with('error', 'Unothorized');
+            return redirect()->route('login.auth')->with('error', 'Unothorized');
         }
 
         $request->validate([
@@ -79,8 +79,28 @@ class UserController extends Controller
             'user_name' => 'required|string|max:50|min:3',
             'email' => 'required|string|max:250',
             'bio' => 'required|string',
+        ]);
+
+        $user->update([
+            'name' => $request->first_name,
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'bio' => $request->bio,
+        ]);
+
+        return view("partial.errorHandler");
+    }
+
+    public function updateProfilePicture(Request $request) {
+        if (!Auth::check()){
+            return redirect()->route('login.auth')->with('error', 'Unothorized for this moment');
+        }
+
+        $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
+
+        $user = Auth::user();
 
         if ($request->hasFile('image')) {
             if ($user->profile_picture && Storage::exists($user->profile_picture)) {
@@ -88,17 +108,12 @@ class UserController extends Controller
             }
         }
 
-        $imagePath = $request->file('image')->store('images', 'public');
-        // $user->profile_picture
+        $path = $request->file('image')->store('images', 'public');
         $user->update([
-            'name' => $request->first_name,
-            'user_name' => $request->user_name,
-            'email' => $request->email,
-            'bio' => $request->bio,
-            'profile_picture' => $imagePath,
+            'profile_picture' => $path,
         ]);
 
-        return view("partial.errorHandler");
+        return view("partial.updated");
     }
     
     public function deleteAccount(Request $request) {
@@ -120,6 +135,8 @@ class UserController extends Controller
 
         return 'Invalid email try another time';
     }
+
+    
 
     public function getUserInfo(){
         $user = Auth::user();

@@ -111,7 +111,7 @@
               <div class="relative" x-data="{ open: false }">
                   <button @click="open = !open" class="flex items-center focus:outline-none">
                       <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-500">
-                          <img src="/api/placeholder/200/200" alt="Profile" class="w-full h-full object-cover">
+                          <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile" class="w-full h-full object-cover">
                       </div>
                   </button>
 

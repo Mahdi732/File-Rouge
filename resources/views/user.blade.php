@@ -58,17 +58,15 @@
                 <!-- Profile Image -->
                 <div x-data="{ showUpload: false }" class="relative">
                     <div class="w-36 h-36 rounded-full overflow-hidden bg-white border-4 border-white shadow-lg">
-                        <img src="" alt="Profile Picture" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="w-full h-full object-cover">
                     </div>
                     <button @click="showUpload = !showUpload" class="absolute bottom-0 right-0 bg-orange-500 text-white rounded-full p-2 shadow-lg">
                         <i class="fas fa-camera"></i>
                     </button>
                     <div x-show="showUpload" @click.away="showUpload = false" class="absolute mt-2 right-0 bg-white p-3 rounded-lg shadow-lg z-10">
                         <form id="profileImageForm" 
-                        {{-- hx-post="{{ route('profile.update') }}"
-                        hx-target="#accepted_update" --}}
-                        action="{{ route('profile.update') }}"
-                        method="POST"
+                        hx-post="{{ route('profile.update.picture') }}"
+                        hx-target="#picture_update" 
                         enctype="multipart/form-data"
                         >
                         @csrf
@@ -76,6 +74,10 @@
                         <input name="image" type="file" class="text-sm">
                         <button class="orange-button text-white px-3 py-1 rounded text-sm mt-2 w-full">Upload</button>
                     </form>
+
+                    <div id="picture_update">
+                       
+                    </div>
 
                     </div>
                 </div>

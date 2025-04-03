@@ -48,6 +48,7 @@ Route::prefix('auth')->group(function () {
 // Profile Management (Authenticated User Routes)
 Route::middleware(['auth.user'])->prefix('profile')->group(function () {
     Route::get('/', [UserController::class, 'getUserInfo'])->name('profile');
+    Route::put('/update/picture', [UserController::class, 'updateProfilePicture'])->name('profile.update.picture');
     Route::put('/update', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::delete('/delete', [UserController::class, 'deleteAccount'])->name('profile.delete');
 });
