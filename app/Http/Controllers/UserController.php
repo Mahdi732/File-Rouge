@@ -137,7 +137,9 @@ class UserController extends Controller
     }
 
     public function updatePassword(Request $request) {
-        
+        if ($request !== "123456") {
+            return "this is not you real pass";
+        }
     }
 
     public function getUserInfo(){
