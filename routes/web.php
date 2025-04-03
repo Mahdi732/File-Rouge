@@ -62,6 +62,10 @@ Route::middleware(['auth.admin'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 });
 
+Route::prefix('friend')->group(function () {
+    
+});
+
 // Application Routes
 Route::prefix('app')->group(function () {
     Route::get('/friends', function () {
