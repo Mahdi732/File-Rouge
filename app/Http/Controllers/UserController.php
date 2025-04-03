@@ -48,7 +48,9 @@ class UserController extends Controller
 
         if ($user) {
             if (!Hash::check($request->password, $user->password)) {
+
                 return redirect('auth/login')->with('password_error', 'Invalid password try another time');
+
             }
             Auth::login($user);
             $request->session()->regenerate();
