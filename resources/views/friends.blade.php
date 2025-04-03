@@ -221,191 +221,34 @@
       
       <!-- Suggestions Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <!-- Suggestion Card 1 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="h-32 bg-orange-50 relative">
-            <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('/api/placeholder/400/200')"></div>
-            <div class="absolute top-2 right-2">
-              <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">87% Match</span>
-            </div>
-          </div>
-          <div class="relative px-4 pt-12 pb-5">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-                <img src="/api/placeholder/200/200" alt="Alex Thompson" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div class="text-center">
-              <h3 class="font-semibold text-gray-800">Alex Thompson</h3>
-              <p class="text-sm text-gray-500">Vegan Chef • Portland</p>
-              <div class="flex justify-center space-x-1 mt-1">
-                <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">Vegan</span>
-                <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">Healthy</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">10 mutual friends</p>
-              <div class="mt-4">
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-user-plus mr-2"></i> Add Friend
-                </button>
-              </div>
-            </div>
-          </div>
+        <!-- Suggestion Card  -->
+        @foreach ($users as $user)
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+        <div class="h-32 bg-orange-50 relative">
+        <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('https://img.uhdpaper.com/wallpaper/anime-girl-fantasy-art-635@0@f-thumb.jpg?dl')"></div>
+        <div class="absolute top-2 right-2">
+            <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">87% Match</span>
         </div>
-        
-        <!-- Suggestion Card 2 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="h-32 bg-orange-50 relative">
-            <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('/api/placeholder/400/200')"></div>
-            <div class="absolute top-2 right-2">
-              <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">91% Match</span>
-            </div>
-          </div>
-          <div class="relative px-4 pt-12 pb-5">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-                <img src="/api/placeholder/200/200" alt="Sophia Patel" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div class="text-center">
-              <h3 class="font-semibold text-gray-800">Sophia Patel</h3>
-              <p class="text-sm text-gray-500">Spice Expert • Chicago</p>
-              <div class="flex justify-center space-x-1 mt-1">
-                <span class="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs">Spicy</span>
-                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs">Indian</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">5 mutual friends</p>
-              <div class="mt-4">
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-user-plus mr-2"></i> Add Friend
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-        
-        <!-- Suggestion Card 3 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="h-32 bg-orange-50 relative">
-            <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('/api/placeholder/400/200')"></div>
-            <div class="absolute top-2 right-2">
-              <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">76% Match</span>
+        <div class="relative px-4 pt-12 pb-5">
+        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
+            <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
+            <img src="{{asset('storage' . $user->profile_picture)}}" alt="{{$user->name}}" class="w-full h-full object-cover">
             </div>
-          </div>
-          <div class="relative px-4 pt-12 pb-5">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-                <img src="/api/placeholder/200/200" alt="Mark Davis" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div class="text-center">
-              <h3 class="font-semibold text-gray-800">Mark Davis</h3>
-              <p class="text-sm text-gray-500">Sourdough Baker • Seattle</p>
-              <div class="flex justify-center space-x-1 mt-1">
-                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs">Baking</span>
-                <span class="px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full text-xs">Fermentation</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">3 mutual friends</p>
-              <div class="mt-4">
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-user-plus mr-2"></i> Add Friend
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-        
-        <!-- Suggestion Card 4 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="h-32 bg-orange-50 relative">
-            <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('/api/placeholder/400/200')"></div>
-            <div class="absolute top-2 right-2">
-              <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">85% Match</span>
+        <div class="text-center">
+            <h3 class="font-semibold text-gray-800">{{$user->name}}</h3>
+            <p class="text-sm text-gray-500">{{ '@' . $user->user_name}}</p>
+            <p class="text-xs text-gray-500 mt-2">10 mutual friends</p>
+            <div class="mt-4">
+            <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
+                <i class="fas fa-user-plus mr-2"></i> Add Friend
+            </button>
             </div>
-          </div>
-          <div class="relative px-4 pt-12 pb-5">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-                <img src="/api/placeholder/200/200" alt="Olivia Kim" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div class="text-center">
-              <h3 class="font-semibold text-gray-800">Olivia Kim</h3>
-              <p class="text-sm text-gray-500">Food Photographer • LA</p>
-              <div class="flex justify-center space-x-1 mt-1">
-                <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">Styling</span>
-                <span class="px-2 py-0.5 bg-pink-100 text-pink-800 rounded-full text-xs">Desserts</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">8 mutual friends</p>
-              <div class="mt-4">
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-user-plus mr-2"></i> Add Friend
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-        
-        <!-- Suggestion Card 5 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="h-32 bg-orange-50 relative">
-            <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('/api/placeholder/400/200')"></div>
-            <div class="absolute top-2 right-2">
-              <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">70% Match</span>
-            </div>
-          </div>
-          <div class="relative px-4 pt-12 pb-5">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-                <img src="/api/placeholder/200/200" alt="Carlos Mendez" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div class="text-center">
-              <h3 class="font-semibold text-gray-800">Carlos Mendez</h3>
-              <p class="text-sm text-gray-500">Grill Master • Houston</p>
-              <div class="flex justify-center space-x-1 mt-1">
-                <span class="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs">BBQ</span>
-                <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">Mexican</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">4 mutual friends</p>
-              <div class="mt-4">
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-user-plus mr-2"></i> Add Friend
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-        
-        <!-- Suggestion Card 6 -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-          <div class="h-32 bg-orange-50 relative">
-            <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('/api/placeholder/400/200')"></div>
-            <div class="absolute top-2 right-2">
-              <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">83% Match</span>
-            </div>
-          </div>
-          <div class="relative px-4 pt-12 pb-5">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-                <img src="/api/placeholder/200/200" alt="Amara Jackson" class="w-full h-full object-cover">
-              </div>
-            </div>
-            <div class="text-center">
-              <h3 class="font-semibold text-gray-800">Amara Jackson</h3>
-              <p class="text-sm text-gray-500">Soul Food • Atlanta</p>
-              <div class="flex justify-center space-x-1 mt-1">
-                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs">Southern</span>
-                <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">Comfort</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">6 mutual friends</p>
-              <div class="mt-4">
-                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-user-plus mr-2"></i> Add Friend
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+  </div>
+@endforeach
       </div>
     </div>
     <div x-show="activeTab === 'friends'" class="space-y-6">
