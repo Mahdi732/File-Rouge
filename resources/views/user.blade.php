@@ -360,6 +360,9 @@
                 
                 <!-- Password Settings -->
                 <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+                    <div id="password_respond">
+                            
+                    </div>
                     <h3 class="font-bold text-lg mb-4">Change Password</h3>
                     <form class="space-y-4"
                     hx-post="{{ route('password.update') }}"
@@ -367,29 +370,18 @@
                     @csrf
                     @method("PATCH")
                         <div>
-                            <label name="old_password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                            <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
-                        </div>
-
-                        <div id="success-notification">
-                            <div class="mt-2 bg-green-50 border-l-4 border-green-500 text-green-700 p-3 rounded-r-lg">
-                                <div class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span id="password_respond" class="text-green-800 font-medium"></span>
-                                </div>
-                            </div>
+                            <label  class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                            <input name="old_password" type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                            <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
+                            <input name="new_password" type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
                         <div>
                             <label name="new_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                            <input type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
+                            <input name="new_password_confirm" type="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300">
                         </div>
                         
                         <div class="flex justify-end">
@@ -453,64 +445,107 @@
                 </div>
                 
                 <!-- Danger Zone -->
-                <div class="bg-red-50 p-6 rounded-lg border border-red-200">
-                    <h3 class="font-bold text-lg text-red-600 mb-4">Danger Zone</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-gray-700 mb-2">Deactivate Account</p>
-                            <p class="text-sm text-gray-600 mb-3">Temporarily disable your account. You can reactivate it anytime by logging in.</p>
-                            <button class="bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50">Deactivate Account</button>
+                <div class="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
+                    <div class="flex items-center mb-6">
+                        <svg class="h-6 w-6 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <h3 class="text-2xl font-bold text-red-600">Danger Zone</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Deactivate Account Section -->
+                        <div class="p-5 bg-red-50 rounded-lg border border-red-100">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-1">Deactivate Account</h4>
+                                    <p class="text-sm text-gray-600">Temporarily disable your account. You can reactivate it anytime by logging in.</p>
+                                </div>
+                                <button class="ml-4 bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1">
+                                    Deactivate
+                                </button>
+                            </div>
                         </div>
 
-                        <div x-data="{ showForm: false }">
-                            <!-- Toggle Button -->
-                            <p class="text-gray-700 mb-2">Delete Account</p>
-                            <p class="text-sm text-gray-600 mb-3">Permanently delete your account and all your data. This action cannot be undone.</p>
-                            <button @click="showForm = !showForm"  class="bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50">Delete Account</button>
+                        <!-- Delete Account Section -->
+                        <div x-data="{ showForm: false }" class="p-5 bg-red-50 rounded-lg border border-red-100">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-1">Delete Account</h4>
+                                    <p class="text-sm text-gray-600">Permanently delete your account and all your data. This action cannot be undone.</p>
+                                </div>
+                                <button 
+                                    @click="showForm = !showForm" 
+                                    class="ml-4 bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
+                                >
+                                    Delete Account
+                                </button>
+                            </div>
+
+                            <!-- Delete Form (Animated) -->
                             <form 
-                                hx-post="{{ route('profile.delete') }}"  
-                                hx-target="#all_content"
-                                x-show="showForm" 
+                                x-show="showForm"
                                 x-transition:enter="transition ease-out duration-300"
-                                x-transition:enter-start="opacity-0 transform scale-95"
-                                x-transition:enter-end="opacity-100 transform scale-100"
+                                x-transition:enter-start="opacity-0 translate-y-4"
+                                x-transition:enter-end="opacity-100 translate-y-0"
                                 x-transition:leave="transition ease-in duration-200"
-                                x-transition:leave-start="opacity-100 transform scale-100"
-                                x-transition:leave-end="opacity-0 transform scale-95"
-                                class="mt-6 p-6 bg-red-50 border border-red-700 rounded-lg shadow-lg space-y-4"
+                                x-transition:leave-start="opacity-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 translate-y-4"
+                                hx-post="{{ route('profile.delete') }}"  
+                                hx-target="#delete_account_error"
+                                class="mt-5 p-5 bg-white border border-red-300 rounded-lg shadow-sm space-y-4"
                             >
-                            @csrf
-                            @method('DELETE')
+                                @csrf
+                                @method('DELETE')
+                                
+                                <div id="delete_account_error" class="text-red-600 text-sm"></div>
+                                
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                                     <input 
                                         name="email"
                                         type="email" 
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
-                                        placeholder="Enter your name"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-transparent transition duration-200" 
+                                        placeholder="your@email.com"
+                                        required
                                     >
                                 </div>
+                                
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                                     <input 
                                         name="password"
                                         type="password" 
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
-                                        placeholder="Enter your email"
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-transparent transition duration-200" 
+                                        placeholder="••••••••"
+                                        required
                                     >
                                 </div>
-                                <button 
-                                    type="submit"
-                                    class="bg-white border border-red-500 text-red-500 px-4 py-2 rounded-lg hover:bg-red-50" 
-                                >
-                                    Submit
-                                </button>
+                                
+                                <div class="flex justify-end space-x-3 pt-2">
+                                    <button 
+                                        @click="showForm = false" 
+                                        type="button" 
+                                        class="px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
+                                    >
+                                        Confirm Deletion
+                                    </button>
+                                </div>
                             </form>
                         </div>
-                        <!-- Save Changes Button -->
-                        <div class="mt-6 flex justify-end">
-                            <button class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600">Save Changes</button>
-                        </div>
+                    </div>
+                    
+                    <!-- Save Changes Button -->
+                    <div class="mt-8 pt-5 border-t border-gray-200 flex justify-end">
+                        <button class="px-6 py-3 bg-orange-500 text-white font-medium rounded-lg hover:bg-orange-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-1">
+                            Save Changes
+                        </button>
                     </div>
                 </div>
             </div>

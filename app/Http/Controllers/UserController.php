@@ -90,7 +90,7 @@ class UserController extends Controller
             'bio' => $request->bio,
         ]);
 
-        return view("partial.errorHandler");
+        return view("partial.updated")->with('update', 'your Profile has been successfuly updated!👌👌');
     }
 
     public function updateProfilePicture(Request $request) {
@@ -115,7 +115,7 @@ class UserController extends Controller
             'profile_picture' => $path,
         ]);
 
-        return view("partial.updated");
+        return view("partial.updated")->with('update',  'Your profile Picture has been successfully updated!');
     }
     
     public function deleteAccount(Request $request) {
@@ -129,19 +129,45 @@ class UserController extends Controller
 
         if ($user) {
             if (!Hash::check($request->password, $user->password)) {
-                return 'Invalid password try another time';
+                return view('partial.errorHandler')->with('error', 'the password you enter is not correct pkease try another time.');
             }
             $user->forceDelete();
-            return redirect('/login');
+            if ($request->header('HX-Request')) {
+                $redirectUrl = route('login.auth') . '?success=' . urlencode('Your account has been successfully deleted.');
+                return response()->json([
+                    'redirect' => $redirectUrl
+                ])->withHeaders([
+                    'HX-Redirect' => $redirectUrl
+                ]);
+            }
         }
 
-        return 'Invalid email try another time';
+        return view('partial.errorHandler')->with('error', 'Invalid email try another time.');
     }
 
     public function updatePassword(Request $request) {
-        if ($request !== "123456") {
-            return "this is not you real pass";
+
+        $request->validate([
+            "old_password" => "required|string|min:8",
+            "new_password" => "required|string|min:8",
+            "new_password_confirm" => "required|string|min:8",
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return view("partial.errorHandler")->with('error', 'This password is not the correct password ');
         }
+
+        if ($request->new_password !== $request->new_password_confirm) {
+            return view("partial.errorHandler")->with('error', 'the new password that you enter is not the same.');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password_confirm),
+        ]);
+        
+        return view('partial.updated')->with('update', 'your password has been successfully updated! 🤞🤞🤞');
     }
 
     public function getUserInfo(){
