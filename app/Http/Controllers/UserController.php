@@ -136,7 +136,9 @@ class UserController extends Controller
         return 'Invalid email try another time';
     }
 
-    
+    public function updatePassword(Request $request) {
+        
+    }
 
     public function getUserInfo(){
         $user = Auth::user();
