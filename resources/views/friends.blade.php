@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CookNShare - Friend Requests</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -205,10 +206,17 @@
       <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
         <h2 class="text-xl font-semibold text-gray-800">People You May Know</h2>
         <div class="flex flex-col sm:flex-row gap-3">
-          <div class="relative">
-            <input type="text" placeholder="Search people..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
-            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-          </div>
+            <form 
+            hx-get="{{ route('search.friend') }}"
+            hx-target="#fiend_add_response"
+            hx-swap="innerHTML"
+            hx-trigger="keyup changed delay:200ms"
+            >
+              <div class="relative">
+              <input name="search_for_friend_input" type="text" placeholder="Search people..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            </form>
           <select class="pl-4 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none appearance-none bg-white">
             <option>All Interests</option>
             <option>Baking</option>
@@ -220,35 +228,35 @@
       </div>
       
       <!-- Suggestions Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div id="fiend_add_response" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- Suggestion Card  -->
         @foreach ($users as $user)
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-        <div class="h-32 bg-orange-50 relative">
-        <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('https://img.uhdpaper.com/wallpaper/anime-girl-fantasy-art-635@0@f-thumb.jpg?dl')"></div>
-        <div class="absolute top-2 right-2">
-            <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">87% Match</span>
-        </div>
-        </div>
-        <div class="relative px-4 pt-12 pb-5">
-        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-            <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-            <img src="{{asset('storage/' . $user->profile_picture)}}" alt="{{$user->name}}" class="w-full h-full object-cover">
-            </div>
-        </div>
-        <div class="text-center">
-            <h3 class="font-semibold text-gray-800">{{$user->name}}</h3>
-            <p class="text-sm text-gray-500">{{ '@' . $user->user_name}}</p>
-            <p class="text-xs text-gray-500 mt-2">10 mutual friends</p>
-            <div class="mt-4">
-            <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                <i class="fas fa-user-plus mr-2"></i> Add Friend
-            </button>
-            </div>
-        </div>
-        </div>
-  </div>
-@endforeach
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
+                <div class="h-32 bg-orange-50 relative">
+                <div class="absolute inset-0 opacity-50 bg-center bg-cover" style="background-image: url('https://img.uhdpaper.com/wallpaper/anime-girl-fantasy-art-635@0@f-thumb.jpg?dl')"></div>
+                <div class="absolute top-2 right-2">
+                    <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">87% Match</span>
+                </div>
+                </div>
+                <div class="relative px-4 pt-12 pb-5">
+                <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                    <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
+                    <img src="{{asset('storage/' . $user->profile_picture)}}" alt="{{$user->name}}" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-semibold text-gray-800">{{$user->name}}</h3>
+                    <p class="text-sm text-gray-500">{{ '@' . $user->user_name}}</p>
+                    <p class="text-xs text-gray-500 mt-2">10 mutual friends</p>
+                    <div class="mt-4">
+                    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i> Add Friend
+                    </button>
+                    </div>
+                </div>
+                </div>
+          </div>
+        @endforeach
       </div>
     </div>
     <div x-show="activeTab === 'friends'" class="space-y-6">
