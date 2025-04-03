@@ -10,21 +10,14 @@ class friendController extends Controller
 {
     public function index() {
         $authUser = Auth::user();
-
-        if (!$authUser) {
-            $users = User::where()
-                    ->orderBy('name')
-                    ->take(6)
-                    ->get();
+    
+        $users = User::when($authUser, function($query) use ($authUser) {
+                $query->where('id', '!=', $authUser->id);
+            })
+            ->orderBy('name')
+            ->take(8)
+            ->get();
         
-        return view('friends', ['users' => $users]);
-        }
-        
-        $users = User::where('id', '!=', $authUser->id)
-                    ->orderBy('name')
-                    ->take(6)
-                    ->get();
-        
-        return view('friends', ['users' => $users]);
+        return view('friends', compact('users'));
     }
 }

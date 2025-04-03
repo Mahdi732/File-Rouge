@@ -233,7 +233,7 @@
         <div class="relative px-4 pt-12 pb-5">
         <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
             <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden">
-            <img src="{{asset('storage' . $user->profile_picture)}}" alt="{{$user->name}}" class="w-full h-full object-cover">
+            <img src="{{asset('storage/' . $user->profile_picture)}}" alt="{{$user->name}}" class="w-full h-full object-cover">
             </div>
         </div>
         <div class="text-center">
