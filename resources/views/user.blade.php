@@ -51,57 +51,91 @@
         @include('partial.nav')
     @endif
     <!-- Profile Header Section -->
-    <section class="bg-[#FEFCE8] py-8 px-8">
-        <div class="container mx-auto">
-            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
-                <div x-data="{ showUpload: false}" class="relative inline-block">
-                <!-- Profile Image -->
-                <div x-data="{ showUpload: false }" class="relative">
-                    <div class="w-36 h-36 rounded-full overflow-hidden bg-white border-4 border-white shadow-lg">
-                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="w-full h-full object-cover">
+    <section class="bg-cover bg-center py-16 px-4 relative" style="background-image: url('{{ asset('storage/' . $user->background_image) }}');" x-data="{ showBgUpload: false, showProfileUpload: false }">
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+        
+        <div class="container mx-auto relative z-10">
+            <!-- Background Image Edit Button -->
+            <div class="absolute top-4 right-4">
+                <!-- Background Upload Form -->
+                <div x-show="showBgUpload" @click.away="showBgUpload = false" class="absolute right-0 mt-2 z-50 w-64 bg-white p-4 rounded-lg shadow-xl">
+                    <form id="bgImageForm" 
+                        hx-post="{{ route('profile.update.background') }}"
+                        hx-target="#picture_update"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PATCH')
+                        <input name="background_image" type="file" class="text-sm mb-3 w-full">
+                        <div class="flex gap-2">
+                            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm flex-1">
+                                Upload
+                            </button>
+                            <button @click="showBgUpload = false" type="button" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    
+            <!-- Profile Content -->
+            <div class="flex flex-col md:flex-row items-center gap-8 bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+                <!-- Profile Picture with Upload -->
+                <div class="relative">
+                    <div class="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-avatar.jpg') }}" 
+                             alt="Profile Picture" 
+                             class="w-full h-full object-cover">
                     </div>
-                    <button @click="showUpload = !showUpload" class="absolute bottom-0 right-0 bg-orange-500 text-white rounded-full p-2 shadow-lg">
+                    <button @click="showProfileUpload = true" 
+                            class="absolute bottom-0 right-0 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-lg transition-transform hover:scale-110">
                         <i class="fas fa-camera"></i>
                     </button>
-                    <div x-show="showUpload" @click.away="showUpload = false" class="absolute mt-2 right-0 bg-white p-3 rounded-lg shadow-lg z-10">
+                    
+                    <!-- Profile Picture Upload Form -->
+                    <div x-show="showProfileUpload" @click.away="showProfileUpload = false" 
+                         class="absolute z-10 mt-2 right-0 bg-white p-4 rounded-lg shadow-xl w-64">
                         <form id="profileImageForm" 
-                        hx-post="{{ route('profile.update.picture') }}"
-                        hx-target="#picture_update" 
-                        enctype="multipart/form-data"
-                        >
-                        @csrf
-                        @method('PUT')
-                        <input name="image" type="file" class="text-sm">
-                        <button class="orange-button text-white px-3 py-1 rounded text-sm mt-2 w-full">Upload</button>
-                    </form>
-
-                    <div id="picture_update">
-                       
+                              hx-post="{{ route('profile.update.picture') }}"
+                              hx-target="#picture_update"
+                              enctype="multipart/form-data">
+                            @csrf
+                            @method('PATCH')
+                            <input name="image" type="file" class="text-sm mb-3 w-full">
+                            <div class="flex gap-2">
+                                <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm flex-1">
+                                    Upload
+                                </button>
+                                <button @click="showProfileUpload = false" type="button" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                        <div id="picture_update"></div>
                     </div>
-
-                    </div>
-                </div>
                 </div>
                 
                 <!-- Profile Info -->
                 <div class="flex-grow text-center md:text-left">
-                    <h1 class="text-2xl font-bold mb-2">{{$user->name}}</h1>
-                    <p class="text-gray-600 mb-3">{{'@' . $user->user_name}}</p>
-                    <div class="flex flex-wrap gap-3 justify-center md:justify-start">
-                        <span class="bg-orange-100 text-orange-500 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-utensils mr-1"></i> 24 Recipes
+                    <h1 class="text-3xl font-bold mb-1 text-gray-800">{{ $user->name }}</h1>
+                    <p class="text-gray-600 mb-3">{{ '@' . $user->user_name }}</p>
+                    <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                        <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-utensils mr-1"></i> {{ $user->recipes_count }} Recipes
                         </span>
-                        <span class="bg-orange-100 text-orange-500 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-heart mr-1"></i> 45 Favorites
+                        <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-heart mr-1"></i> {{ $user->favorites_count }} Favorites
                         </span>
                     </div>
-                    <p class="mt-4 text-gray-700">{{ $user->bio }}</p>
+                    <p class="mt-4 text-gray-700 max-w-prose">{{ $user->bio }}</p>
                 </div>
                 
                 <!-- Edit Profile Button -->
-                <div x-data="{ showEdit: false }">
-                    <button @click="showEdit = !showEdit" class="outline-button bg-transparent px-5 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-edit mr-2"></i> Edit Profile
+                <div class="md:ml-auto">
+                    <button  @click="showBgUpload = true"
+                            class="bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 px-4 py-2 rounded-lg flex items-center transition-colors">
+                        <i class="fas fa-edit mr-2"></i> Edit BackGround
                     </button>
                 </div>
             </div>

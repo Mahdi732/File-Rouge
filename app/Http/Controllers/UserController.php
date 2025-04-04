@@ -170,6 +170,33 @@ class UserController extends Controller
         return view('partial.updated')->with('update', 'your password has been successfully updated! 🤞🤞🤞');
     }
 
+    public function updateBackground(Request $request)
+    {
+        if (!Auth::check()){
+            return redirect()->route('login.auth')->with('error', 'Unothorized for this moment');
+        }
+
+        $request->validate([
+            'background_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5000',
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->hasFile('background_image')) {
+            if ($user->background_image && Storage::exists($user->background_image)) {
+                Storage::delete($user->background_image);
+            }
+            
+        }
+
+        $path = $request->file('background_image')->store('background', 'public');
+        $user->update([
+            'background_image' => $path
+        ]);
+
+        return view("partial.updated")->with('update',  'Your profile Picture has been successfully updated!');
+    }
+
     public function getUserInfo(){
         $user = Auth::user();
         return view("user", ['user' => $user]);
