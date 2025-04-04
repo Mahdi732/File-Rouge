@@ -50,4 +50,8 @@ class friendController extends Controller
 
         return view('partial.friendSearchResult', compact('users'));;
     }
+
+    public function addFriend($friend_id) {
+        
+    }
 }
