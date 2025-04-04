@@ -22,7 +22,7 @@
       <a href="{{ route('app.library') }}" class="text-gray-600 hover:text-orange-500 transition">Library</a>
       <a href="#" class="text-gray-600 hover:text-orange-500 transition">Shop</a>
       <a href="{{ route('app.media') }}" class="text-gray-600 hover:text-orange-500 transition">Community</a>
-      <a href="{{ route('app.friends') }}" class="text-gray-600 hover:text-orange-500 transition">Friends</a>
+      <a href="{{ route('friends') }}" class="text-gray-600 hover:text-orange-500 transition">Friends</a>
     </nav>
     <div class="flex space-x-2 ml-4">
       <a href="{{route('login.auth')}}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition">Sign In</a>
@@ -73,7 +73,7 @@
       <a href="{{ route('app.library') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Library</a>
       <a href="#" class="text-gray-600 hover:text-orange-500 py-2 border-b">Shop</a>
       <a href="{{ route('app.media') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Community</a>
-      <a href="{{ route('app.friends') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Friends</a>
+      <a href="{{ route('friends') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Friends</a>
       <div class="flex flex-col space-y-2 pt-2">
         <a href="{{route('login.auth')}}" class="bg-orange-500 hover:bg-orange-600 text-white text-center py-2 rounded-lg transition">Sign In</a>
         <a href="{{route('login.auth')}}" class="bg-orange-500 hover:bg-orange-600 text-white text-center py-2 rounded-lg transition">Sign Up</a>
@@ -95,7 +95,7 @@
             <a href="{{route('home')}}" class="text-gray-600 hover:text-orange-500">Home</a>
             <a href="{{ route('app.library') }}" class="text-gray-600 hover:text-orange-500">Biblio</a>
             <a href="{{ route('app.media') }}" class="text-gray-600 hover:text-orange-500">Community</a>
-            <a href="{{ route('app.friends') }}" class="text-gray-600 hover:text-orange-500">Friend</a>
+            <a href="{{ route('friends') }}" class="text-gray-600 hover:text-orange-500">Friend</a>
           </nav>
 
           <!-- User Menu -->
@@ -139,7 +139,7 @@
           <a href="{{route('home')}}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Home</a>
           <a href="{{ route('app.library') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Biblio</a>
           <a href="{{ route('app.media') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Community</a>
-          <a href="{{ route('app.friends') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Friend</a>
+          <a href="{{ route('friends') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Friend</a>
           <form action="{{ route('logout')}}" method="POST">
             @csrf
             <button type="submit" class="block px-4 py-2 text-gray-800 hover:bg-orange-100">Log Out</button>

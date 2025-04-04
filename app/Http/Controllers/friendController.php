@@ -22,9 +22,32 @@ class friendController extends Controller
     }
 
     public function searchFriend(Request $request) {
-        if ($request->search_for_friend_input === "a") {
-            return "test 1";
+        $search = $request->search_for_friend_input;
+        if ($search) {
+            $users = User::query()
+            ->where('user_name', 'LIKE', "%{$search}%")
+            ->orWhere('name', 'LIKE', "%{$search}%")
+            ->take(8)
+            ->get();
+
+            
+
+            if ($users->isEmpty()) {
+                return view('partial.notFoundMessage')->with('message', 'We couldnt find anything matching 😒😒😒');
+            }else {
+                return view('partial.friendSearchResult', compact('users'));
+            }
         }
-        return "88";
+
+        $authUser = Auth::user();
+
+        $users = User::when($authUser, function($query) use ($authUser) {
+            $query->where('id', '!=', $authUser->id);
+        })
+        ->orderBy('name')
+        ->take(8)
+        ->get();
+
+        return view('partial.friendSearchResult', compact('users'));;
     }
 }
