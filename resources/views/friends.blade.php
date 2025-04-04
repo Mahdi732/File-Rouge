@@ -260,7 +260,7 @@
                           <i class="fas fa-user-plus mr-2"></i> Add Friend
                       </button>
                       </form>
-                      <div id="send_request"></div>
+                      <div id="send_request" class="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none"></div>
                     </div>
                 </div>
                 </div>
