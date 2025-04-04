@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class friendController extends Controller
@@ -52,9 +53,21 @@ class friendController extends Controller
     }
 
     public function addFriend($friend_id) {
-        if ($friend_id === 5555) {
-            return view('partial.updated')->with('update', 'this is working' . $friend_id);
+        $user = Auth::user();
+
+            $existingRequest = DB::table('friend_requests')
+            ->where(function($query) use ($friend_id, $user) {
+                $query->where('receiver_id', $user->id)->where('sender_id', $friend_id);
+            })
+            ->orWhere(function($query) use ($user, $friend_id) {
+                $query->where('receiver_id', $friend_id)->where('sender_id', $user->id);
+            })
+            ->exists();
+
+        if ($existingRequest) {
+            return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you bitch ');
         }
-        return view('partial.updated')->with('update', 'this is not working' . $friend_id);
+           
+        
     }
 }
