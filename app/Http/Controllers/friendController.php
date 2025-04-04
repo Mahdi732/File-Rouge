@@ -22,9 +22,20 @@ class friendController extends Controller
     }
 
     public function searchFriend(Request $request) {
-        if ($request->search_for_friend_input === "a") {
-            return "test 1";
+        $search = $request->search_for_friend_input;
+        if ($search) {
+            $users = User::query()
+            ->where('user_name', 'LIKE', "%{$search}%")
+            ->orWhere('name', 'LIKE', "%{$search}%")
+            ->take(8)
+            ->get();
+
+            return view('partial.friendSearchResult', compact('users'));
+
+            if (isset($users)) {
+                return 'there';
+            }
         }
-        return "88";
+        return "";
     }
 }
