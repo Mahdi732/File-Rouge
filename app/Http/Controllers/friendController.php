@@ -53,6 +53,15 @@ class friendController extends Controller
     }
 
     public function addFriend($friend_id) {
+        if (!Auth::check()) {
+                $redirectUrl = route('login.auth') . '?success=' . urlencode('You have to login to send a request.');
+                return response()->json([
+                    'redirect' => $redirectUrl
+                ])->withHeaders([
+                    'HX-Redirect' => $redirectUrl
+                ]);
+        }
+
         $user = Auth::user();
 
             $existingRequest = DB::table('friend_requests')
@@ -65,9 +74,12 @@ class friendController extends Controller
             ->exists();
 
         if ($existingRequest) {
-            return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you  ');
+            return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you');
         }
-           
-        return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you  ');
+        DB::table('friend_requests')->insert([
+            'receiver_id' => $user->id,
+            'sender_id' => $friend_id,
+        ]);
+        return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
     }
 }
