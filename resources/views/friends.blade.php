@@ -255,6 +255,7 @@
                       <form 
                       hx-post="{{ route('addFriend.friend', $user->id)}}"
                       hx-target="#send_request">
+                      @csrf
                         <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
                           <i class="fas fa-user-plus mr-2"></i> Add Friend
                       </button>

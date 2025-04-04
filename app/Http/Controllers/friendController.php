@@ -50,4 +50,11 @@ class friendController extends Controller
 
         return view('partial.friendSearchResult', compact('users'));;
     }
+
+    public function addFriend($friend_id) {
+        if ($friend_id === 5555) {
+            return view('partial.updated')->with('update', 'this is working' . $friend_id);
+        }
+        return view('partial.updated')->with('update', 'this is not working' . $friend_id);
+    }
 }
