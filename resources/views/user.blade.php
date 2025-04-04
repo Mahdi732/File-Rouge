@@ -62,7 +62,7 @@
                 <div x-show="showBgUpload" @click.away="showBgUpload = false" class="absolute right-0 mt-2 z-50 w-64 bg-white p-4 rounded-lg shadow-xl">
                     <form id="bgImageForm" 
                         hx-post="{{ route('profile.update.background') }}"
-                        hx-target="#picture_update"
+                        hx-target="#background_update"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
@@ -76,6 +76,7 @@
                             </button>
                         </div>
                     </form>
+                    <div id="background_update"></div>
                 </div>
             </div>
     
