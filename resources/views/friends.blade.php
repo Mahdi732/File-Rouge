@@ -252,9 +252,14 @@
                     <p class="text-sm text-gray-500">{{ '@' . $user->user_name}}</p>
                     <p class="text-xs text-gray-500 mt-2">10 mutual friends</p>
                     <div class="mt-4">
-                    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                        <i class="fas fa-user-plus mr-2"></i> Add Friend
-                    </button>
+                      <form 
+                      hx-post="{{ route('addFriend.friend', $user->id)}}"
+                      hx-target="#send_request">
+                        <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
+                          <i class="fas fa-user-plus mr-2"></i> Add Friend
+                      </button>
+                      </form>
+                      <div id="send_request"></div>
                     </div>
                 </div>
                 </div>

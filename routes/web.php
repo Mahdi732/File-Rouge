@@ -67,6 +67,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->group(function () {
 Route::prefix('friend')->group(function () {
     Route::get('/', [FriendController::class, 'index'])->name('friends');
     Route::post('/search', [FriendController::class, 'searchFriend'])->name('search.friend');
+    Route::post('/addFriend/{id}', [FriendController::class, 'addFriend'])->name('addFriend.friend');
 });
 
 // Application Routes
