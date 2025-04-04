@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use function Laravel\Prompts\table;
+
 class friendController extends Controller
 {
     public function index() {
@@ -77,9 +79,21 @@ class friendController extends Controller
             return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you');
         }
         DB::table('friend_requests')->insert([
-            'receiver_id' => $user->id,
-            'sender_id' => $friend_id,
+            'receiver_id' => $friend_id,
+            'sender_id' => $user->id,
         ]);
         return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
+    }
+
+    public function afficheRequest() {
+        $user =Auth::user();
+
+        $request = DB::table('friend_requests')
+        ->where('receiver_id', $user->id)
+        ->join('users', 'friend_request.sender_id', '=', 'users.id')
+        ->select('user.name', 'user.user_name', 'user.bio', 'user.profile_picture', 'user.background_image')
+        ->get();
+
+        return view('partial.friend.requestFriend', compact('request'));
     }
 }
