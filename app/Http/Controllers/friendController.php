@@ -22,6 +22,9 @@ class friendController extends Controller
     }
 
     public function searchFriend(Request $request) {
-        
+        if ($request->search_for_friend_input === "a") {
+            return "test 1";
+        }
+        return "88";
     }
 }
