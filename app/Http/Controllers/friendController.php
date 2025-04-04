@@ -30,12 +30,24 @@ class friendController extends Controller
             ->take(8)
             ->get();
 
-            return view('partial.friendSearchResult', compact('users'));
+            
 
-            if (isset($users)) {
-                return 'there';
+            if ($users->isEmpty()) {
+                return view('partial.notFoundMessage')->with('message', 'We couldnt find anything matching 😒😒😒');
+            }else {
+                return view('partial.friendSearchResult', compact('users'));
             }
         }
-        return "";
+
+        $authUser = Auth::user();
+
+        $users = User::when($authUser, function($query) use ($authUser) {
+            $query->where('id', '!=', $authUser->id);
+        })
+        ->orderBy('name')
+        ->take(8)
+        ->get();
+
+        return view('partial.friendSearchResult', compact('users'));;
     }
 }
