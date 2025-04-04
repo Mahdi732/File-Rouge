@@ -65,9 +65,9 @@ class friendController extends Controller
             ->exists();
 
         if ($existingRequest) {
-            return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you bitch ');
+            return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you  ');
         }
            
-        
+        return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you  ');
     }
 }
