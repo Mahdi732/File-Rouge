@@ -21,6 +21,15 @@ class PostController extends Controller
     }
 
     public function createPost(Request $request) {
+        if (!Auth::check()) {
+            $redirectUrl = route('login.auth') . '?success=' . urlencode('You have to login to send a request.');
+            return response()->json([
+                'redirect' => $redirectUrl
+            ])->withHeaders([
+                'HX-Redirect' => $redirectUrl
+            ]);
+        }
+
         
     }
 }
