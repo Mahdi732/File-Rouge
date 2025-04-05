@@ -13,15 +13,24 @@ class friendController extends Controller
 {
     public function index() {
         $authUser = Auth::user();
-    
+        
         $users = User::when($authUser, function($query) use ($authUser) {
                 $query->where('id', '!=', $authUser->id);
             })
             ->orderBy('name')
             ->take(8)
             ->get();
-        
-        return view('friends', compact('users'));
+    
+        $requests = $authUser ? DB::table('friend_requests')
+            ->where('receiver_id', $authUser->id)
+            ->join('users', 'friend_requests.sender_id', '=', 'users.id')
+            ->select('users.*')
+            ->get() : collect();
+    
+        return view('friends', [
+            'users' => $users,
+            'requests' => $requests
+        ]);
     }
 
     public function searchFriend(Request $request) {
@@ -85,15 +94,4 @@ class friendController extends Controller
         return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
     }
 
-    public function afficheRequest() {
-        $user =Auth::user();
-
-        $request = DB::table('friend_requests')
-        ->where('receiver_id', $user->id)
-        ->join('users', 'friend_request.sender_id', '=', 'users.id')
-        ->select('user.name', 'user.user_name', 'user.bio', 'user.profile_picture', 'user.background_image')
-        ->get();
-
-        return view('partial.friend.requestFriend', compact('request'));
-    }
 }
