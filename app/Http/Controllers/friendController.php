@@ -43,11 +43,16 @@ class friendController extends Controller
         ->select('users.*')
         ->get() : collect();
         
+        $pendingCount = DB::table('friend_requests')
+        ->where('receiver_id', $authUser->id)
+        ->where('status', 'pending')
+        ->count();
     
         return view('friends', [
             'users' => $users,
             'requests' => $requests,
-            'friends' => $friends
+            'friends' => $friends,
+            'CountRequest' => $pendingCount,
         ]);
     }
 
