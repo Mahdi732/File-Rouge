@@ -25,7 +25,7 @@ class friendController extends Controller
             ->where('receiver_id', $authUser->id)
             ->where('status', 'pending')
             ->join('users', 'friend_requests.sender_id', '=', 'users.id')
-            ->select('users.*')
+            ->select('users.*', 'friend_requests.id as request_id')
             ->get() : collect();
     
         return view('friends', [
@@ -100,6 +100,6 @@ class friendController extends Controller
     }
 
     public function rejectRequest($request_id) {
-        
+
     }
 }
