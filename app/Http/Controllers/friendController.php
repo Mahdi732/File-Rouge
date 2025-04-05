@@ -23,6 +23,7 @@ class friendController extends Controller
     
         $requests = $authUser ? DB::table('friend_requests')
             ->where('receiver_id', $authUser->id)
+            ->where('status', 'pending')
             ->join('users', 'friend_requests.sender_id', '=', 'users.id')
             ->select('users.*')
             ->get() : collect();
@@ -94,4 +95,11 @@ class friendController extends Controller
         return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
     }
 
+    public function acceptRequest($request_id) {
+
+    }
+
+    public function rejectRequest($request_id) {
+        
+    }
 }
