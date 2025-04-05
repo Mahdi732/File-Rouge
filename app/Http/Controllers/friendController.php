@@ -95,4 +95,11 @@ class friendController extends Controller
         return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
     }
 
+    public function acceptRequest($request_id) {
+
+    }
+
+    public function rejectRequest($request_id) {
+        
+    }
 }
