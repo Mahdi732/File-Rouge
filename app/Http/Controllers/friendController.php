@@ -7,19 +7,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use function Laravel\Prompts\table;
+
 class friendController extends Controller
 {
     public function index() {
         $authUser = Auth::user();
-    
+        
         $users = User::when($authUser, function($query) use ($authUser) {
                 $query->where('id', '!=', $authUser->id);
             })
             ->orderBy('name')
             ->take(8)
             ->get();
-        
-        return view('friends', compact('users'));
+    
+        $requests = $authUser ? DB::table('friend_requests')
+            ->where('receiver_id', $authUser->id)
+            ->join('users', 'friend_requests.sender_id', '=', 'users.id')
+            ->select('users.*')
+            ->get() : collect();
+    
+        return view('friends', [
+            'users' => $users,
+            'requests' => $requests
+        ]);
     }
 
     public function searchFriend(Request $request) {
@@ -77,9 +88,10 @@ class friendController extends Controller
             return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you');
         }
         DB::table('friend_requests')->insert([
-            'receiver_id' => $user->id,
-            'sender_id' => $friend_id,
+            'receiver_id' => $friend_id,
+            'sender_id' => $user->id,
         ]);
         return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
     }
+
 }
