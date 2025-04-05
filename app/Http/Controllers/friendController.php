@@ -23,6 +23,7 @@ class friendController extends Controller
     
         $requests = $authUser ? DB::table('friend_requests')
             ->where('receiver_id', $authUser->id)
+            ->where('status', 'pending')
             ->join('users', 'friend_requests.sender_id', '=', 'users.id')
             ->select('users.*')
             ->get() : collect();
