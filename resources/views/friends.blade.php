@@ -178,171 +178,40 @@
         
         <!-- Friends List -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Friend Card 1 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-            <div class="p-5">
+          <!-- Friend Card  -->
+          @foreach ($friends as $friend)
+          <div class="relative h-[15rem] rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300">
+            <!-- Background with gradient overlay -->
+            <div 
+              class="absolute inset-0 bg-[url('{{$friend->background_image ? asset('storage/' . $friend->background_image) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9zLLURPoXWGgSacq-v3HjFv0oHmEHVA8rFA&s"}}')] bg-cover bg-center"
+              style="filter: brightness(0.7)">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            
+            <!-- Content -->
+            <div class="relative z-10 p-6 text-white">
               <div class="flex items-start justify-between">
                 <div class="flex items-center">
-                  <div class="w-14 h-14 rounded-full overflow-hidden mr-4">
-                    <img src="/api/placeholder/200/200" alt="Thomas Wright" class="w-full h-full object-cover">
+                  <div class="w-16 h-16 rounded-full overflow-hidden mr-4 border-4 border-white/80 shadow-lg">
+                    <img src="{{$friend->profile_picture ? asset('storage/' . $friend->profile_picture) : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}}" alt="Profile Picture" class="w-full h-full object-cover">
                   </div>
                   <div>
-                    <h3 class="font-semibold text-gray-800">Thomas Wright</h3>
-                    <p class="text-sm text-gray-500">Sous Chef • Boston</p>
-                    <div class="flex space-x-1 mt-1">
-                      <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">Seafood</span>
+                    <h3 class="font-bold text-xl">{{ $friend->name}}</h3>
+                    <div class="flex items-center mt-1">
+                      <p class="text-orange-100 text-sm">{{ '@' .  $friend->user_name }}</p>
                     </div>
                   </div>
                 </div>
-                <div class="relative" x-data="{ open: false }">
-                  <button @click="open = !open" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-ellipsis-v"></i>
-                  </button>
-                  <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-10">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">View Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Send Message</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Unfriend</a>
-                  </div>
-                </div>
+                <span class="px-3 py-1 bg-orange-500/90 text-white rounded-full text-xs font-medium shadow-sm">{{\Carbon\Carbon::parse($friend->created_at)->diffForHumans()}}</span>
               </div>
-              <div class="mt-4">
-                <p class="text-sm text-gray-600">Active 5 hours ago</p>
-              </div>
-              <div class="mt-4 flex space-x-2">
-                <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-envelope mr-2"></i> Message
-                </button>
-                <button class="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center transition-colors">
-                  <i class="fas fa-user-tag text-gray-600"></i>
-                </button>
-              </div>
-            </div>
-          </div>
           
-          <!-- Friend Card 2 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-            <div class="p-5">
-              <div class="flex items-start justify-between">
-                <div class="flex items-center">
-                  <div class="w-14 h-14 rounded-full overflow-hidden mr-4 relative">
-                    <img src="/api/placeholder/200/200" alt="Rachel Green" class="w-full h-full object-cover">
-                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-800">Rachel Green</h3>
-                    <p class="text-sm text-gray-500">Pastry Chef • Denver</p>
-                    <div class="flex space-x-1 mt-1">
-                      <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs">Baking</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="relative" x-data="{ open: false }">
-                  <button @click="open = !open" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-ellipsis-v"></i>
-                  </button>
-                  <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-10">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">View Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Send Message</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Unfriend</a>
-                  </div>
-                </div>
+              <div class="mt-5 pl-2 border-l-2 border-orange-400">
+                <p class="text-orange-50 italic">"{{$friend->bio ? $friend->bio : "there's no description for this user"}}"</p>
               </div>
-              <div class="mt-4">
-                <p class="text-sm text-gray-600">Currently online</p>
-              </div>
-              <div class="mt-4 flex space-x-2">
-                <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-envelope mr-2"></i> Message
-                </button>
-                <button class="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center transition-colors">
-                  <i class="fas fa-user-tag text-gray-600"></i>
-                </button>
-              </div>
+
             </div>
           </div>
-          
-          <!-- Friend Card 3 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-            <div class="p-5">
-              <div class="flex items-start justify-between">
-                <div class="flex items-center">
-                  <div class="w-14 h-14 rounded-full overflow-hidden mr-4">
-                    <img src="/api/placeholder/200/200" alt="Hiroshi Tanaka" class="w-full h-full object-cover">
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-800">Hiroshi Tanaka</h3>
-                    <p class="text-sm text-gray-500">Sushi Chef • Tokyo</p>
-                    <div class="flex space-x-1 mt-1">
-                      <span class="px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full text-xs">Japanese</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="relative" x-data="{ open: false }">
-                  <button @click="open = !open" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-ellipsis-v"></i>
-                  </button>
-                  <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-10">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">View Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Send Message</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Unfriend</a>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-4">
-                <p class="text-sm text-gray-600">Active 2 days ago</p>
-              </div>
-              <div class="mt-4 flex space-x-2">
-                <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-envelope mr-2"></i> Message
-                </button>
-                <button class="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center transition-colors">
-                  <i class="fas fa-user-tag text-gray-600"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Friend Card 4 -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover">
-            <div class="p-5">
-              <div class="flex items-start justify-between">
-                <div class="flex items-center">
-                  <div class="w-14 h-14 rounded-full overflow-hidden mr-4 relative">
-                    <img src="/api/placeholder/200/200" alt="Maria Garcia" class="w-full h-full object-cover">
-                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-800">Maria Garcia</h3>
-                    <p class="text-sm text-gray-500">Chocolatier • Barcelona</p>
-                    <div class="flex space-x-1 mt-1">
-                      <span class="px-2 py-0.5 bg-pink-100 text-pink-800 rounded-full text-xs">Desserts</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="relative" x-data="{ open: false }">
-                  <button @click="open = !open" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-ellipsis-v"></i>
-                  </button>
-                  <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-10">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">View Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Send Message</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">Unfriend</a>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-4">
-                <p class="text-sm text-gray-600">Currently online</p>
-              </div>
-              <div class="mt-4 flex space-x-2">
-                <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition-colors">
-                  <i class="fas fa-envelope mr-2"></i> Message
-                </button>
-                <button class="w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center transition-colors">
-                  <i class="fas fa-user-tag text-gray-600"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+          @endforeach
         </div>
         
         <!-- Load More Button -->

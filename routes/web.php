@@ -68,6 +68,8 @@ Route::prefix('friend')->group(function () {
     Route::get('/', [FriendController::class, 'index'])->name('friends');
     Route::post('/search', [FriendController::class, 'searchFriend'])->name('search.friend');
     Route::post('/addFriend/{id}', [FriendController::class, 'addFriend'])->name('addFriend.friend');
+    Route::patch('/request/accept/{id}', [FriendController::class, "acceptRequest"])->name('accept.request.friend');
+    Route::delete('/request/reject/{id}', [FriendController::class, "rejectRequest"])->name('reject.request.friend');
 });
 
 // Application Routes

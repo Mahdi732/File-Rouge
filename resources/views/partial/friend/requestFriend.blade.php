@@ -1,26 +1,23 @@
 @if ($requests->isEmpty())
-<div class="bg-white rounded-xl shadow-sm p-6 text-center border border-gray-100">
-    <!-- Illustration -->
-    <div class="mx-auto w-20 h-20 mb-4 text-gray-300">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+<div class="bg-white rounded-xl p-8 text-center border border-gray-100 hover:border-gray-200 transition-all duration-300">
+    <!-- Minimalist SVG Icon (Thinner strokes, precise) -->
+    <div class="mx-auto w-20 h-20 mb-5 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="text-gray-300/90 w-14 h-14">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2-4a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
         </svg>
     </div>
     
-    <!-- Text Content -->
-    <h3 class="text-lg font-medium text-gray-700 mb-1">No Friend Requests Yet</h3>
-    <p class="text-gray-500 text-sm mb-4">When someone sends you a request, it will appear here</p>
-    
-    <!-- Action Button -->
-    <button class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-medium hover:shadow-md transition-all">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1 -mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Find Friends
-    </button>
+    <!-- Typography Hierarchy (Perfect contrast) -->
+    <div class="space-y-2">
+        <h3 class="text-xl font-semibold text-gray-900 tracking-tight">All Caught Up</h3>
+        <p class="text-gray-500/90 text-sm max-w-[240px] mx-auto leading-snug">
+            When someone sends a request, it’ll show up here.
+        </p>
+    </div>
 </div>
 @endif
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div id="friend_request" class="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none"></div>
 @foreach($requests as $request)
 <div class="relative rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300">
     <!-- Background with gradient overlay -->
@@ -44,23 +41,39 @@
             </div>
           </div>
         </div>
-        <span class="px-3 py-1 bg-orange-500/90 text-white rounded-full text-xs font-medium shadow-sm">3d ago</span>
+        <span class="px-3 py-1 bg-orange-500/90 text-white rounded-full text-xs font-medium shadow-sm">{{\Carbon\Carbon::parse($request->created_at)->diffForHumans()}}</span>
       </div>
   
       <div class="mt-5 pl-2 border-l-2 border-orange-400">
         <p class="text-orange-50 italic">"{{$request->bio ? $request->bio : "there's no description for this user"}}"</p>
       </div>
   
-      <div class="mt-6 flex space-x-3">
-        <button class="flex-1 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-all duration-200 transform group-hover:scale-[1.02]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          Accept
-        </button>
-        <button class="flex-1 bg-transparent hover:bg-white/20 text-white py-2.5 rounded-lg transition-all border border-white/30">
-          Decline
-        </button>
+      <div class="mt-6 flex gap-3">
+        <form 
+          hx-post="{{ route('accept.request.friend', $request->request_id) }}"
+          hx-target="#friend_request"
+          class="flex-1"
+        >
+        @csrf
+        @method('PATCH')
+          <button class="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 hover:shadow-md active:scale-[0.98]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            Accept
+          </button>
+        </form>
+        <form 
+          hx-post="{{ route('reject.request.friend', $request->request_id) }}"
+          hx-target="#friend_request"
+          class="flex-1"
+        >
+        @csrf
+        @method('DELETE')
+          <button class="w-full py-2.5 px-4 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 active:scale-[0.98]">
+            Decline
+          </button>
+        </form>
       </div>
     </div>
   </div>
