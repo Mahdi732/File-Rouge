@@ -11,12 +11,16 @@ class PostController extends Controller
     public function index () {
         $Authuser = Auth::user();
         $posts = DB::table('posts')
-        ->where('user_id', $Authuser)
+        ->where('user_id', $Authuser->id)
         ->select('posts.*')
         ->get();
 
         return view('media', [
             'posts' => $posts,
         ]);
+    }
+
+    public function createPost(Request $request) {
+        
     }
 }
