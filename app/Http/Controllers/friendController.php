@@ -27,10 +27,27 @@ class friendController extends Controller
             ->join('users', 'friend_requests.sender_id', '=', 'users.id')
             ->select('users.*', 'friend_requests.id as request_id')
             ->get() : collect();
+
+        $friends = $authUser ? DB::table('friend_requests')
+        ->where('status', 'accepted')
+        ->where(function($query) use ($authUser) {
+            $query->where('sender_id', $authUser->id)
+                ->orWhere('receiver_id', $authUser->id);
+        })
+        ->join('users', function($join) use ($authUser) {
+            $join->on('users.id', '=', DB::raw("CASE 
+                WHEN friend_requests.sender_id = {$authUser->id} THEN friend_requests.receiver_id 
+                ELSE friend_requests.sender_id 
+            END"));
+        })
+        ->select('users.*')
+        ->get() : collect();
+        
     
         return view('friends', [
             'users' => $users,
-            'requests' => $requests
+            'requests' => $requests,
+            'friends' => $friends
         ]);
     }
 
@@ -99,13 +116,24 @@ class friendController extends Controller
 
         DB::table('friend_requests')
         ->where('id', $request_id)
-        ->update(['status' => 'accept']);
-        
-        return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
+        ->update(['status' => 'accepted']);
+
+        return view('partial.updated')->with('update', 'The request has been successfully accepted.');
 
     }
 
     public function rejectRequest($request_id) {
+
+        $delete = DB::table('friend_requests')
+        ->where('id', $request_id)
+        ->where('status', 'pending')
+        ->delete();
+
+        if (!$delete) {
+            return view('partial.errorHandler')->with('error', 'You have already rejected this request or it does not exist.');
+        }
+
+        return view('partial.errorHandler')->with('error', 'The request has been rejected.');
 
     }
 }
