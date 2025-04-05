@@ -97,6 +97,12 @@ class friendController extends Controller
 
     public function acceptRequest($request_id) {
 
+        DB::table('friend_requests')
+        ->where('id', $request_id)
+        ->update(['status' => 'accept']);
+        
+        return view('partial.updated')->with('update', 'the request has been seccussfuly besended');
+
     }
 
     public function rejectRequest($request_id) {
