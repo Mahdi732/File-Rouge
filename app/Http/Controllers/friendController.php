@@ -133,7 +133,7 @@ class friendController extends Controller
             return view('partial.errorHandler')->with('error', 'You have already rejected this request or it does not exist.');
         }
 
-        return view('partial.errorHandler')->with('error', 'The request has been rejected.');
+        return view('partial.errorHandler')->with('error', 'The request has been rejected 💯');
 
     }
 }
