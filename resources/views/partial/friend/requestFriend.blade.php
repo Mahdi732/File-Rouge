@@ -52,15 +52,23 @@
       </div>
   
       <div class="mt-6 flex space-x-3">
-        <button class="flex-1 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-all duration-200 transform group-hover:scale-[1.02]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          Accept
-        </button>
-        <button class="flex-1 bg-transparent hover:bg-white/20 text-white py-2.5 rounded-lg transition-all border border-white/30">
-          Decline
-        </button>
+        <form 
+        hx-post="{{route('accept.request.friend', $request->request_id)}}"
+        hx-target="#send_request">
+            <button class="flex-1 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-all duration-200 transform group-hover:scale-[1.02]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Accept
+              </button>
+        </form>
+        <form 
+        hx-post="{{route('reject.request.friend', $request->request_id)}}"
+        hx-target="#send_request">
+            <button class="flex-1 bg-transparent hover:bg-white/20 text-white py-2.5 rounded-lg transition-all border border-white/30">
+                Decline
+            </button>
+        </form>
       </div>
     </div>
   </div>
