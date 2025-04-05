@@ -85,12 +85,9 @@
       </div>
       
       <!-- Friend Request List -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {{-- request form other user  --}}
         @if (View::exists('partial.friend.requestFriend'))
         @include('partial.friend.requestFriend')
        @endif
-      </div>
     </div>
     
     <!-- People You May Know Tab -->
