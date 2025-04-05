@@ -54,7 +54,7 @@
           :class="activeTab === 'requests' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
         >
           Friend Requests
-          <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-orange-100 text-orange-800">4</span>
+          <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-orange-100 text-orange-800">{{  $CountRequest }}</span>
         </button>
         <button 
           @click="activeTab = 'suggestions'" 
@@ -78,10 +78,6 @@
       <!-- Search Section -->
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-semibold text-gray-800">Friend Requests</h2>
-        <div class="relative">
-          <input type="text" placeholder="Search requests..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
-          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-        </div>
       </div>
       
       <!-- Friend Request List -->
@@ -108,13 +104,6 @@
               <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
             </form>
-          <select class="pl-4 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none appearance-none bg-white">
-            <option>All Interests</option>
-            <option>Baking</option>
-            <option>Grilling</option>
-            <option>Vegan</option>
-            <option>International</option>
-          </select>
         </div>
       </div>
       
@@ -163,16 +152,6 @@
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
           <h2 class="text-xl font-semibold text-gray-800">Your Friends</h2>
           <div class="flex flex-col sm:flex-row gap-3">
-            <div class="relative">
-              <input type="text" placeholder="Search friends..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
-              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-            <select class="pl-4 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none appearance-none bg-white">
-              <option>All Friends</option>
-              <option>Recent Activity</option>
-              <option>Newest Friends</option>
-              <option>Alphabetical</option>
-            </select>
           </div>
         </div>
         

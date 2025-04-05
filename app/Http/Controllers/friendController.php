@@ -43,11 +43,16 @@ class friendController extends Controller
         ->select('users.*')
         ->get() : collect();
         
+        $pendingCount = DB::table('friend_requests')
+        ->where('receiver_id', $authUser->id)
+        ->where('status', 'pending')
+        ->count();
     
         return view('friends', [
             'users' => $users,
             'requests' => $requests,
-            'friends' => $friends
+            'friends' => $friends,
+            'CountRequest' => $pendingCount,
         ]);
     }
 
@@ -133,7 +138,7 @@ class friendController extends Controller
             return view('partial.errorHandler')->with('error', 'You have already rejected this request or it does not exist.');
         }
 
-        return view('partial.errorHandler')->with('error', 'The request has been rejected.');
+        return view('partial.errorHandler')->with('error', 'The request has been rejected 💯');
 
     }
 }
