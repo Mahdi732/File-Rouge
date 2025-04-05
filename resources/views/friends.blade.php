@@ -86,52 +86,10 @@
       
       <!-- Friend Request List -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <div class="relative rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300">
-          <!-- Background with gradient overlay -->
-          <div 
-            class="absolute inset-0 bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9zLLURPoXWGgSacq-v3HjFv0oHmEHVA8rFA&s')] bg-cover bg-center"
-            style="filter: brightness(0.7)">
-          </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          
-          <!-- Content -->
-          <div class="relative z-10 p-6 text-white">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center">
-                <div class="w-16 h-16 rounded-full overflow-hidden mr-4 border-4 border-white/80 shadow-lg">
-                  <img src="/api/placeholder/200/200" alt="James Wilson" class="w-full h-full object-cover">
-                </div>
-                <div>
-                  <h3 class="font-bold text-xl">James Wilson</h3>
-                  <div class="flex items-center mt-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-orange-300 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                    </svg>
-                    <p class="text-orange-100 text-sm">BBQ Master • Austin, TX</p>
-                  </div>
-                </div>
-              </div>
-              <span class="px-3 py-1 bg-orange-500/90 text-white rounded-full text-xs font-medium shadow-sm">3d ago</span>
-            </div>
-        
-            <div class="mt-5 pl-2 border-l-2 border-orange-400">
-              <p class="text-orange-50 italic">"Passionate about slow-smoked brisket and homemade rubs. Let's grill together!"</p>
-            </div>
-        
-            <div class="mt-6 flex space-x-3">
-              <button class="flex-1 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg transition-all duration-200 transform group-hover:scale-[1.02]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Accept
-              </button>
-              <button class="flex-1 bg-transparent hover:bg-white/20 text-white py-2.5 rounded-lg transition-all border border-white/30">
-                Decline
-              </button>
-            </div>
-          </div>
-        </div>
+        {{-- request form other user  --}}
+        @if (View::exists('partial.friend.requestFriend'))
+        @include('partial.friend.requestFriend')
+       @endif
       </div>
     </div>
     
