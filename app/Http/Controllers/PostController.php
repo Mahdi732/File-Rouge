@@ -9,19 +9,33 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function index () {
-        if (Auth::check()) {
+        if (!Auth::check()) {
             return view('media')->with('message', "you have to be login to able to create or see friends post");
         }
 
-        $Authuser = Auth::user();
-        $posts = DB::table('posts')
-        ->where('user_id', $Authuser->id)
-        ->select('posts.*')
-        ->get();
+        $authUser = Auth::user();
 
-        return view('media', [
-            'posts' => $posts,
-        ]);
+        $posts = $authUser ? DB::table('posts')
+        ->join('users', 'posts.user_id', '=', 'users.id')
+        ->leftJoin('friend_requests', function ($join) use ($authUser) {
+            $join->on(function ($query) use ($authUser) {
+                $query->on('friend_requests.sender_id', '=', 'posts.user_id')
+                    ->where('friend_requests.receiver_id', '=', $authUser->id);
+            })->orOn(function ($query) use ($authUser) {
+                $query->on('friend_requests.receiver_id', '=', 'posts.user_id')
+                    ->where('friend_requests.sender_id', '=', $authUser->id);
+            });
+        })
+        ->where(function ($query) use ($authUser) {
+            $query->where('posts.user_id', $authUser->id)
+                ->orWhere('friend_requests.status', 'accepted');
+        })
+        ->select('posts.*', 'users.*')
+        ->orderBy('posts.created_at', 'desc')
+        ->take(8)
+        ->get() : "you need to loggin";
+
+        return view('media', compact('posts'));
     }
 
     public function createPost(Request $request) {
@@ -45,11 +59,12 @@ class PostController extends Controller
         DB::table('posts')
         ->insert([
             'description' => $request->description,
-            'picture' => $request->hasFile('picture') ? $request->file('picture')->store('posts/video', 'public') : null,
-            'video' => $request->hasFile('video') ? $request->file('video')->store('posts/picture', 'public') : null,
+            'picture' => $request->hasFile('picture') ? $request->file('picture')->store('post/picture', 'public') : null,
+            'video' => $request->hasFile('video') ? $request->file('video')->store('post/video', 'public') : null,
             'user_id' => $user->id,
         ]);
 
-        return redirect()->route('post.create.media');
+        return redirect()->route('post.media');
     }
+
 }
