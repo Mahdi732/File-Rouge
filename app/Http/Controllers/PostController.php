@@ -22,7 +22,7 @@ class PostController extends Controller
 
     public function createPost(Request $request) {
         if (!Auth::check()) {
-            $redirectUrl = route('login.auth') . '?success=' . urlencode('You have to login to send a request.');
+            $redirectUrl = route('login.auth') . '?success=' . urlencode('You have to login to create Post. 🤷‍♂️🤷‍♂️🤷‍♂️');
             return response()->json([
                 'redirect' => $redirectUrl
             ])->withHeaders([
@@ -30,6 +30,19 @@ class PostController extends Controller
             ]);
         }
 
-        
+        $request->validate([
+            'description' => 'reqiured|string|max:1000',
+            'picture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:51200',
+            'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:51200',
+        ]);
+
+        $user = Auth::user();
+
+        $newPosts = DB::table('posts')
+        ->insert([
+            'description' => $request->description,
+            'picture' => $request->hasFile('picture') ? $request->file('picture')->store('posts/video', 'public') : null,
+            'video' => $request->hasFile('video') ? $request->file('video')->store('posts/picture', 'public') : null,
+        ]);
     }
 }
