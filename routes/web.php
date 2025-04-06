@@ -77,7 +77,7 @@ Route::prefix('friend')->group(function () {
 // Friend Route
 Route::prefix('media')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('post.media');
-
+    Route::post('/create/post', [PostController::class, 'createPost'])->name('post.create.media');
 });
 
 // Application Routes

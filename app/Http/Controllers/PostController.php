@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function index () {
+        if (Auth::check()) {
+            return view('media')->with('message', "you have to be login to able to create or see friends post");
+        }
+
         $Authuser = Auth::user();
         $posts = DB::table('posts')
         ->where('user_id', $Authuser->id)
@@ -38,11 +42,12 @@ class PostController extends Controller
 
         $user = Auth::user();
 
-        $newPosts = DB::table('posts')
+        DB::table('posts')
         ->insert([
             'description' => $request->description,
             'picture' => $request->hasFile('picture') ? $request->file('picture')->store('posts/video', 'public') : null,
             'video' => $request->hasFile('video') ? $request->file('video')->store('posts/picture', 'public') : null,
+            'user_id' => $user->id,
         ]);
     }
 }
