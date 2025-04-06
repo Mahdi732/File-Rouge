@@ -220,7 +220,7 @@
                     <form action="{{ route('post.create.media') }}" method="post">
                         @csrf
                         <textarea 
-                            name="description"
+                        name="description"
                         x-model="textPost.content"
                         class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-spice focus:border-transparent" 
                         rows="6"
@@ -281,20 +281,6 @@
                 </div>
             </div>
             
-            <!-- Footer -->
-            <div class="p-4 border-t flex justify-end">
-                <button 
-                    @click="openComposer = false"
-                    class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
-                    Cancel
-                </button>
-                <button 
-                    @click="submitPost()"
-                    :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
-                    class="px-4 py-2 rounded-lg font-medium text-white">
-                    Share
-                </button>
-            </div>
         </div>
     </div>
 
