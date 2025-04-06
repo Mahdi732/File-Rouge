@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\friendController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -64,12 +65,19 @@ Route::middleware(['auth.admin'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 });
 
+// Friends Route
 Route::prefix('friend')->group(function () {
     Route::get('/', [FriendController::class, 'index'])->name('friends');
     Route::post('/search', [FriendController::class, 'searchFriend'])->name('search.friend');
     Route::post('/addFriend/{id}', [FriendController::class, 'addFriend'])->name('addFriend.friend');
     Route::patch('/request/accept/{id}', [FriendController::class, "acceptRequest"])->name('accept.request.friend');
     Route::delete('/request/reject/{id}', [FriendController::class, "rejectRequest"])->name('reject.request.friend');
+});
+
+// Friend Route
+Route::prefix('media')->group(function () {
+    Route::get('/', [PostController::class, 'index'])->name('post.media');
+    Route::post('/create/post', [PostController::class, 'createPost'])->name('post.create.media');
 });
 
 // Application Routes
@@ -82,8 +90,5 @@ Route::prefix('app')->group(function () {
     Route::get('/recipes', function () {
         return view('recipe');
     })->name('app.recipes');
-    
-    Route::get('/media', function () {
-        return view('media');
-    })->name('app.media');
+
 }); 

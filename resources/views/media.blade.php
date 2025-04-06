@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlavorFeed | Share Your Recipes</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -217,96 +217,112 @@
             <div class="p-4">
                 <!-- Text Post Form -->
                 <div x-show="activeTab === 'text'" x-transition>
-                    <textarea 
+                    <form action="{{ route('post.create.media') }}" method="post">
+                        @csrf
+                        <textarea 
+                        name="description"
                         x-model="textPost.content"
                         class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-spice focus:border-transparent" 
                         rows="6"
                         placeholder="Share your recipe or cooking tip..."></textarea>
-                    
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium mb-1">Tags (optional)</label>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <template x-for="(tag, index) in textPost.tags" :key="index">
-                                <div class="flex items-center bg-cream px-3 py-1 rounded-full text-sm">
-                                    <span x-text="tag"></span>
-                                    <button 
-                                        @click="textPost.tags.splice(index, 1)"
-                                        class="ml-2 text-gray-500 hover:text-chili">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </template>
-                            <input 
-                                x-model="textPost.newTag"
-                                @keydown.enter.prevent="if(textPost.newTag.trim() && !textPost.tags.includes(textPost.newTag.trim())) { textPost.tags.push(textPost.newTag.trim()); textPost.newTag = ''; }"
-                                type="text" 
-                                class="flex-1 min-w-[100px] bg-transparent outline-none text-sm" 
-                                placeholder="Add tags...">
+                
+                        <div class="p-4 border-t flex justify-end">
+                            <button 
+                                @click="openComposer = false"
+                                class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
+                                class="px-4 py-2 rounded-lg font-medium text-white">
+                                Share
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 
                 <!-- Photo Post Form -->
                 <div x-show="activeTab === 'photo'" x-transition>
-                    <div 
-                        @click="document.getElementById('photo-upload').click()"
-                        class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-spice transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <p class="text-gray-500">Click to upload a photo</p>
-                        <input type="file" id="photo-upload" class="hidden" accept="image/*">
-                    </div>
-                    
-                    <template x-if="photoPost.preview">
-                        <div class="mt-4">
-                            <img :src="photoPost.preview" class="w-full rounded-lg border border-gray-200">
+                    <form action="{{ route('post.create.media') }}" method="post">
+                        @csrf
+                        <div 
+                            @click="document.getElementById('photo-upload').click()"
+                            class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-spice transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-gray-500">Click to upload a photo</p>
+                            <input name="picture" type="file" id="photo-upload" class="hidden" accept="image/*">
                         </div>
-                    </template>
-                    
-                    <textarea 
-                        x-model="photoPost.caption"
-                        class="w-full p-3 border rounded-lg mt-4 focus:ring-2 focus:ring-spice focus:border-transparent" 
-                        rows="3"
-                        placeholder="Add a caption..."></textarea>
+                        
+                        <template x-if="photoPost.preview">
+                            <div class="mt-4">
+                                <img :src="photoPost.preview" class="w-full rounded-lg border border-gray-200">
+                            </div>
+                        </template>
+                        
+                        <textarea 
+                            name="description"
+                            x-model="photoPost.caption"
+                            class="w-full p-3 border rounded-lg mt-4 focus:ring-2 focus:ring-spice focus:border-transparent" 
+                            rows="3"
+                            placeholder="Add a caption..."></textarea>
+                        
+                        <div class="p-4 border-t flex justify-end">
+                            <button 
+                                @click="openComposer = false"
+                                class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
+                                class="px-4 py-2 rounded-lg font-medium text-white">
+                                Share
+                            </button>
+                        </div>
+                    </form>
                 </div>
                 
                 <!-- Video Post Form -->
                 <div x-show="activeTab === 'video'" x-transition>
-                    <div 
-                        @click="document.getElementById('video-upload').click()"
-                        class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-spice transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        <p class="text-gray-500">Click to upload a video</p>
-                        <input type="file" id="video-upload" class="hidden" accept="video/*">
-                    </div>
-                    
-                    <textarea 
-                        x-model="videoPost.caption"
-                        class="w-full p-3 border rounded-lg mt-4 focus:ring-2 focus:ring-spice focus:border-transparent" 
-                        rows="3"
-                        placeholder="Add a description..."></textarea>
+                    <form action="{{ route('post.create.media') }}" method="post">
+                        @csrf
+                        <div 
+                            @click="document.getElementById('video-upload').click()"
+                            class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-spice transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-gray-500">Click to upload a video</p>
+                            <input name="video" type="file" id="video-upload" class="hidden" accept="video/*">
+                        </div>
+                        
+                        <textarea 
+                            name="description"
+                            x-model="videoPost.caption"
+                            class="w-full p-3 border rounded-lg mt-4 focus:ring-2 focus:ring-spice focus:border-transparent" 
+                            rows="3"
+                            placeholder="Add a description..."></textarea>
+                        
+                        <div class="p-4 border-t flex justify-end">
+                            <button 
+                                @click="openComposer = false"
+                                class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
+                                class="px-4 py-2 rounded-lg font-medium text-white">
+                                Share
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             
-            <!-- Footer -->
-            <div class="p-4 border-t flex justify-end">
-                <button 
-                    @click="openComposer = false"
-                    class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
-                    Cancel
-                </button>
-                <button 
-                    @click="submitPost()"
-                    :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
-                    class="px-4 py-2 rounded-lg font-medium text-white">
-                    Share
-                </button>
-            </div>
         </div>
     </div>
 
@@ -355,22 +371,6 @@
                     });
                 },
                 
-                submitPost() {
-                    if (!this.canSubmit) return;
-                    console.log('Submitting:', {
-                        type: this.activeTab,
-                        data: this[`${this.activeTab}Post`]
-                    });
-                    
-                    // Reset form
-                    this.textPost = { content: '', tags: [], newTag: '' };
-                    this.photoPost = { preview: null, caption: '' };
-                    this.videoPost = { caption: '' };
-                    this.openComposer = false;
-                    
-                    // Show success message
-                    alert('Post shared successfully!');
-                }
             }));
         });
     </script>
