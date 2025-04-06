@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodHub | Join Our Culinary Community</title>
+    <title>CookNShare | Join Our Culinary Community</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -84,7 +84,7 @@
             <div class="max-w-md text-center md:text-left">
                 <div class="flex justify-center md:justify-start items-center mb-6">
                     <i class="fas fa-utensils text-6xl mr-4"></i>
-                    <h1 class="text-4xl font-bold">FoodHub</h1>
+                    <h1 class="text-4xl font-bold">CookNShare</h1>
                 </div>
                 <h2 class="text-2xl font-semibold mb-4">Discover & Share Culinary Delights</h2>
                 <p class="text-lg mb-8">Join our community of food enthusiasts and explore recipes from around the world.</p>
@@ -118,7 +118,7 @@
                 <div class="bg-white rounded-xl shadow-sm p-8">
                     <!-- Form Header -->
                     <div class="text-center mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800" x-text="isLogin ? 'Welcome Back' : 'Join FoodHub'"></h2>
+                        <h2 class="text-2xl font-bold text-gray-800" x-text="isLogin ? 'Welcome Back' : 'Join CookNShare'"></h2>
                         <p class="text-gray-500" x-text="isLogin ? 'Sign in to your account' : 'Create your free account'"></p>
                     </div>
 

@@ -41,13 +41,68 @@
 <body class="bg-gray-50 font-sans text-gray-900" x-cloak>
     <!-- Main Feed -->
     <div class="max-w-lg mx-auto pb-20">
-        <!-- Text Post -->
+        @if (!Auth::check())
+        <div class="max-w-lg mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+            <!-- Icon -->
+            <div class="mx-auto w-20 h-20 mb-6 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            
+            <!-- Message -->
+            <h3 class="text-xl font-medium text-gray-700 mb-3">Welcome to CookNShare!</h3>
+            <p class="text-gray-500 mb-6">
+                Join our community of food lovers! Sign in to view posts, share recipes, and connect with other foodies.
+            </p>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="{{route('login.auth')}}" class="px-6 py-2 bg-spice text-white rounded-lg font-medium hover:bg-opacity-90 transition flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Sign In
+                </a>
+                <a href="{{route('login.auth')}}" class="px-6 py-2 border border-spice text-spice rounded-lg font-medium hover:bg-cream transition flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    Create Account
+                </a>
+            </div>
+            
+            <!-- Optional Guest Option -->
+            <div class="mt-6 text-sm">
+                <p class="text-gray-500 mb-2">Just want to browse?</p>
+            </div>
+        </div> 
+        @endif
+
+        @if (Auth::check())
+        @if ($posts->isEmpty())
+            <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+                <!-- Illustration -->
+                <div class="w-48 h-48 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                
+                <!-- Message -->
+                <h3 class="text-xl font-medium text-gray-700 mb-2">No posts yet</h3>
+                <p class="text-gray-500 max-w-md mb-6">
+                    It looks quiet here! Be the first to share something amazing with the community.
+                </p>
+            </div>
+        @endif
+        @foreach ($posts as $post)
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <!-- Header -->
+            <!-- Header (common to all post types) -->
             <div class="flex items-center p-4">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" 
-                     class="w-8 h-8 rounded-full object-cover border border-spice mr-3">
-                <div class="flex-1 font-semibold">chef_michael</div>
+                <img src="{{ asset('storage/' . $post->profile_picture)  ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }}" 
+                    class="w-8 h-8 rounded-full object-cover border border-spice mr-3">
+                <div class="flex-1 font-semibold">{{ '@' . $post->user_name }}</div>
                 <button class="text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -55,107 +110,38 @@
                 </button>
             </div>
             
-            <!-- Content -->
-            <div class="px-4 pb-3 whitespace-pre-line">
-                Just discovered this amazing flavor combination for pasta! 
-                
-                Ingredients:
-                - 2 cups penne pasta
-                - 1/2 cup sun-dried tomatoes
-                - 3 cloves garlic
-                - 1/4 cup olive oil
-                - Fresh basil
-                
-                Cook the pasta al dente, sauté the garlic in olive oil, add chopped sun-dried tomatoes, then toss with pasta and fresh basil. So simple but so delicious!
-            </div>
+            <!-- Content (conditional based on post type) -->
+            @if($post->video)
+                <!-- Video Content -->
+                <div class="relative bg-black">
+                    <video controls class="w-full" style="max-height: 600px;">
+                        <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            @endif
+
+            @if($post->picture)
+                <!-- Image Content -->
+                <img src="{{ asset('storage/' . $post->picture ) }}" 
+                    class="w-full object-cover" style="max-height: 600px;">
+            @endif
             
-            <!-- Footer -->
+            
+            <!-- Footer (common to all post types) -->
             <div class="border-t border-gray-100 px-4 pt-3 pb-2">
                 <div class="flex space-x-4 mb-2">
-                    <button class="text-gray-500 hover:text-red-400 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
                     <button class="text-gray-500 hover:text-gray-700 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                     </button>
-                    <button class="text-gray-500 hover:text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                    </button>
-                    <button class="ml-auto text-gray-500 hover:text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                        </svg>
-                    </button>
                 </div>
                 
-                <div class="text-sm font-semibold mb-1">243 likes</div>
-                <div class="text-xs text-gray-500 mb-2">2 hours ago</div>
-                
-                <div class="flex items-center border-t border-gray-100 pt-3">
-                    <input type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
-                    <button class="text-spice font-semibold text-sm ml-2">Post</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Image Post -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <!-- Header -->
-            <div class="flex items-center p-4">
-                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" 
-                     class="w-8 h-8 rounded-full object-cover border border-spice mr-3">
-                <div class="flex-1 font-semibold">baking_queen</div>
-                <button class="text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Content -->
-            <img src="https://media.timeout.com/images/106162401/image.jpg" 
-                 class="w-full object-cover" style="max-height: 600px;">
-            
-            <div class="border-t border-gray-100 px-4 pt-3 pb-2">
-                <div class="flex space-x-4 mb-2">
-                    <button class="text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12z" />
-                        </svg>
-                    </button>
-                    <button class="text-gray-500 hover:text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                    </button>
-                    <button class="text-gray-500 hover:text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                    </button>
-                    <button class="ml-auto text-spice">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                        </svg>
-                    </button>
-                </div>
-                
-                <div class="text-sm font-semibold mb-1">892 likes</div>
                 <div class="mb-1">
-                    <span class="font-semibold">baking_queen</span> Moist vegan banana bread that even non-vegans love! Recipe in comments 👇
+                    <span class="font-semibold">{{ '@' . $post->user_name }}</span> {{ $post->description ?? 'hahhaha' }}
                 </div>
-                <div class="flex flex-wrap gap-1 mb-1">
-                    <span class="text-xs px-2 py-1 rounded-full bg-herb text-white">#vegan</span>
-                    <span class="text-xs px-2 py-1 rounded-full bg-eggyolk">#baking</span>
-                    <span class="text-xs px-2 py-1 rounded-full bg-mint text-gray-800">#dessert</span>
-                </div>
-                <div class="text-xs text-gray-500 mb-2">5 hours ago</div>
+                <div class="text-xs text-gray-500 mb-2">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</div>
                 
                 <div class="flex items-center border-t border-gray-100 pt-3">
                     <input type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
@@ -163,6 +149,8 @@
                 </div>
             </div>
         </div>
+        @endforeach
+        @endif
     </div>
 
     <!-- Floating Action Button -->
@@ -244,7 +232,10 @@
                 
                 <!-- Photo Post Form -->
                 <div x-show="activeTab === 'photo'" x-transition>
-                    <form action="{{ route('post.create.media') }}" method="post">
+                    <form 
+                    action="{{ route('post.create.media') }}" 
+                    method="post"
+                    enctype="multipart/form-data">
                         @csrf
                         <div 
                             @click="document.getElementById('photo-upload').click()"
@@ -287,7 +278,10 @@
                 
                 <!-- Video Post Form -->
                 <div x-show="activeTab === 'video'" x-transition>
-                    <form action="{{ route('post.create.media') }}" method="post">
+                    <form 
+                    action="{{ route('post.create.media') }}" 
+                    method="post"
+                    enctype="multipart/form-data">
                         @csrf
                         <div 
                             @click="document.getElementById('video-upload').click()"
