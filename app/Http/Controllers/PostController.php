@@ -49,5 +49,7 @@ class PostController extends Controller
             'video' => $request->hasFile('video') ? $request->file('video')->store('posts/picture', 'public') : null,
             'user_id' => $user->id,
         ]);
+
+        return redirect()->route('post.create.media');
     }
 }
