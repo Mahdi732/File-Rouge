@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlavorFeed | Share Your Recipes</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -310,69 +310,5 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('app', () => ({
-                openComposer: false,
-                activeTab: 'text',
-                
-                textPost: {
-                    content: '',
-                    tags: [],
-                    newTag: ''
-                },
-                
-                photoPost: {
-                    preview: null,
-                    caption: ''
-                },
-                
-                videoPost: {
-                    caption: ''
-                },
-                
-                get canSubmit() {
-                    if (this.activeTab === 'text') {
-                        return this.textPost.content.trim().length > 0;
-                    } else if (this.activeTab === 'photo') {
-                        return this.photoPost.preview !== null;
-                    } else if (this.activeTab === 'video') {
-                        return this.videoPost.caption.trim().length > 0;
-                    }
-                    return false;
-                },
-                
-                init() {
-                    document.getElementById('photo-upload').addEventListener('change', (e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                            this.photoPost.preview = URL.createObjectURL(file);
-                        }
-                    });
-                    
-                    document.getElementById('video-upload').addEventListener('change', (e) => {
-                        console.log('Video selected:', e.target.files[0]);
-                    });
-                },
-                
-                submitPost() {
-                    if (!this.canSubmit) return;
-                    console.log('Submitting:', {
-                        type: this.activeTab,
-                        data: this[`${this.activeTab}Post`]
-                    });
-                    
-                    // Reset form
-                    this.textPost = { content: '', tags: [], newTag: '' };
-                    this.photoPost = { preview: null, caption: '' };
-                    this.videoPost = { caption: '' };
-                    this.openComposer = false;
-                    
-                    // Show success message
-                    alert('Post shared successfully!');
-                }
-            }));
-        });
-    </script>
 </body>
 </html>
