@@ -35,7 +35,7 @@ class PostController extends Controller
         }
 
         $request->validate([
-            'description' => 'reqiured|string|max:1000',
+            'description' => 'required|string|max:1000',
             'picture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:51200',
             'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:51200',
         ]);

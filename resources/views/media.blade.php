@@ -225,6 +225,20 @@
                         class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-spice focus:border-transparent" 
                         rows="6"
                         placeholder="Share your recipe or cooking tip..."></textarea>
+                
+                        <div class="p-4 border-t flex justify-end">
+                            <button 
+                                @click="openComposer = false"
+                                class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
+                                class="px-4 py-2 rounded-lg font-medium text-white">
+                                Share
+                            </button>
+                        </div>
                     </form>
                 </div>
                 
@@ -254,6 +268,20 @@
                             class="w-full p-3 border rounded-lg mt-4 focus:ring-2 focus:ring-spice focus:border-transparent" 
                             rows="3"
                             placeholder="Add a caption..."></textarea>
+                        
+                        <div class="p-4 border-t flex justify-end">
+                            <button 
+                                @click="openComposer = false"
+                                class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
+                                class="px-4 py-2 rounded-lg font-medium text-white">
+                                Share
+                            </button>
+                        </div>
                     </form>
                 </div>
                 
@@ -277,6 +305,20 @@
                             class="w-full p-3 border rounded-lg mt-4 focus:ring-2 focus:ring-spice focus:border-transparent" 
                             rows="3"
                             placeholder="Add a description..."></textarea>
+                        
+                        <div class="p-4 border-t flex justify-end">
+                            <button 
+                                @click="openComposer = false"
+                                class="px-4 py-2 border rounded-lg font-medium mr-2 hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
+                                class="px-4 py-2 rounded-lg font-medium text-white">
+                                Share
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
