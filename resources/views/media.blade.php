@@ -42,6 +42,8 @@
     <!-- Main Feed -->
     <div class="max-w-lg mx-auto pb-20">
         @if (!Auth::check())
+            
+        @endif
         <div class="max-w-lg mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <!-- Icon -->
             <div class="mx-auto w-20 h-20 mb-6 text-gray-400">
@@ -76,9 +78,7 @@
             <div class="mt-6 text-sm">
                 <p class="text-gray-500 mb-2">Just want to browse?</p>
             </div>
-        </div> 
-        @endif
-
+        </div>
         @if (Auth::check())
         @if ($posts->isEmpty())
             <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
