@@ -43,10 +43,10 @@ class friendController extends Controller
         ->select('users.*')
         ->get() : collect();
         
-        $pendingCount = DB::table('friend_requests')
+        $pendingCount = $authUser ? DB::table('friend_requests')
         ->where('receiver_id', $authUser->id)
         ->where('status', 'pending')
-        ->count();
+        ->count() : "login to see your request";
     
         return view('friends', [
             'users' => $users,
@@ -60,8 +60,24 @@ class friendController extends Controller
         $search = $request->search_for_friend_input;
         $authUser = Auth::user();
         if ($search) {
+            if (Auth::check()) {
+                $users = User::query()
+                ->where('id', '!=', $authUser->id)
+                ->where(function ($query) use ($search) {
+                    $query->where('user_name', 'LIKE', "%{$search}%")
+                        ->orWhere('name', 'LIKE', "%{$search}%");
+                })
+                ->take(8)
+                ->get();
+
+                if ($users->isEmpty()) {
+                    return view('partial.notFoundMessage')->with('message', 'We couldnt find anything matching 😒😒😒');
+                }else {
+                    return view('partial.friendSearchResult', compact('users'));
+                }
+            }
+
             $users = User::query()
-            ->where('id', '!=', $authUser->id)
             ->where(function ($query) use ($search) {
                 $query->where('user_name', 'LIKE', "%{$search}%")
                       ->orWhere('name', 'LIKE', "%{$search}%");
@@ -74,6 +90,7 @@ class friendController extends Controller
             }else {
                 return view('partial.friendSearchResult', compact('users'));
             }
+            
         }
         
         $users = User::when($authUser, function($query) use ($authUser) {
