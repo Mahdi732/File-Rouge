@@ -30,7 +30,7 @@ class PostController extends Controller
             $query->where('posts.user_id', $authUser->id)
                 ->orWhere('friend_requests.status', 'accepted');
         })
-        ->select('posts.*', 'users.*')
+        ->select('posts.*', 'users.profile_picture', 'users.user_name', 'users.name', 'users.id as user_id')
         ->orderBy('posts.created_at', 'desc')
         ->take(8)
         ->get() : "you need to loggin";
@@ -65,6 +65,14 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('post.media');
+    }
+
+    public function delete($id_post) {
+        $Authuser = Auth::user();
+        DB::table('posts')
+        ->where('id', $id_post)
+        ->where('user_id', $Authuser)
+        ->delete();
     }
 
 }

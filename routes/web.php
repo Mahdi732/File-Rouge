@@ -78,6 +78,7 @@ Route::prefix('friend')->group(function () {
 Route::prefix('media')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('post.media');
     Route::post('/create/post', [PostController::class, 'createPost'])->name('post.create.media');
+    Route::delete('/delete/post/{id}', [PostController::class, 'delete'])->name('post.delete.media');
 });
 
 // Application Routes
