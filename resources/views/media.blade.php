@@ -76,9 +76,9 @@
             <div class="mt-6 text-sm">
                 <p class="text-gray-500 mb-2">Just want to browse?</p>
             </div>
-        </div> 
+        </div>
         @endif
-
+        
         @if (Auth::check())
         @if ($posts->isEmpty())
             <div class="flex flex-col items-center justify-center py-12 px-4 text-center">

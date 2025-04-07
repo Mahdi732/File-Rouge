@@ -92,3 +92,6 @@ Route::prefix('app')->group(function () {
     })->name('app.recipes');
 
 }); 
+Route::get('/test', function () {
+    return view('test');
+});

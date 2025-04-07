@@ -34,7 +34,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-gray-900 to-black text-gray-100">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-black text-gray-100">
     <div class="max-w-4xl w-full text-center space-y-10">
         <!-- Header with Dino and Frog -->
         <div class="flex justify-center items-center space-x-6">
