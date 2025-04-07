@@ -97,20 +97,68 @@
             </div>
         @endif
         @foreach ($posts as $post)
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6" x-data="{ showMenu: false }">
             <!-- Header (common to all post types) -->
             <div class="flex items-center p-4">
                 <img src="{{ asset('storage/' . $post->profile_picture)  ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }}" 
                     class="w-8 h-8 rounded-full object-cover border border-spice mr-3">
-                <div class="flex-1 font-semibold">{{ '@' . $post->user_name }}</div>
-                <button class="text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                    </svg>
-                </button>
+                <div class="flex-1 font-semibold">{{ '@' . $post->user_name }} + {{$post->user_id}}</div>
+                
+                <!-- Three-dot menu button -->
+                @if (Auth::id() == $post->user_id) 
+                <div class="relative">
+                    <button @click="showMenu = !showMenu" class="text-gray-500 hover:text-gray-700 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Dropdown menu -->
+                    <div x-show="showMenu" 
+                         @click.away="showMenu = false"
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                        <div class="py-1">
+                            
+                                <form action="{{route('post.delete.media', $post->id)}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        delete
+                                    </button>
+                                </form>        
+
+                                <!-- Delete Option -->
+                                <a href="#" @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    Delete
+                                </a>
+                                
+                                <!-- Private/Public Toggle -->
+                                <div @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    Make Private
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
             
-            <!-- Content (conditional based on post type) -->
+            <!-- Rest of your existing content -->
             @if($post->video)
                 <!-- Video Content -->
                 <div class="relative bg-black">
@@ -120,13 +168,12 @@
                     </video>
                 </div>
             @endif
-
+        
             @if($post->picture)
                 <!-- Image Content -->
                 <img src="{{ asset('storage/' . $post->picture ) }}" 
                     class="w-full object-cover" style="max-height: 600px;">
             @endif
-            
             
             <!-- Footer (common to all post types) -->
             <div class="border-t border-gray-100 px-4 pt-3 pb-2">
