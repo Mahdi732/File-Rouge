@@ -32,6 +32,7 @@ class PostController extends Controller
         })
         ->select('posts.*', 'users.profile_picture', 'users.user_name', 'users.name', 'users.id as user_id')
         ->orderBy('posts.created_at', 'desc')
+        ->orderBy('posts.updated_at', 'desc')
         ->take(8)
         ->get() : "you need to loggin";
 
@@ -62,6 +63,8 @@ class PostController extends Controller
             'picture' => $request->hasFile('picture') ? $request->file('picture')->store('post/picture', 'public') : null,
             'video' => $request->hasFile('video') ? $request->file('video')->store('post/video', 'public') : null,
             'user_id' => $user->id,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return redirect()->route('post.media');
@@ -71,8 +74,10 @@ class PostController extends Controller
         $Authuser = Auth::user();
         DB::table('posts')
         ->where('id', $id_post)
-        ->where('user_id', $Authuser)
+        ->where('user_id', $Authuser->id)
         ->delete();
+
+        return redirect()->route('post.media')->with('success', 'the post has successfuly deleted');
     }
 
 }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlavorFeed | Share Your Recipes</title>
+    <link rel="stylesheet" href="{{asset('/public/designWithcss.css')}}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -23,34 +24,49 @@
             }
         }
     </script>
-    <style>
-        [x-cloak] { display: none !important; }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 3px;
-        }
-    </style>
 </head>
+
+<body class="bg-gray-50 font-sans text-gray-900" x-cloak>
     @if (View::exists('partial.nav'))
     @include('partial.nav')
     @endif
-<body class="bg-gray-50 font-sans text-gray-900" x-cloak>
+    @if(session('success'))
+    <div id="success-notification" class="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
+        <div class="animate-fade-in-up bg-white shadow-lg rounded-lg border border-green-100 overflow-hidden w-full max-w-md">
+            <div class="flex items-start p-4">
+                <div class="flex-shrink-0">
+                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-3 flex-1 pt-0.5">
+                    <p class="text-sm font-medium text-gray-900">Success!</p>
+                    <p class="mt-1 text-sm text-gray-500">{{ session('success') }}</p>
+                </div>
+                <div class="ml-4 flex-shrink-0 flex">
+                    <button onclick="document.getElementById('success-notification').remove()" class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="bg-green-500 h-1 w-full"></div>
+        </div>
+    </div>
+    @endif
     <!-- Main Feed -->
     <div class="max-w-lg mx-auto pb-20">
         @if (!Auth::check())
         <div class="max-w-lg mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <!-- Icon -->
             <div class="mx-auto w-20 h-20 mb-6 text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
             </div>
             
-            <!-- Message -->
             <h3 class="text-xl font-medium text-gray-700 mb-3">Welcome to CookNShare!</h3>
             <p class="text-gray-500 mb-6">
                 Join our community of food lovers! Sign in to view posts, share recipes, and connect with other foodies.
@@ -175,7 +191,6 @@
                     class="w-full object-cover" style="max-height: 600px;">
             @endif
             
-            <!-- Footer (common to all post types) -->
             <div class="border-t border-gray-100 px-4 pt-3 pb-2">
                 <div class="flex space-x-4 mb-2">
                     <button class="text-gray-500 hover:text-gray-700 transition">
@@ -414,6 +429,14 @@
                 
             }));
         });
+
+        setTimeout(() => {
+        const notification = document.getElementById('success-notification');
+        if (notification) {
+            notification.classList.add('animate-fade-out');
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
     </script>
 </body>
 </html>
