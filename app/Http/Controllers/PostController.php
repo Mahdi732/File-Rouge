@@ -41,12 +41,7 @@ class PostController extends Controller
 
     public function createPost(Request $request) {
         if (!Auth::check()) {
-            $redirectUrl = route('login.auth') . '?success=' . urlencode('You have to login to create Post. 🤷‍♂️🤷‍♂️🤷‍♂️');
-            return response()->json([
-                'redirect' => $redirectUrl
-            ])->withHeaders([
-                'HX-Redirect' => $redirectUrl
-            ]);
+            return redirect()->route('login.auth')->with('success', 'login to get permetion for create new post');
         }
 
         $request->validate([
@@ -79,5 +74,9 @@ class PostController extends Controller
 
         return redirect()->route('post.media')->with('success', 'the post has successfuly deleted');
     }
+
+   public function update () {
+    
+   }
 
 }
