@@ -6,6 +6,7 @@
     <title>FlavorFeed | Share Your Recipes</title>
     <link rel="stylesheet" href="{{asset('/public/designWithcss.css')}}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script>
@@ -113,104 +114,229 @@
             </div>
         @endif
         @foreach ($posts as $post)
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6" x-data="{ showMenu: false }">
-            <!-- Header (common to all post types) -->
-            <div class="flex items-center p-4">
-                <img src="{{ asset('storage/' . $post->profile_picture)  ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }}" 
-                    class="w-8 h-8 rounded-full object-cover border border-spice mr-3">
-                <div class="flex-1 font-semibold">{{ '@' . $post->user_name }} + {{$post->user_id}}</div>
-                
-                <!-- Three-dot menu button -->
-                @if (Auth::id() == $post->user_id) 
-                <div class="relative">
-                    <button @click="showMenu = !showMenu" class="text-gray-500 hover:text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                        </svg>
-                    </button>
-                    
-                    <!-- Dropdown menu -->
-                    <div x-show="showMenu" 
-                         @click.away="showMenu = false"
-                         x-transition:enter="transition ease-out duration-100"
-                         x-transition:enter-start="transform opacity-0 scale-95"
-                         x-transition:enter-end="transform opacity-100 scale-100"
-                         x-transition:leave="transition ease-in duration-75"
-                         x-transition:leave-start="transform opacity-100 scale-100"
-                         x-transition:leave-end="transform opacity-0 scale-95"
-                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                        <div class="py-1">
-                            
-                                <form action="{{route('post.delete.media', $post->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        delete
-                                    </button>
-                                </form>        
-
-                                <!-- Delete Option -->
-                                <a href="#" @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    Delete
-                                </a>
-                                
-                                <!-- Private/Public Toggle -->
-                                <div @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                    </svg>
-                                    Make Private
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-                @endif
-            </div>
-            
-            <!-- Rest of your existing content -->
-            @if($post->video)
-                <!-- Video Content -->
-                <div class="relative bg-black">
-                    <video controls class="w-full" style="max-height: 600px;">
-                        <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            @endif
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6" 
+     x-data="{ 
+        showMenu: false, 
+        showEditForm: false,
+        editType: '{{ $post->video ? 'video' : ($post->picture ? 'image' : 'text') }}',
+        description: '{{ $post->description }}',
+        previewImage: null,
+        previewVideo: null
+     }">
+    <!-- Header (common to all post types) -->
+    <div class="flex items-center p-4">
+        <img src="{{ asset('storage/' . $post->profile_picture)  ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }}" 
+            class="w-8 h-8 rounded-full object-cover border border-spice mr-3">
+        <div class="flex-1 font-semibold">{{ '@' . $post->user_name }} + {{$post->user_id}}</div>
         
-            @if($post->picture)
-                <!-- Image Content -->
-                <img src="{{ asset('storage/' . $post->picture ) }}" 
-                    class="w-full object-cover" style="max-height: 600px;">
-            @endif
+        <!-- Three-dot menu button -->
+        @if (Auth::id() == $post->user_id) 
+        <div class="relative">
+            <button @click="showMenu = !showMenu" class="text-gray-500 hover:text-gray-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                </svg>
+            </button>
             
-            <div class="border-t border-gray-100 px-4 pt-3 pb-2">
-                <div class="flex space-x-4 mb-2">
-                    <button class="text-gray-500 hover:text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            <!-- Dropdown menu -->
+            <div x-show="showMenu" 
+                 @click.away="showMenu = false"
+                 x-transition:enter="transition ease-out duration-100"
+                 x-transition:enter-start="transform opacity-0 scale-95"
+                 x-transition:enter-end="transform opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-75"
+                 x-transition:leave-start="transform opacity-100 scale-100"
+                 x-transition:leave-end="transform opacity-0 scale-95"
+                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                <div class="py-1">
+                    
+                    <form action="{{route('post.delete.media', $post->id)}}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Delete Media
+                        </button>
+                    </form>        
+
+                    <!-- Edit Option -->
+                    <a href="#" @click.prevent="showMenu = false; showEditForm = true;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                    </button>
-                </div>
-                
-                <div class="mb-1">
-                    <span class="font-semibold">{{ '@' . $post->user_name }}</span> {{ $post->description ?? 'hahhaha' }}
-                </div>
-                <div class="text-xs text-gray-500 mb-2">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</div>
-                
-                <div class="flex items-center border-t border-gray-100 pt-3">
-                    <input type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
-                    <button class="text-spice font-semibold text-sm ml-2">Post</button>
+                        Edit Post
+                    </a>
+                    
+                    <!-- Delete Option -->
+                    <a href="#" @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete Post
+                    </a>
+                    
+                    <!-- Private/Public Toggle -->
+                    <div @click="showMenu = false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Make Private
+                    </div>
                 </div>
             </div>
         </div>
+        @endif
+    </div>
+    
+    <!-- Edit Form (shows when edit is clicked) -->
+    <div x-show="showEditForm" x-cloak class="border-t border-gray-100 p-4">
+        <form action="{{ route('post.update', $post->id) }}" method="POST" enctype="multipart/form-data" 
+              @submit="showEditForm = false">
+            @csrf
+            @method('PUT')
+            
+            <!-- Content Type Selector -->
+            <div class="flex border border-gray-200 rounded-lg mb-4">
+                <button type="button" @click="editType = 'text'" 
+                        :class="{'bg-gray-100 text-gray-900': editType === 'text', 'bg-white text-gray-600': editType !== 'text'}"
+                        class="flex-1 py-2 px-4 text-sm font-medium rounded-l-lg transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Text
+                </button>
+                <button type="button" @click="editType = 'image'" 
+                        :class="{'bg-gray-100 text-gray-900': editType === 'image', 'bg-white text-gray-600': editType !== 'image'}"
+                        class="flex-1 py-2 px-4 text-sm font-medium transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Image
+                </button>
+                <button type="button" @click="editType = 'video'" 
+                        :class="{'bg-gray-100 text-gray-900': editType === 'video', 'bg-white text-gray-600': editType !== 'video'}"
+                        class="flex-1 py-2 px-4 text-sm font-medium rounded-r-lg transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Video
+                </button>
+            </div>
+            
+            <!-- Description Field (always visible) -->
+            <div class="mb-4">
+                <textarea name="description" x-model="description" 
+                          class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-spice focus:border-spice" 
+                          placeholder="What's on your mind?" rows="3"></textarea>
+            </div>
+            
+            <!-- Image Upload Field -->
+            <div x-show="editType === 'image'" class="mb-4">
+                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <input type="file" name="picture" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                           @change="previewImage = URL.createObjectURL($event.target.files[0])">
+                    
+                    <template x-if="!previewImage">
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-1 text-sm text-gray-500">Click to upload an image</p>
+                        </div>
+                    </template>
+                    
+                    <template x-if="previewImage">
+                        <div>
+                            <img :src="previewImage" class="mx-auto max-h-48 object-contain">
+                            <button type="button" @click="previewImage = null" class="mt-2 text-xs text-red-500">Remove</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Video Upload Field -->
+            <div x-show="editType === 'video'" class="mb-4">
+                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <input type="file" name="video" accept="video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                           @change="previewVideo = URL.createObjectURL($event.target.files[0])">
+                    
+                    <template x-if="!previewVideo">
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-1 text-sm text-gray-500">Click to upload a video</p>
+                        </div>
+                    </template>
+                    
+                    <template x-if="previewVideo">
+                        <div>
+                            <video controls class="mx-auto max-h-48">
+                                <source :src="previewVideo" type="video/mp4">
+                            </video>
+                            <button type="button" @click="previewVideo = null" class="mt-2 text-xs text-red-500">Remove</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Hidden field to track content type -->
+            <input type="hidden" name="content_type" x-bind:value="editType">
+            
+            <!-- Form Buttons -->
+            <div class="flex justify-end space-x-2">
+                <button type="button" @click="showEditForm = false" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 text-sm bg-spice text-white rounded-lg hover:bg-opacity-90 transition">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Post Content (only visible when not editing) -->
+    <div x-show="!showEditForm">
+        <!-- Video Content -->
+        @if($post->video)
+            <div class="relative bg-black">
+                <video controls class="w-full" style="max-height: 600px;">
+                    <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        @endif
+    
+        <!-- Image Content -->
+        @if($post->picture)
+            <img src="{{ asset('storage/' . $post->picture ) }}" 
+                class="w-full object-cover" style="max-height: 600px;">
+        @endif
+        
+        <div class="border-t border-gray-100 px-4 pt-3 pb-2">
+            <div class="flex space-x-4 mb-2">
+                <button class="text-gray-500 hover:text-gray-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="mb-1">
+                <span class="font-semibold">{{ '@' . $post->user_name }}</span> {{ $post->description ?? 'hahhaha' }}
+            </div>
+            <div class="text-xs text-gray-500 mb-2">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</div>
+            
+            <div class="flex items-center border-t border-gray-100 pt-3">
+                <input type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
+                <button class="text-spice font-semibold text-sm ml-2">Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
         @endforeach
         @endif
     </div>
@@ -224,7 +350,7 @@
         </svg>
     </button>
 
-    <!-- Post Composer Modal -->
+    <!-- Post Modal -->
     <div 
         x-show="openComposer" 
         @click.away="openComposer = false"
@@ -291,7 +417,7 @@
                         </div>
                     </form>
                 </div>
-                
+
                 <!-- Photo Post Form -->
                 <div x-show="activeTab === 'photo'" x-transition>
                     <form 
@@ -369,6 +495,7 @@
                                 Cancel
                             </button>
                             <button 
+                            hx-indicator="#loader"
                                 type="submit"
                                 :class="{ 'bg-spice': canSubmit, 'bg-gray-300 cursor-not-allowed': !canSubmit }"
                                 class="px-4 py-2 rounded-lg font-medium text-white">
@@ -379,6 +506,7 @@
                 </div>
             </div>
             
+              
         </div>
     </div>
 
