@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use function Laravel\Prompts\table;
-
 class friendController extends Controller
 {
     public function index() {
@@ -17,7 +15,7 @@ class friendController extends Controller
         $users = User::when($authUser, function($query) use ($authUser) {
                 $query->where('id', '!=', $authUser->id);
             })
-            ->orderBy('name')
+            ->orderBy   ('name')
             ->take(8)
             ->get();
     
@@ -124,9 +122,6 @@ class friendController extends Controller
             })
             ->exists();
 
-        if ($existingRequest) {
-            return view('partial.errorHandler')->with('error', 'you have already send request for this user or he ignore you');
-        }
         DB::table('friend_requests')->insert([
             'receiver_id' => $friend_id,
             'sender_id' => $user->id,
