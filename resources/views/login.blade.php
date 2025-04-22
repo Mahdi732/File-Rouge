@@ -50,31 +50,31 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
-    @if (request()->has('success'))
-    <div id="success-notification" class="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
-        <div class="animate-fade-in-up bg-white shadow-lg rounded-lg border border-green-100 overflow-hidden w-full max-w-md">
-            <div class="flex items-start p-4">
-                <div class="flex-shrink-0">
-                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="ml-3 flex-1 pt-0.5">
-                    <p class="text-sm font-medium text-gray-900">Success!</p>
-                    
-                    <p class="mt-1 text-sm text-gray-500">{{ urldecode(request()->query('success')) }}</p>
-                </div>
-                <div class="ml-4 flex-shrink-0 flex">
-                    <button onclick="document.getElementById('success-notification').remove()" class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                </div>
+    @if (request()->has('success') || session('success'))
+    <div  class=" success-notification fixed top-4 right-5 z-50 max-w-md animate-in fade-in slide-in-from-top-3 duration-300">
+        <div class="flex items-center gap-3 rounded-lg border border-emerald-100 bg-emerald-50 p-4 shadow-md dark:border-emerald-800 dark:bg-emerald-900">
+            <!-- Success Icon -->
+            <div class="flex-shrink-0 rounded-full bg-emerald-100 p-2 dark:bg-emerald-800">
+                <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
             </div>
-            <div class="bg-green-500 h-1 w-full"></div>
+            
+            <div class="flex-1">
+                <div class="mt-1 text-sm text-emerald-700 dark:text-emerald-300">{{ urldecode(request()->query('success')) ? urldecode(request()->query('success')) : session('success') }}</div>
+            </div>
+            
+            <button 
+                onclick="dismissNotification()"
+                class="flex-shrink-0 rounded-full p-1.5 text-emerald-500 hover:bg-emerald-100 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:text-emerald-300 dark:hover:bg-emerald-800"
+                aria-label="Close notification"
+            >
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
     </div>
     @endif
@@ -267,13 +267,20 @@
     </div>
 
     <script>
-        setTimeout(() => {
-            const notification = document.getElementById('success-notification');
+        setTimeout(dismissNotification, 5000);
+        
+        function dismissNotification() {
+            const notification = document.querySelector('.success-notification');
             if (notification) {
-                notification.classList.add('animate-fade-out');
-                setTimeout(() => notification.remove(), 300);
+                
+                notification.classList.add('opacity-0', 'translate-y-[-10px]');
+                notification.style.transition = 'opacity 300ms, transform 300ms';
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }
-        }, 5000);
+        }
     </script>
 </body>
 </html>
