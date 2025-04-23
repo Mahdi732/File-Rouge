@@ -122,8 +122,8 @@ class UserController extends Controller
             'email' => 'required|string|max:250',
             'password' => 'required|string|max:250|min:8'
         ]);
-
-        $user = User::Where('email', $request->email)->first();
+        if ($user->email == $request->email) {
+            $user = User::Where('email', $request->email)->first();
 
         if ($user) {
             if (!Hash::check($request->password, $user->password)) {
@@ -139,8 +139,11 @@ class UserController extends Controller
                 ]);
             }
         }
-
         return view('partial.errorHandler')->with('error', 'Invalid email try another time.');
+
+        }
+        
+        return view('partial.errorHandler')->with('error', "that's not the right email, try again.");
     }
 
     public function updatePassword(Request $request) {
