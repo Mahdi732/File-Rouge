@@ -113,7 +113,8 @@ class UserController extends Controller
             'profile_picture' => $path,
         ]);
 
-        return view("partial.updated")->with('update',  'Your profile Picture has been successfully updated!');
+        return view("partial.updated")
+        ->with('update',  'Your profile Picture has been successfully updated!');
     }
     
     public function deleteAccount(Request $request) {
