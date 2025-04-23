@@ -116,9 +116,6 @@
                   <div class="absolute inset-0 bg-center bg-cover" 
                   style="background-image: url('{{ $user->background_image ? asset('storage/' . $user->background_image) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9zLLURPoXWGgSacq-v3HjFv0oHmEHVA8rFA&s" }}');">
               </div>
-                <div class="absolute top-2 right-2">
-                    <span class="px-2 py-1 bg-white rounded-full text-xs font-medium text-orange-600">87% Match</span>
-                </div>
                 </div>
                 <div class="relative px-4 pt-12 pb-5">
                 <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
