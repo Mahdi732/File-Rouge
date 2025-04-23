@@ -75,8 +75,25 @@ class PostController extends Controller
         return redirect()->route('post.media')->with('success', 'the post has successfuly deleted');
     }
 
-   public function update () {
-     
+   public function update (Request $request, $postId) {
+     $userAuth = Auth::user();
+
+     $request->validate([
+        'description' => 'required|string|max:1000',
+        'picture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:51200',
+        'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:51200',
+     ]);
+
+     DB::table('posts')
+     ->where('id', $postId)
+     ->update([
+        'description' => $request->description ?? null,
+        'picture' => $request->hasFile('picture') ? $request->file('picture')->store('post/picture', 'public') : null,
+        'video' => $request->hasfile('video') ? $request->file('video')->store('post/video', 'public') : null,
+        'updated_at' => now(),
+     ]);
+
+     return redirect()->route('post.media');
    }
 
 }
