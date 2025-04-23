@@ -11,6 +11,6 @@ class Post extends Model
     protected $fillable = [
         'video',
         'description',
-        'picture'
+        'picture',
     ];
 }
