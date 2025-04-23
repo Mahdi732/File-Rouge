@@ -323,7 +323,7 @@
             <div class="text-xs text-gray-500 mb-2">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</div>
             
             <div class="flex items-center border-t border-gray-100 pt-3">
-                <form action="" method="post">
+                <form action="{{route('post.create.comment')}}" method="post">
                     <input name="comment" type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
                     <button class="text-spice font-semibold text-sm ml-2">Post</button>
                 </form>

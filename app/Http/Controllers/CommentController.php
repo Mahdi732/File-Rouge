@@ -6,5 +6,7 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    //
+    public function create(Request $request, $postId) {
+
+    }
 }

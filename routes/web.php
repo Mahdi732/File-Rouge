@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\friendController;
-use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\friendController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,7 @@ Route::prefix('media')->group(function () {
     Route::post('/create/post', [PostController::class, 'createPost'])->name('post.create.media');
     Route::delete('/delete/post/{id}', [PostController::class, 'delete'])->name('post.delete.media');
     Route::put('/update/post/{id}', [PostController::class, 'update'])->name('post.update');
+    Route::post('/create/comment/post/{id}', [CommentController::class, 'create'])->name('post.create.comment');
 });
 
 // Application Routes
