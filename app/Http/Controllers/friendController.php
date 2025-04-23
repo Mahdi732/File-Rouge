@@ -122,6 +122,10 @@ class friendController extends Controller
             })
             ->exists();
 
+            if ($existingRequest) {
+                return view('partial.errorHandler')->with('error', 'You have already sent the request or you can view your existing request.');
+            }
+
         DB::table('friend_requests')->insert([
             'receiver_id' => $friend_id,
             'sender_id' => $user->id,
