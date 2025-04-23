@@ -425,60 +425,6 @@
                     </form>
                 </div>
                 
-                <!-- Notification Settings -->
-                <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
-                    <h3 class="font-bold text-lg mb-4">Notification Settings</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-medium">Email Notifications</p>
-                                <p class="text-sm text-gray-600">Receive updates about new recipes and followers</p>
-                            </div>
-                            <div x-data="{ enabled: true }">
-                                <button @click="enabled = !enabled" :class="enabled ? 'bg-orange-500' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none">
-                                    <span :class="enabled ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-medium">Recipe Comments</p>
-                                <p class="text-sm text-gray-600">Get notified when someone comments on your recipes</p>
-                            </div>
-                            <div x-data="{ enabled: true }">
-                                <button @click="enabled = !enabled" :class="enabled ? 'bg-orange-500' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none">
-                                    <span :class="enabled ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-medium">New Followers</p>
-                                <p class="text-sm text-gray-600">Get notified when someone follows you</p>
-                            </div>
-                            <div x-data="{ enabled: false }">
-                                <button @click="enabled = !enabled" :class="enabled ? 'bg-orange-500' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none">
-                                    <span :class="enabled ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-medium">Weekly Digest</p>
-                                <p class="text-sm text-gray-600">Receive a weekly summary of trending recipes</p>
-                            </div>
-                            <div x-data="{ enabled: true }">
-                                <button @click="enabled = !enabled" :class="enabled ? 'bg-orange-500' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none">
-                                    <span :class="enabled ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- Danger Zone -->
                 <div class="bg-white p-8 rounded-xl border border-red-200 shadow-sm">
                     <div class="flex items-center mb-6">
