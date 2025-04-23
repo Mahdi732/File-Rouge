@@ -15,7 +15,7 @@ class friendController extends Controller
         $users = User::when($authUser, function($query) use ($authUser) {
                 $query->where('id', '!=', $authUser->id);
             })
-            ->orderBy   ('name')
+            ->orderBy('name')
             ->take(8)
             ->get();
     
