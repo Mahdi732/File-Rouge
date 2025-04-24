@@ -82,6 +82,8 @@ Route::prefix('media')->group(function () {
     Route::delete('/delete/post/{id}', [PostController::class, 'delete'])->name('post.delete.media');
     Route::put('/update/post/{id}', [PostController::class, 'update'])->name('post.update');
     Route::post('/create/comment/post/{id}', [CommentController::class, 'create'])->name('post.create.comment');
+    Route::patch('/edit/comment/post/{id}', [CommentController::class, 'edit'])->name('edit.comment.media');
+    Route::delete('/delete/comment/post/{id}', [CommentController::class, 'delete'])->name('delete.comment.media');
 });
 
 // Application Routes

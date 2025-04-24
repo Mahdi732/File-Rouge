@@ -16,7 +16,10 @@ class PostController extends Controller
         $authUser = Auth::user();
 
         $comments = DB::table('comments')
-        ->where
+        ->join('posts', 'comments.postId', '=', 'posts.id')
+        ->join('users', 'comments.userId', '=', 'users.id')
+        ->select('comments.*', 'users.profile_picture', 'users.user_name', 'users.id as user_comment_id', 'posts.id as post_id')
+        ->get();
 
         $posts = $authUser ? DB::table('posts')
         ->join('users', 'posts.user_id', '=', 'users.id')
@@ -39,7 +42,7 @@ class PostController extends Controller
         ->take(8)
         ->get() : "you need to loggin";
 
-        return view('media', compact('posts'));
+        return view('media', compact('posts', 'comments'));
     }
 
     public function createPost(Request $request) {

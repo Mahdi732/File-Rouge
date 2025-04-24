@@ -20,8 +20,11 @@ class CommentController extends Controller
             'comment' => $request->comment,
             'postId' => $postId,
             'userId' => $userAuth->id,
+            'created_at' => now(),
         ]);
         
         return redirect()->route('post.media');
    }
+
+   
 }
