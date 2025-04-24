@@ -322,12 +322,11 @@
             </div>
             <div class="text-xs text-gray-500 mb-2">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</div>
             
-            <div class="flex items-center border-t border-gray-100 pt-3">
-                <form action="{{route('post.create.comment')}}" method="post">
-                    <input name="comment" type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
-                    <button class="text-spice font-semibold text-sm ml-2">Post</button>
-                </form>
-            </div>
+            <form class="flex items-center border-t border-gray-100 pt-3" action="{{route('post.create.comment', $post->id)}}" method="post">
+                @csrf
+                <input name="comment" type="text" placeholder="Add a comment..." class="flex-1 text-sm outline-none bg-transparent">
+                <button class="text-spice font-semibold text-sm ml-2">Post</button>
+            </form>
         </div>
     </div>
 </div>

@@ -15,6 +15,9 @@ class PostController extends Controller
 
         $authUser = Auth::user();
 
+        $comments = DB::table('comments')
+        ->where
+
         $posts = $authUser ? DB::table('posts')
         ->join('users', 'posts.user_id', '=', 'users.id')
         ->leftJoin('friend_requests', function ($join) use ($authUser) {
