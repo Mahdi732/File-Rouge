@@ -15,6 +15,12 @@ class PostController extends Controller
 
         $authUser = Auth::user();
 
+        $comments = DB::table('comments')
+        ->join('posts', 'comments.postId', '=', 'posts.id')
+        ->join('users', 'comments.userId', '=', 'users.id')
+        ->select('comments.*', 'users.profile_picture', 'users.user_name', 'users.id as user_comment_id', 'posts.id as post_id')
+        ->get();
+
         $posts = $authUser ? DB::table('posts')
         ->join('users', 'posts.user_id', '=', 'users.id')
         ->leftJoin('friend_requests', function ($join) use ($authUser) {
@@ -36,7 +42,7 @@ class PostController extends Controller
         ->take(8)
         ->get() : "you need to loggin";
 
-        return view('media', compact('posts'));
+        return view('media', compact('posts', 'comments'));
     }
 
     public function createPost(Request $request) {
@@ -75,8 +81,25 @@ class PostController extends Controller
         return redirect()->route('post.media')->with('success', 'the post has successfuly deleted');
     }
 
-   public function update () {
-    
+   public function update (Request $request, $postId) {
+     $userAuth = Auth::user();
+
+     $request->validate([
+        'description' => 'required|string|max:1000',
+        'picture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:51200',
+        'video' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:51200',
+     ]);
+
+     DB::table('posts')
+     ->where('id', $postId)
+     ->update([
+        'description' => $request->description ?? null,
+        'picture' => $request->hasFile('picture') ? $request->file('picture')->store('post/picture', 'public') : null,
+        'video' => $request->hasfile('video') ? $request->file('video')->store('post/video', 'public') : null,
+        'updated_at' => now(),
+     ]);
+
+     return redirect()->route('post.media');
    }
 
 }
