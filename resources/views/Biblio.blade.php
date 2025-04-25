@@ -54,13 +54,59 @@
             background-color: #FF6B35;
             color: white;
         }
+        [x-cloak] { 
+            display: none !important; 
+        }
+        .file-drop-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            padding: 2rem 1.5rem;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            transition: 0.2s;
+            background-color: #f8fafc;
+        }
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+            opacity: 0;
+        }
+        .file-msg {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #FF6B35;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #e05a2b;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    @if (View::exists('partial.nav'))
-    @include('partial.nav')
-    @endif
+    <!-- Navigation would be included here -->
 
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-r from-orange-50 to-amber-50 py-20">
@@ -69,6 +115,371 @@
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                 Discover culinary stories, cooking tips, and delicious recipes from our community
             </p>
+            
+            <!-- Add Recipe Button -->
+            <div class="mt-8" x-data="{ showRecipeForm: false }">
+                <button 
+                    @click="showRecipeForm = !showRecipeForm" 
+                    class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg transition flex items-center mx-auto shadow-md hover:shadow-lg"
+                >
+                    <i class="fas fa-plus mr-2"></i>
+                    <span x-text="showRecipeForm ? 'Close Form' : 'Create New Recipe'"></span>
+                </button>
+                
+                <!-- Recipe Creation Form -->
+                <div x-show="showRecipeForm" x-cloak class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <!-- Modal backdrop - only this element closes the form when clicked -->
+                    <div @click="showRecipeForm = false" class="absolute inset-0"></div>
+                    
+                    <!-- Form container - removed the @click.outside directive -->
+                    <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative custom-scrollbar">
+                        <div class="sticky top-0 z-10 bg-white p-6 border-b border-gray-200 flex justify-between items-center">
+                            <h2 class="text-2xl font-bold text-gray-800">Create New Recipe</h2>
+                            <button @click="showRecipeForm = false" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <form class="p-6 space-y-6" method="POST" enctype="multipart/form-data" x-data="{
+                            selectedCategories: [],
+                            availableCategories: [
+                                'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack', 
+                                'Appetizer', 'Soup', 'Salad', 'Main Course', 'Side Dish'
+                            ],
+                            selectedIngredients: [],
+                            searchTerm: '',-
+
+                            
+                            availableIngredients: [
+                                'Salt', 'Pepper', 'Olive Oil', 'Garlic', 'Onion', 'Tomato', 
+                                'Chicken', 'Beef', 'Pork', 'Rice', 'Pasta', 'Flour', 
+                                'Sugar', 'Butter', 'Milk', 'Eggs', 'Cheese', 'Lemon'
+                            ],
+                            customIngredient: '',
+                            
+                            toggleCategory(category) {
+                                if (this.selectedCategories.includes(category)) {
+                                    this.selectedCategories = this.selectedCategories.filter(c => c !== category);
+                                } else {
+                                    this.selectedCategories.push(category);
+                                }
+                            },
+                            
+                            filteredIngredients() {
+                                if (!this.searchTerm.trim()) return [];
+                                
+                                return this.availableIngredients.filter(i => 
+                                    i.toLowerCase().includes(this.searchTerm.toLowerCase()) && 
+                                    !this.selectedIngredients.includes(i)
+                                );
+                            },
+                            
+                            addIngredient(ingredient) {
+                                if (!this.selectedIngredients.includes(ingredient)) {
+                                    this.selectedIngredients.push(ingredient);
+                                    this.searchTerm = '';
+                                }
+                            },
+                            
+                            addCustomIngredient() {
+                                if (this.customIngredient.trim() !== '' && !this.selectedIngredients.includes(this.customIngredient.trim())) {
+                                    this.selectedIngredients.push(this.customIngredient.trim());
+                                    this.customIngredient = '';
+                                }
+                            },
+                            
+                            removeIngredient(ingredient) {
+                                this.selectedIngredients = this.selectedIngredients.filter(i => i !== ingredient);
+                            }
+                        }">
+                            <!-- Title -->
+                            <div>
+                                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="title" 
+                                    name="title" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                    placeholder="Recipe title"
+                                    required
+                                >
+                            </div>
+                            
+                            <!-- Categories -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Categories</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <template x-for="category in availableCategories" :key="category">
+                                        <button 
+                                            type="button"
+                                            @click="toggleCategory(category)"
+                                            :class="selectedCategories.includes(category) ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                                            class="px-3 py-1 rounded-full text-sm font-medium transition-colors"
+                                            x-text="category"
+                                        ></button>
+                                    </template>
+                                </div>
+                                
+                                <!-- Hidden inputs to store selected categories -->
+                                <template x-for="category in selectedCategories" :key="category">
+                                    <input type="hidden" name="categories[]" :value="category">
+                                </template>
+                                
+                                <p class="text-xs text-gray-500 mt-1">Select all that apply</p>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description <span class="text-red-500">*</span></label>
+                                <textarea 
+                                    id="description" 
+                                    name="description" 
+                                    rows="3" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                    placeholder="Describe your recipe"
+                                    required
+                                ></textarea>
+                            </div>
+                            
+                            <!-- Steps -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-sm font-medium text-gray-700">Steps <span class="text-red-500">*</span></label>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <!-- Step 1 -->
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mr-3 mt-2">
+                                            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">1</span>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <textarea 
+                                                name="steps[]"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                                placeholder="Step 1" 
+                                                rows="2"
+                                                required
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Step 2 -->
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mr-3 mt-2">
+                                            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">2</span>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <textarea 
+                                                name="steps[]"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                                placeholder="Step 2" 
+                                                rows="2"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Step 3 -->
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mr-3 mt-2">
+                                            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">3</span>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <textarea 
+                                                name="steps[]"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                                placeholder="Step 3" 
+                                                rows="2"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-xs text-gray-500 mt-1">Add at least one step. Leave empty steps blank.</p>
+                            </div>
+                            
+                            <!-- Notes -->
+                            <div>
+                                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                                <textarea 
+                                    id="notes" 
+                                    name="notes" 
+                                    rows="2" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                    placeholder="Additional notes or tips"
+                                ></textarea>
+                            </div>
+                            
+                            <!-- Media Section -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Image Upload -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                                    <div class="file-drop-area">
+                                        <input 
+                                            type="file" 
+                                            id="image" 
+                                            name="image" 
+                                            accept="image/*" 
+                                            class="file-input"
+                                        >
+                                        <div class="file-msg">
+                                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                            <p class="text-sm text-gray-500">Click to upload or drag and drop</p>
+                                            <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Video Upload -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Video</label>
+                                    <div class="file-drop-area">
+                                        <input 
+                                            type="file" 
+                                            id="video" 
+                                            name="video" 
+                                            accept="video/*" 
+                                            class="file-input"
+                                        >
+                                        <div class="file-msg">
+                                            <i class="fas fa-film text-3xl text-gray-400 mb-2"></i>
+                                            <p class="text-sm text-gray-500">Upload a video file</p>
+                                            <p class="text-xs text-gray-400 mt-1">MP4, MOV, AVI up to 50MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Ingredients -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Ingredients <span class="text-red-500">*</span></label>
+                                
+                                <!-- Selected Ingredients -->
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    <template x-for="ingredient in selectedIngredients" :key="ingredient">
+                                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                            <span x-text="ingredient"></span>
+                                            <button 
+                                                type="button" 
+                                                @click="removeIngredient(ingredient)" 
+                                                class="ml-2 text-orange-700 hover:text-orange-900"
+                                            >
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </template>
+                                </div>
+                                
+                                <!-- Hidden inputs to store selected ingredients -->
+                                <template x-for="ingredient in selectedIngredients" :key="ingredient">
+                                    <input type="hidden" name="ingredients[]" :value="ingredient">
+                                </template>
+                                
+                                <!-- Search Input -->
+                                <div class="relative mb-2">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                    <input 
+                                        type="text" 
+                                        x-model="searchTerm" 
+                                        placeholder="Search ingredients..." 
+                                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
+                                    >
+                                    
+                                    <!-- Dropdown Results -->
+                                    <div 
+                                        x-show="filteredIngredients().length > 0" 
+                                        class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 max-h-60 overflow-y-auto"
+                                    >
+                                        <template x-for="ingredient in filteredIngredients()" :key="ingredient">
+                                            <button 
+                                                type="button"
+                                                @click="addIngredient(ingredient)"
+                                                class="block w-full text-left px-4 py-2 hover:bg-orange-50 text-sm"
+                                                x-text="ingredient"
+                                            ></button>
+                                        </template>
+                                    </div>
+                                </div>
+                                
+                                <!-- Custom Ingredient -->
+                                <div class="flex">
+                                    <input 
+                                        type="text" 
+                                        x-model="customIngredient" 
+                                        placeholder="Add custom ingredient..." 
+                                        class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
+                                        @keydown.enter.prevent="addCustomIngredient()"
+                                    >
+                                    <button 
+                                        type="button" 
+                                        @click="addCustomIngredient()" 
+                                        class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-r-lg transition"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Can't find an ingredient? Add your own!</p>
+                            </div>
+                            
+                            <!-- Time and Level -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Preparation Time -->
+                                <div>
+                                    <label for="prepTime" class="block text-sm font-medium text-gray-700 mb-1">Preparation Time (minutes)</label>
+                                    <input 
+                                        type="number" 
+                                        id="prepTime" 
+                                        name="prepTime" 
+                                        min="5" 
+                                        max="180"
+                                        value="30"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                    >
+                                </div>
+                                
+                                <!-- Difficulty Level -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty Level</label>
+                                    <div class="flex space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="level" value="easy" class="text-orange-500 focus:ring-orange-300">
+                                            <span class="ml-2">Easy</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="level" value="medium" class="text-orange-500 focus:ring-orange-300" checked>
+                                            <span class="ml-2">Medium</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="level" value="hard" class="text-orange-500 focus:ring-orange-300">
+                                            <span class="ml-2">Hard</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Buttons -->
+                            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                                <button 
+                                    type="button" 
+                                    @click="showRecipeForm = false" 
+                                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit"
+                                    class="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition flex items-center"
+                                >
+                                    <i class="fas fa-save mr-2"></i> Create Recipe
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 to-transparent"></div>
     </div>
@@ -211,37 +622,6 @@
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Post 1 -->
-                <div class="bg-white rounded-xl overflow-hidden blog-card">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                             alt="Post image" 
-                             class="w-full h-full object-cover transition duration-500 hover:scale-105">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span class="category-tag bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                                Healthy Eating
-                            </span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">
-                            Seasonal Vegetables You Should Be Cooking This Month
-                        </h3>
-                        <p class="text-gray-600 mb-4 text-sm">
-                            Discover the best seasonal produce for May and how to prepare them for maximum flavor and nutrition...
-                        </p>
-                        <div class="flex items-center justify-between pt-3 border-t">
-                            <div class="flex items-center space-x-2 author-hover">
-                                <img src="https://randomuser.me/api/portraits/men/32.jpg" 
-                                     alt="Author" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm font-medium text-gray-700 author-name transition">John Smith</span>
-                            </div>
-                            <span class="text-xs text-gray-500">May 10, 2023</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Post 2 -->
                 <div class="bg-white rounded-xl overflow-hidden blog-card">
                     <div class="h-48 overflow-hidden">
@@ -275,40 +655,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Post 3 -->
-                <div class="bg-white rounded-xl overflow-hidden blog-card">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                             alt="Post image" 
-                             class="w-full h-full object-cover transition duration-500 hover:scale-105">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span class="category-tag bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
-                                World Cuisine
-                            </span>
-                            <span class="category-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                Techniques
-                            </span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">
-                            Mastering the Art of Thai Curry Pastes
-                        </h3>
-                        <p class="text-gray-600 mb-4 text-sm">
-                            From selecting the right ingredients to achieving the perfect texture, learn how to make authentic Thai curry pastes at home...
-                        </p>
-                        <div class="flex items-center justify-between pt-3 border-t">
-                            <div class="flex items-center space-x-2 author-hover">
-                                <img src="https://randomuser.me/api/portraits/men/45.jpg" 
-                                     alt="Author" 
-                                     class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm font-medium text-gray-700 author-name transition">Michael Brown</span>
-                            </div>
-                            <span class="text-xs text-gray-500">April 28, 2023</span>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
 
@@ -357,8 +704,6 @@
     </div>
 
     <!-- Footer -->
-    @if (View::exists('partial.fotter'))
-    @include('partial.fotter')
-    @endif
+    <!-- Footer would be included here -->
 </body>
 </html>

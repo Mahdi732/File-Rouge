@@ -26,5 +26,24 @@ class CommentController extends Controller
         return redirect()->route('post.media');
    }
 
-   
+   public function edit(Request $request, $idComment) {
+
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        DB::table('comments')
+        ->where('comments.id', $idComment)
+        ->update([
+            "comment" => $request->comment,
+        ]);
+        return redirect()->route('post.media');
+   }
+
+   public function delete($CommentId) {
+    DB::table('comments')
+        ->where('comments.id', $CommentId)
+        ->delete();
+    return redirect()->route('post.media');
+   }
 }
