@@ -332,37 +332,43 @@
                    x-transition:enter-end="opacity-100 transform translate-y-0"
                    class="border-t border-gray-100 pt-3 pb-2"
                >
-                   @foreach ($comments as $comment)
-                   @if ($comment->post_id == $post->id)
-                    <div class="flex items-start mb-4">
+               @foreach ($comments as $comment)
+               @if ($comment->post_id == $post->id)
+                    <div class="flex items-start mb-4" x-data="{ showFormComment: false }">
                         <img src="{{ asset('storage/'. $comment->profile_picture ) ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}" 
                             class="w-8 h-8 rounded-full object-cover border border-gray-200 mr-2">
-                            <div class="flex-1">
-                                <div class="bg-gray-50 rounded-lg px-3 py-2">
-                                    <div class="font-medium text-sm">{{'@' . $comment->user_name}}</div>
-                                    <p class="text-sm mt-1">{{$comment->comment}}</p>
-                                </div>
-                                <div class="flex items-center mt-1 text-xs text-gray-500">
-                                    <span>{{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</span>
-                                    @if (Auth::user()->id == $comment->user_comment_id)
+                        <div class="flex-1">
+                            <div class="bg-gray-50 rounded-lg px-3 py-2">
+                                <div class="font-medium text-sm">{{'@' . $comment->user_name}}</div>
+                                <p x-show="!showFormComment" class="text-sm mt-1">{{$comment->comment}}</p>
+                                <form x-show="showFormComment" action="{{ route('edit.comment.media', $comment->id)}}" method="post" class="mt-1">
+                                    @csrf
+                                    @method('PATCH')
+                                    <textarea name="comment" class="w-full text-sm border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300">{{$comment->comment}}</textarea>
+                                    <div class="flex justify-end mt-2 space-x-2">
+                                        <button type="button" @click="showFormComment = false" class="text-xs px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+                                        <button type="submit" class="text-xs px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="flex items-center mt-1 text-xs text-gray-500">
+                                <span>{{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</span>
+                                @if (Auth::user()->id == $comment->user_comment_id)
                                     <span class="mx-1">•</span>
-                                    <form action="{{ route('edit.comment.media')}}" method="post">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="hover:text-gray-700">edit</button>
-                                    </form>
-                                    <form action="{{ route('delete.comment.media')}}" method="post">
+                                    <button x-show="!showFormComment" @click="showFormComment = true" class="hover:text-gray-700">edit</button>
+                                    
+                                    <form action="{{ route('delete.comment.media', $comment->id)}}" method="post" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <span class="mx-1">•</span>
                                         <button class="hover:text-gray-700">delete</button>
-                                        </form>
-                                    @endif
-                                </div>
+                                    </form>
+                                @endif
                             </div>
+                        </div>
                     </div>
-                   @endif
-                   @endforeach         
+                @endif
+                @endforeach                  
                    <button class="text-sm text-gray-500 hover:text-gray-700 font-medium mt-2">
                        View more comments
                    </button>
