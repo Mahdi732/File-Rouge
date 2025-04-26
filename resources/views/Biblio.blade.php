@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Keep all existing head content -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CookNShare - Blog</title>
@@ -9,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        /* Keep all existing styles */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f8fafc;
@@ -102,11 +104,48 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #e05a2b;
         }
+        .step-number {
+            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 600;
+        }
+        .add-btn {
+            transition: all 0.2s ease;
+        }
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .category-pill {
+            transition: all 0.2s ease;
+        }
+        .category-pill:hover {
+            background-color: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+        }
+        .ingredient-item {
+            transition: all 0.2s ease;
+        }
+        .ingredient-item:hover {
+            border-color: #FF6B35;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    <!-- Navigation would be included here -->
+        @if (View::exists('partial.nav'))
+        @include('partial.nav')
+        @endif
 
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-r from-orange-50 to-amber-50 py-20">
@@ -131,182 +170,351 @@
                     <!-- Modal backdrop - only this element closes the form when clicked -->
                     <div @click="showRecipeForm = false" class="absolute inset-0"></div>
                     
-                    <!-- Form container - removed the @click.outside directive -->
+                    <!-- Form container -->
                     <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative custom-scrollbar">
-                        <div class="sticky top-0 z-10 bg-white p-6 border-b border-gray-200 flex justify-between items-center">
-                            <h2 class="text-2xl font-bold text-gray-800">Create New Recipe</h2>
-                            <button @click="showRecipeForm = false" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <!-- Form Header -->
+                        <div class="sticky top-0 z-10 bg-gradient-to-r from-orange-500 to-amber-500 py-6 px-8 flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-semibold text-white">Create New Recipe</h2>
+                                <p class="text-orange-50 text-sm mt-1">Fields marked with * are required</p>
+                            </div>
+                            <button @click="showRecipeForm = false" class="text-white hover:text-orange-100 focus:outline-none">
                                 <i class="fas fa-times text-xl"></i>
                             </button>
                         </div>
                         
-                        <form class="p-6 space-y-6" method="POST" enctype="multipart/form-data" x-data="{
+                        <!-- Form Body -->
+                        <form class="p-8 space-y-8" method="POST" action="{{route('create.recipe')}}" enctype="multipart/form-data" x-data="{
+                            steps: [
+                            ],
+                            ingredients: [
+                            ],
+                            newIngredient: {
+                                amount: '',
+                                name: ''
+                            },
                             selectedCategories: [],
-                            availableCategories: [
-                                'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack', 
-                                'Appetizer', 'Soup', 'Salad', 'Main Course', 'Side Dish'
-                            ],
-                            selectedIngredients: [],
-                            searchTerm: '',-
-
+                            nextStepId: 1,
+                            nextIngredientId: 1,
                             
-                            availableIngredients: [
-                                'Salt', 'Pepper', 'Olive Oil', 'Garlic', 'Onion', 'Tomato', 
-                                'Chicken', 'Beef', 'Pork', 'Rice', 'Pasta', 'Flour', 
-                                'Sugar', 'Butter', 'Milk', 'Eggs', 'Cheese', 'Lemon'
-                            ],
-                            customIngredient: '',
+                            addStep() {
+                                this.steps.push({
+                                    id: this.nextStepId++,
+                                    text: ''
+                                });
+                            },
                             
-                            toggleCategory(category) {
-                                if (this.selectedCategories.includes(category)) {
-                                    this.selectedCategories = this.selectedCategories.filter(c => c !== category);
-                                } else {
+                            removeStep(stepId) {
+                                this.steps = this.steps.filter(step => step.id !== stepId);
+                            },
+                            
+                            addIngredient() {
+                                if (this.newIngredient.amount.trim() !== '' && this.newIngredient.name.trim() !== '') {
+                                    this.ingredients.push({
+                                        id: this.nextIngredientId++,
+                                        amount: this.newIngredient.amount,
+                                        name: this.newIngredient.name
+                                    });
+                                    this.newIngredient.amount = '';
+                                    this.newIngredient.name = '';
+                                }
+                            },
+                            
+                            removeIngredient(ingredientId) {
+                                this.ingredients = this.ingredients.filter(ingredient => ingredient.id !== ingredientId);
+                            },
+                            
+                            addCategory(category) {
+                                if (!this.selectedCategories.includes(category)) {
                                     this.selectedCategories.push(category);
                                 }
                             },
                             
-                            filteredIngredients() {
-                                if (!this.searchTerm.trim()) return [];
-                                
-                                return this.availableIngredients.filter(i => 
-                                    i.toLowerCase().includes(this.searchTerm.toLowerCase()) && 
-                                    !this.selectedIngredients.includes(i)
-                                );
+                            removeCategory(category) {
+                                this.selectedCategories = this.selectedCategories.filter(c => c !== category);
                             },
                             
-                            addIngredient(ingredient) {
-                                if (!this.selectedIngredients.includes(ingredient)) {
-                                    this.selectedIngredients.push(ingredient);
-                                    this.searchTerm = '';
-                                }
-                            },
-                            
-                            addCustomIngredient() {
-                                if (this.customIngredient.trim() !== '' && !this.selectedIngredients.includes(this.customIngredient.trim())) {
-                                    this.selectedIngredients.push(this.customIngredient.trim());
-                                    this.customIngredient = '';
-                                }
-                            },
-                            
-                            removeIngredient(ingredient) {
-                                this.selectedIngredients = this.selectedIngredients.filter(i => i !== ingredient);
+                            isCategorySelected(category) {
+                                return this.selectedCategories.includes(category);
                             }
                         }">
-                            <!-- Title -->
-                            <div>
-                                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
-                                <input 
-                                    type="text" 
-                                    id="title" 
-                                    name="title" 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                    placeholder="Recipe title"
-                                    required
-                                >
-                            </div>
+                            @csrf
                             
-                            <!-- Categories -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Categories</label>
-                                <div class="flex flex-wrap gap-2">
-                                    <template x-for="category in availableCategories" :key="category">
-                                        <button 
-                                            type="button"
-                                            @click="toggleCategory(category)"
-                                            :class="selectedCategories.includes(category) ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-                                            class="px-3 py-1 rounded-full text-sm font-medium transition-colors"
-                                            x-text="category"
-                                        ></button>
-                                    </template>
+                            <!-- Basic Information Section -->
+                            <div class="space-y-6">
+                                <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Basic Information</h3>
+                                
+                                <!-- Title -->
+                                <div>
+                                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Recipe Title <span class="text-red-500">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="title" 
+                                        name="title" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent shadow-sm" 
+                                        placeholder="Give your recipe a descriptive title"
+                                        required
+                                    >
                                 </div>
                                 
-                                <!-- Hidden inputs to store selected categories -->
-                                <template x-for="category in selectedCategories" :key="category">
-                                    <input type="hidden" name="categories[]" :value="category">
-                                </template>
-                                
-                                <p class="text-xs text-gray-500 mt-1">Select all that apply</p>
-                            </div>
-                            
-                            <!-- Description -->
-                            <div>
-                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description <span class="text-red-500">*</span></label>
-                                <textarea 
-                                    id="description" 
-                                    name="description" 
-                                    rows="3" 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                    placeholder="Describe your recipe"
-                                    required
-                                ></textarea>
-                            </div>
-                            
-                            <!-- Steps -->
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <label class="block text-sm font-medium text-gray-700">Steps <span class="text-red-500">*</span></label>
+                                <!-- Description -->
+                                <div>
+                                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description <span class="text-red-500">*</span></label>
+                                    <textarea 
+                                        id="description" 
+                                        name="description" 
+                                        rows="3" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent shadow-sm" 
+                                        placeholder="Describe your recipe in a few sentences"
+                                        required
+                                    ></textarea>
                                 </div>
                                 
+                                <!-- Categories with Search -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Categories <span class="text-red-500">*</span></label>
+                                    
+                                    <!-- Category Search Bar -->
+                                    <div class="relative mb-4">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-search text-gray-400"></i>
+                                        </div>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Search categories..." 
+                                            class="search-input w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-300 shadow-sm"
+                                        >
+                                    </div>
+                                    
+                                    <!-- Selected Categories -->
+                                    <div class="mb-3">
+                                        <p class="text-sm text-gray-600 mb-2">Selected Categories:</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <template x-for="category in selectedCategories" :key="category">
+                                                <div class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                                    <span x-text="category"></span>
+                                                    <button type="button" @click="removeCategory(category)" class="ml-1 text-orange-600 hover:text-orange-800">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    <input type="hidden" name="categories[]" :value="category">
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Popular Categories -->
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-2">Popular Categories:</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Breakfast')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Breakfast')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Breakfast
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Lunch')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Lunch')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Lunch
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Dinner')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Dinner')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Dinner
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Dessert')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Dessert')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Dessert
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Appetizer')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Appetizer')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Appetizer
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Soup')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Soup')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Soup
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Salad')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Salad')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Salad
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="addCategory('Vegetarian')" 
+                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Vegetarian')}"
+                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
+                                            >
+                                                Vegetarian
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Ingredients Section -->
+                            <div class="space-y-6">
+                                <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Ingredients <span class="text-red-500">*</span></h3>
+                                
+                                <!-- Ingredient List -->
                                 <div class="space-y-3">
-                                    <!-- Step 1 -->
-                                    <div class="flex items-start">
-                                        <div class="flex-shrink-0 mr-3 mt-2">
-                                            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">1</span>
-                                        </div>
+                                    <template x-for="ingredient in ingredients" :key="ingredient.id">
+                                    <div class="ingredient-item flex items-center p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
                                         <div class="flex-grow">
-                                            <textarea 
-                                                name="steps[]"
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                                placeholder="Step 1" 
-                                                rows="2"
-                                                required
-                                            ></textarea>
+                                            <input 
+                                                type="text" 
+                                                x-bind:value="`${ingredient.amount} | ${ingredient.name}`"
+                                                name="ingredients[]"
+                                                readonly
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" 
+                                            >
                                         </div>
+                                        <button type="button" @click="removeIngredient(ingredient.id)" class="ml-3 text-gray-400 hover:text-red-500">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </div>
+                                </template>
                                     
-                                    <!-- Step 2 -->
-                                    <div class="flex items-start">
-                                        <div class="flex-shrink-0 mr-3 mt-2">
-                                            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">2</span>
+                                    <!-- Add Ingredient Form -->
+                                    <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                                                <input 
+                                                    type="text" 
+                                                    x-model="newIngredient.amount"
+                                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                                    placeholder="e.g. 2 cups"
+                                                >
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Ingredient</label>
+                                                <input 
+                                                    type="text" 
+                                                    x-model="newIngredient.name"
+                                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                                    placeholder="e.g. All-purpose flour"
+                                                >
+                                            </div>
                                         </div>
-                                        <div class="flex-grow">
-                                            <textarea 
-                                                name="steps[]"
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                                placeholder="Step 2" 
-                                                rows="2"
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Step 3 -->
-                                    <div class="flex items-start">
-                                        <div class="flex-shrink-0 mr-3 mt-2">
-                                            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">3</span>
-                                        </div>
-                                        <div class="flex-grow">
-                                            <textarea 
-                                                name="steps[]"
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                                placeholder="Step 3" 
-                                                rows="2"
-                                            ></textarea>
-                                        </div>
+                                        <button 
+                                            type="button" 
+                                            @click="addIngredient()"
+                                            class="add-btn w-full flex items-center justify-center py-2 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition"
+                                        >
+                                            <i class="fas fa-plus mr-2"></i> Add Ingredient
+                                        </button>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <!-- Preparation Steps -->
+                            <div class="space-y-6">
+                                <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Preparation Steps <span class="text-red-500">*</span></h3>
                                 
-                                <p class="text-xs text-gray-500 mt-1">Add at least one step. Leave empty steps blank.</p>
+                                <div class="space-y-4">
+                                    <template x-for="step in steps" :key="step.id">
+                                        <div class="flex items-start gap-3 p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
+                                            <div class="step-number flex-shrink-0" x-text="step.id"></div>
+                                            <textarea 
+                                                x-model="step.text"
+                                                name="steps[]"
+                                                class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
+                                                :placeholder="`Describe step ${step.id}`"
+                                                rows="2"
+                                                :required="step.id === 1"
+                                            ></textarea>
+                                            <button 
+                                                type="button" 
+                                                @click="removeStep(step.id)" 
+                                                class="text-gray-400 hover:text-red-500 mt-3"
+                                                :disabled="steps.length === 1"
+                                                :class="{ 'opacity-50 cursor-not-allowed': steps.length === 1 }"
+                                            >
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </template>
+                                    
+                                    <!-- Add Step Button -->
+                                    <button 
+                                        type="button" 
+                                        @click="addStep()"
+                                        class="add-btn w-full flex items-center justify-center py-3 px-4 border border-dashed border-orange-300 rounded-lg text-orange-500 hover:bg-orange-50"
+                                    >
+                                        <i class="fas fa-plus mr-2"></i> Add Another Step
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Additional Information -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Preparation Time -->
+                                <div>
+                                    <label for="prep_time" class="block text-sm font-medium text-gray-700 mb-1">Preparation Time (minutes)</label>
+                                    <input 
+                                        type="number" 
+                                        id="prep_time" 
+                                        name="prep_time" 
+                                        min="5" 
+                                        max="180"
+                                        value="30"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent shadow-sm" 
+                                    >
+                                </div>
+                                
+                                <!-- Difficulty Level -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty Level</label>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <label class="flex items-center justify-center space-x-2 category-pill px-3 py-3 rounded-lg border border-gray-200 hover:border-orange-300">
+                                            <input type="radio" name="difficulty" value="easy" class="text-orange-500 focus:ring-orange-300">
+                                            <span>Easy</span>
+                                        </label>
+                                        <label class="flex items-center justify-center space-x-2 category-pill px-3 py-3 rounded-lg border border-gray-200 hover:border-orange-300">
+                                            <input type="radio" name="difficulty" value="medium" class="text-orange-500 focus:ring-orange-300" checked>
+                                            <span>Medium</span>
+                                        </label>
+                                        <label class="flex items-center justify-center space-x-2 category-pill px-3 py-3 rounded-lg border border-gray-200 hover:border-orange-300">
+                                            <input type="radio" name="difficulty" value="hard" class="text-orange-500 focus:ring-orange-300">
+                                            <span>Hard</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                             
                             <!-- Notes -->
                             <div>
-                                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
                                 <textarea 
                                     id="notes" 
                                     name="notes" 
-                                    rows="2" 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                    placeholder="Additional notes or tips"
+                                    rows="3" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent shadow-sm" 
+                                    placeholder="Share any tips, variations, or additional information about your recipe"
                                 ></textarea>
                             </div>
                             
@@ -314,8 +522,8 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Image Upload -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                                    <div class="file-drop-area">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Recipe Image</label>
+                                    <div class="file-drop-area bg-orange-50 border-orange-200">
                                         <input 
                                             type="file" 
                                             id="image" 
@@ -324,16 +532,16 @@
                                             class="file-input"
                                         >
                                         <div class="file-msg">
-                                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm text-gray-500">Click to upload or drag and drop</p>
-                                            <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+                                            <i class="fas fa-camera text-3xl text-orange-400 mb-2"></i>
+                                            <p class="text-sm text-gray-600">Click to upload or drag and drop</p>
+                                            <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 5MB</p>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Video Upload -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Video</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Recipe Video (optional)</label>
                                     <div class="file-drop-area">
                                         <input 
                                             type="file" 
@@ -344,136 +552,27 @@
                                         >
                                         <div class="file-msg">
                                             <i class="fas fa-film text-3xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm text-gray-500">Upload a video file</p>
+                                            <p class="text-sm text-gray-500">Upload a video demonstration</p>
                                             <p class="text-xs text-gray-400 mt-1">MP4, MOV, AVI up to 50MB</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Ingredients -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Ingredients <span class="text-red-500">*</span></label>
-                                
-                                <!-- Selected Ingredients -->
-                                <div class="flex flex-wrap gap-2 mb-3">
-                                    <template x-for="ingredient in selectedIngredients" :key="ingredient">
-                                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                                            <span x-text="ingredient"></span>
-                                            <button 
-                                                type="button" 
-                                                @click="removeIngredient(ingredient)" 
-                                                class="ml-2 text-orange-700 hover:text-orange-900"
-                                            >
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </span>
-                                    </template>
-                                </div>
-                                
-                                <!-- Hidden inputs to store selected ingredients -->
-                                <template x-for="ingredient in selectedIngredients" :key="ingredient">
-                                    <input type="hidden" name="ingredients[]" :value="ingredient">
-                                </template>
-                                
-                                <!-- Search Input -->
-                                <div class="relative mb-2">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400"></i>
-                                    </div>
-                                    <input 
-                                        type="text" 
-                                        x-model="searchTerm" 
-                                        placeholder="Search ingredients..." 
-                                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
-                                    >
-                                    
-                                    <!-- Dropdown Results -->
-                                    <div 
-                                        x-show="filteredIngredients().length > 0" 
-                                        class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 max-h-60 overflow-y-auto"
-                                    >
-                                        <template x-for="ingredient in filteredIngredients()" :key="ingredient">
-                                            <button 
-                                                type="button"
-                                                @click="addIngredient(ingredient)"
-                                                class="block w-full text-left px-4 py-2 hover:bg-orange-50 text-sm"
-                                                x-text="ingredient"
-                                            ></button>
-                                        </template>
-                                    </div>
-                                </div>
-                                
-                                <!-- Custom Ingredient -->
-                                <div class="flex">
-                                    <input 
-                                        type="text" 
-                                        x-model="customIngredient" 
-                                        placeholder="Add custom ingredient..." 
-                                        class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
-                                        @keydown.enter.prevent="addCustomIngredient()"
-                                    >
-                                    <button 
-                                        type="button" 
-                                        @click="addCustomIngredient()" 
-                                        class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-r-lg transition"
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Can't find an ingredient? Add your own!</p>
-                            </div>
-                            
-                            <!-- Time and Level -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Preparation Time -->
-                                <div>
-                                    <label for="prepTime" class="block text-sm font-medium text-gray-700 mb-1">Preparation Time (minutes)</label>
-                                    <input 
-                                        type="number" 
-                                        id="prepTime" 
-                                        name="prepTime" 
-                                        min="5" 
-                                        max="180"
-                                        value="30"
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
-                                    >
-                                </div>
-                                
-                                <!-- Difficulty Level -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty Level</label>
-                                    <div class="flex space-x-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="radio" name="level" value="easy" class="text-orange-500 focus:ring-orange-300">
-                                            <span class="ml-2">Easy</span>
-                                        </label>
-                                        <label class="inline-flex items-center">
-                                            <input type="radio" name="level" value="medium" class="text-orange-500 focus:ring-orange-300" checked>
-                                            <span class="ml-2">Medium</span>
-                                        </label>
-                                        <label class="inline-flex items-center">
-                                            <input type="radio" name="level" value="hard" class="text-orange-500 focus:ring-orange-300">
-                                            <span class="ml-2">Hard</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            
                             <!-- Submit Buttons -->
-                            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                            <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
                                 <button 
                                     type="button" 
                                     @click="showRecipeForm = false" 
-                                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                                    class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition shadow-sm"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     type="submit"
-                                    class="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition flex items-center"
+                                    class="px-8 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg transition shadow-md flex items-center"
                                 >
-                                    <i class="fas fa-save mr-2"></i> Create Recipe
+                                    <i class="fas fa-utensils mr-2"></i> Create Recipe
                                 </button>
                             </div>
                         </form>
@@ -484,6 +583,7 @@
         <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-50 to-transparent"></div>
     </div>
 
+    <!-- Keep all existing content below this point -->
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-6 py-12">
         <!-- Search and Filters -->
@@ -704,6 +804,8 @@
     </div>
 
     <!-- Footer -->
-    <!-- Footer would be included here -->
+    @if (View::exists('partial.fotter'))
+    @include('partial.fotter')
+    @endif
 </body>
 </html>
