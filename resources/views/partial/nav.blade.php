@@ -19,7 +19,7 @@
   <div class="hidden md:flex items-center gap-6">
     <nav class="flex space-x-6">
       <a href="{{route('home')}}" class="text-gray-600 hover:text-orange-500 transition">Home</a>
-      <a href="{{ route('app.library') }}" class="text-gray-600 hover:text-orange-500 transition">Library</a>
+      <a href="{{ route('library.recipe') }}" class="text-gray-600 hover:text-orange-500 transition">Library</a>
       <a href="#" class="text-gray-600 hover:text-orange-500 transition">Shop</a>
       <a href="{{ route('post.media') }}" class="text-gray-600 hover:text-orange-500 transition">Community</a>
       <a href="{{ route('friends') }}" class="text-gray-600 hover:text-orange-500 transition">Friends</a>
@@ -70,7 +70,7 @@
   >
     <div class="flex flex-col space-y-3">
       <a href="{{route('home')}}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Home</a>
-      <a href="{{ route('app.library') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Library</a>
+      <a href="{{ route('library.recipe') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Library</a>
       <a href="#" class="text-gray-600 hover:text-orange-500 py-2 border-b">Shop</a>
       <a href="{{ route('post.media') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Community</a>
       <a href="{{ route('friends') }}" class="text-gray-600 hover:text-orange-500 py-2 border-b">Friends</a>
@@ -93,7 +93,7 @@
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex space-x-8">
             <a href="{{route('home')}}" class="text-gray-600 hover:text-orange-500">Home</a>
-            <a href="{{ route('app.library') }}" class="text-gray-600 hover:text-orange-500">Biblio</a>
+            <a href="{{ route('library.recipe') }}" class="text-gray-600 hover:text-orange-500">Biblio</a>
             <a href="{{ route('post.media') }}" class="text-gray-600 hover:text-orange-500">Community</a>
             <a href="{{ route('friends') }}" class="text-gray-600 hover:text-orange-500">Friend</a>
           </nav>
@@ -137,7 +137,7 @@
   <div x-show="mobileMenu" class="md:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
           <a href="{{route('home')}}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Home</a>
-          <a href="{{ route('app.library') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Biblio</a>
+          <a href="{{ route('library.recipe') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Biblio</a>
           <a href="{{ route('post.media') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Community</a>
           <a href="{{ route('friends') }}" class="block px-3 py-2 text-gray-600 hover:bg-orange-100 rounded-md">Friend</a>
           <form action="{{ route('logout')}}" method="POST">
