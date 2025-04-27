@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\friendController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\RecipeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,12 +87,16 @@ Route::prefix('media')->group(function () {
     Route::delete('/delete/comment/post/{id}', [CommentController::class, 'delete'])->name('delete.comment.media');
 });
 
+Route::prefix('biblio')->group(function () {
+    Route::get('/', function () {
+        return view('biblio');
+    })->name('library.recipe');
+    Route::post('/create/recipe', [RecipeController::class, 'create'])->name('create.recipe');
+    Route::post('/search/categorie', [RecipeController::class, 'searchCategorie'])->name('search.categorie');
+});
+
 // Application Routes
 Route::prefix('app')->group(function () {
-    
-    Route::get('/library', function () {
-        return view('biblio');
-    })->name('app.library');
     
     Route::get('/recipes', function () {
         return view('recipe');
