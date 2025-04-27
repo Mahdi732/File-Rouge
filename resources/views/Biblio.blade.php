@@ -280,7 +280,12 @@
                                             <i class="fas fa-search text-gray-400"></i>
                                         </div>
                                         <input 
-                                            type="text" 
+                                            type="text"
+                                            name="categoriesSearch"
+                                            hx-post="{{route('search.categorie')}}"
+                                            hx-target="#categorieSearch"
+                                            hx-swap="innerHTML"
+                                            hx-trigger="keyup changed delay:200ms"
                                             placeholder="Search categories..." 
                                             class="search-input w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-300 shadow-sm"
                                         >
@@ -305,71 +310,7 @@
                                     <!-- Popular Categories -->
                                     <div>
                                         <p class="text-sm text-gray-600 mb-2">Popular Categories:</p>
-                                        <div class="flex flex-wrap gap-2">
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Breakfast')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Breakfast')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Breakfast
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Lunch')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Lunch')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Lunch
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Dinner')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Dinner')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Dinner
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Dessert')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Dessert')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Dessert
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Appetizer')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Appetizer')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Appetizer
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Soup')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Soup')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Soup
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Salad')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Salad')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Salad
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="addCategory('Vegetarian')" 
-                                                :class="{'bg-orange-100 text-orange-800 border-orange-300': isCategorySelected('Vegetarian')}"
-                                                class="category-pill px-3 py-1 rounded-full text-sm font-medium border border-gray-200 hover:border-orange-300"
-                                            >
-                                                Vegetarian
-                                            </button>
+                                        <div id="categorieSearch" class="flex flex-wrap gap-2">
                                         </div>
                                     </div>
                                 </div>
@@ -622,37 +563,6 @@
                     </button>
                     <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
                         Kitchen Tools
-                    </button>
-                </div>
-            </div>
-
-            <!-- Tag Filters -->
-            <div>
-                <h3 class="text-lg font-medium text-gray-800 mb-3">Filter by Tags</h3>
-                <div class="flex flex-wrap gap-2">
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Vegetarian
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Quick Meals
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Beginner
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Advanced
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Seasonal
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Family Friendly
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Gluten-Free
-                    </button>
-                    <button class="filter-chip px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
-                        Dairy-Free
                     </button>
                 </div>
             </div>
