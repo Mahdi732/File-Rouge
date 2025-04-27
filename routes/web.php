@@ -88,18 +88,15 @@ Route::prefix('media')->group(function () {
 });
 
 Route::prefix('biblio')->group(function () {
-    Route::get('/library', function () {
+    Route::get('/', function () {
         return view('biblio');
-    })->name('app.library');
+    })->name('library.recipe');
     Route::post('/create/recipe', [RecipeController::class, 'create'])->name('create.recipe');
+    Route::post('/search/categorie', [RecipeController::class, 'searchCategorie'])->name('search.categorie');
 });
 
 // Application Routes
 Route::prefix('app')->group(function () {
-    
-    Route::get('/library', function () {
-        return view('biblio');
-    })->name('app.library');
     
     Route::get('/recipes', function () {
         return view('recipe');
