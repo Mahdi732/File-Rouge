@@ -88,9 +88,7 @@ Route::prefix('media')->group(function () {
 });
 
 Route::prefix('biblio')->group(function () {
-    Route::get('/', function () {
-        return view('biblio');
-    })->name('library.recipe');
+    Route::get('/',  [RecipeController::class, 'index'])->name('library.recipe');
     Route::post('/create/recipe', [RecipeController::class, 'create'])->name('create.recipe');
     Route::post('/search/categorie', [RecipeController::class, 'searchCategorie'])->name('search.categorie');
 });
