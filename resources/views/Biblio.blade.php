@@ -537,9 +537,6 @@
                 <input type="text" 
                        class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent" 
                        placeholder="Search posts...">
-                <button class="absolute right-2.5 bottom-2.5 bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded-lg transition">
-                    Search
-                </button>
             </div>
 
             <!-- Category Filters -->
@@ -549,21 +546,11 @@
                     <button class="filter-chip active px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
                         All Categories
                     </button>
+                    @foreach ($categories as $category)
                     <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
-                        Cooking Tips
+                        {{$category->name}}
                     </button>
-                    <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
-                        Baking
-                    </button>
-                    <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
-                        Healthy Eating
-                    </button>
-                    <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
-                        World Cuisine
-                    </button>
-                    <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
-                        Kitchen Tools
-                    </button>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -577,33 +564,33 @@
             <div class="bg-white rounded-2xl overflow-hidden blog-card">
                 <div class="md:flex">
                     <div class="md:w-1/2 h-80 md:h-auto">
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                        <img src="{{asset('storage/' . $First_recipe->image)}}" 
                              alt="Featured post" 
                              class="w-full h-full object-cover">
                     </div>
                     <div class="md:w-1/2 p-8 md:p-10">
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="category-tag bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
-                                Cooking Tips
-                            </span>
-                            <span class="category-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                Techniques
-                            </span>
+                            @foreach ($First_recipe->categories as $category)
+                                <span class="category-tag bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
+                                    {{$category->name}}
+                                </span> 
+                            @endforeach
+                            
                         </div>
                         <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
-                            10 Essential Knife Skills Every Home Cook Should Master
+                            {{$First_recipe->title}}
                         </h3>
                         <p class="text-gray-600 mb-6">
-                            Learn the fundamental knife techniques that will transform your cooking efficiency and presentation. These skills will save you time and elevate your dishes...
+                            {{$First_recipe->description}}
                         </p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3 author-hover">
-                                <img src="https://randomuser.me/api/portraits/women/44.jpg" 
+                                <img src="{{asset('storage/' . $First_recipe->user->profile_picture)}}" 
                                      alt="Author" 
                                      class="w-10 h-10 rounded-full object-cover">
                                 <div>
-                                    <p class="font-medium text-gray-800 author-name transition">Maria Garcia</p>
-                                    <p class="text-sm text-gray-500">May 15, 2023 · 8 min read</p>
+                                    <p class="font-medium text-gray-800 author-name transition">{{$First_recipe->user->name}}</p>
+                                    <p class="text-sm text-gray-500">{{\Carbon\Carbon::parse($First_recipe->created_at)->diffForHumans()}}</p>
                                 </div>
                             </div>
                             <button class="text-orange-500 hover:text-orange-600 font-medium">
@@ -617,54 +604,41 @@
 
         <!-- Blog Posts Grid -->
         <div class="mb-12">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-                    <span class="w-4 h-4 bg-orange-500 rounded-full mr-3"></span>
-                    Latest Articles
-                </h2>
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-600">Sort by:</span>
-                    <select class="border-0 bg-gray-100 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-orange-300">
-                        <option>Newest First</option>
-                        <option>Most Popular</option>
-                        <option>Trending</option>
-                    </select>
-                </div>
-            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Post 2 -->
+                {{-- <!-- Post 2 -->@dd($recipes) --}}
+                @foreach ($recipes as $recipe)
                 <div class="bg-white rounded-xl overflow-hidden blog-card">
                     <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                        <img src="{{asset('storage/' . $recipe->image)}}" 
                              alt="Post image" 
                              class="w-full h-full object-cover transition duration-500 hover:scale-105">
                     </div>
                     <div class="p-6">
                         <div class="flex flex-wrap gap-2 mb-3">
+                            @foreach ($recipe->categories as $category)
                             <span class="category-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-                                Baking
+                                {{$category->name}}
                             </span>
-                            <span class="category-tag bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
-                                Desserts
-                            </span>
+                            @endforeach
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 mb-2">
-                            The Science Behind Perfect Sourdough Bread
+                            {{$recipe->title}}
                         </h3>
                         <p class="text-gray-600 mb-4 text-sm">
-                            Understanding the fermentation process and how to control it for consistently amazing sourdough results every time...
+                            {{$recipe->description}}
                         </p>
                         <div class="flex items-center justify-between pt-3 border-t">
                             <div class="flex items-center space-x-2 author-hover">
-                                <img src="https://randomuser.me/api/portraits/women/68.jpg" 
+                                <img src="{{asset('storage/' . $recipe->user->profile_picture)}}" 
                                      alt="Author" 
                                      class="w-8 h-8 rounded-full object-cover">
-                                <span class="text-sm font-medium text-gray-700 author-name transition">Sarah Johnson</span>
+                                <span class="text-sm font-medium text-gray-700 author-name transition">{{$recipe->user->name}}</span>
                             </div>
-                            <span class="text-xs text-gray-500">May 5, 2023</span>
+                            <span class="text-xs text-gray-500">{{\Carbon\Carbon::parse($recipe->created_at)->diffForHumans()}}</span>
                         </div>
                     </div>
                 </div>
+                @endforeach
                 
             </div>
         </div>
