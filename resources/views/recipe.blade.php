@@ -157,10 +157,12 @@
                                     class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden"
                                 >
                                     <div class="py-1">
+                                        <form action="{{ route('add.favorite.recipe', $recipes) }}" method="post">
+                                            @csrf
                                         <button @click="editMode = true" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
-                                            <i class="fas fa-edit mr-2"></i> Edit Recipe
+                                            <i class="fas fa-fav mr-2"></i> Add Favorite
                                         </button>
-
+                                        </form>
                                         <form action="{{ route('delete.recipe', $recipes->id) }}" method="POST" class="w-full">
                                             @csrf
                                             @method('DELETE')
