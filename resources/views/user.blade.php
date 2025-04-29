@@ -230,69 +230,28 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Saved Recipe Card 1 -->
+                    <!-- Saved Recipe -->
+                    @foreach ($favories as $favori)
                     <div class="bg-white rounded-lg overflow-hidden recipe-card relative">
                         <div class="absolute top-2 right-2 z-10">
                             <button class="bg-white rounded-full p-2 text-red-500 hover:text-red-600">
                                 <i class="fas fa-heart"></i>
                             </button>
                         </div>
-                        <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
+                        <img src="{{asset('storage/' . $favori->image)}}" alt="Recipe" class="w-full h-48 object-cover">
                         <div class="p-4">
-                            <h3 class="font-bold mb-2">Honey Glazed Salmon</h3>
-                            <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">ChefMike</span></p>
+                            <h3 class="font-bold mb-2">{{ $favori->title }}</h3>
+                            <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">{{ $favori->name }}</span></p>
                             <div class="flex items-center mb-2">
-                                <span class="text-sm text-gray-500 mr-3"><i class="far fa-clock mr-1"></i> 25 mins</span>
-                                <span class="text-sm text-gray-500"><i class="fas fa-signal mr-1"></i> Intermediate</span>
+                                <span class="text-sm text-gray-500 mr-3"><i class="far fa-clock mr-1"></i> {{ $favori->time_pr }} mins</span>
+                                <span class="text-sm text-gray-500"><i class="fas fa-signal mr-1"></i> {{ $favori->level }}</span>
                             </div>
                             <div class="flex mt-3">
-                                <span class="protein-tag text-white text-xs px-2 py-1 rounded-full">High Protein</span>
+                                <span class="bg-red-300 text-white text-xs px-2 py-1 rounded-full">High Protein</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Saved Recipe Card 2 -->
-                    <div class="bg-white rounded-lg overflow-hidden recipe-card relative">
-                        <div class="absolute top-2 right-2 z-10">
-                            <button class="bg-white rounded-full p-2 text-red-500 hover:text-red-600">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                        </div>
-                        <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h3 class="font-bold mb-2">Avocado Toast with Poached Eggs</h3>
-                            <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">HealthyEats</span></p>
-                            <div class="flex items-center mb-2">
-                                <span class="text-sm text-gray-500 mr-3"><i class="far fa-clock mr-1"></i> 15 mins</span>
-                                <span class="text-sm text-gray-500"><i class="fas fa-signal mr-1"></i> Beginner</span>
-                            </div>
-                            <div class="flex mt-3">
-                                <span class="veg-tag text-white text-xs px-2 py-1 rounded-full mr-2">Vegetarian</span>
-                                <span class="protein-tag text-white text-xs px-2 py-1 rounded-full">High Protein</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Saved Recipe Card 3 -->
-                    <div class="bg-white rounded-lg overflow-hidden recipe-card relative">
-                        <div class="absolute top-2 right-2 z-10">
-                            <button class="bg-white rounded-full p-2 text-red-500 hover:text-red-600">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                        </div>
-                        <img src="{{asset('picture/pizza.webp')}}" alt="Recipe" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h3 class="font-bold mb-2">Thai Green Curry</h3>
-                            <p class="text-sm text-gray-600 mb-3">By <span class="text-orange-500">AsianFusion</span></p>
-                            <div class="flex items-center mb-2">
-                                <span class="text-sm text-gray-500 mr-3"><i class="far fa-clock mr-1"></i> 40 mins</span>
-                                <span class="text-sm text-gray-500"><i class="fas fa-signal mr-1"></i> Intermediate</span>
-                            </div>
-                            <div class="flex mt-3">
-                                <span class="spicy-tag text-white text-xs px-2 py-1 rounded-full">Spicy</span>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
 
                 <div class="mt-8 text-center">

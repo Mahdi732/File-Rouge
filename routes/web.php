@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\friendController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\RecipeController;
 
 /*
@@ -95,6 +96,8 @@ Route::prefix('biblio')->group(function () {
     Route::put('/edit/recipe/{id}', [RecipeController::class, 'editRecipe'])->name('edit.recipe');
     Route::put('/edit/recipe/', [RecipeController::class, 'searchCategorie'])->name('searchCategorie');
     Route::delete('/delete/recipe/{id}', [RecipeController::class, 'deleteRecipe'])->name('delete.recipe');
+    Route::post('/recipe/add/favorite/{id}', [FavoriteController::class, 'addFavorite'])->name('add.favorite.recipe');
+    Route::delete('/recipe/delete/favorite/{id}', [FavoriteController::class, 'removeFavorite'])->name('remove.favorite.recipe');
 });
 
 // Application Routes

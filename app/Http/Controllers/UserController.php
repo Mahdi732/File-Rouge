@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -206,9 +207,19 @@ class UserController extends Controller
         $recipes = Recipe::with('categories')
         ->where('userId', $user->id)
         ->paginate(3);
+
+        $favories = DB::table('favorites')
+        ->join('recipes', 'favorites.recipeId', '=', 'recipes.id')
+        ->join('users', 'favorites.userId', '=', 'users.id')
+        ->join()
+        ->where('favorites.userId', Auth::user()->id)
+        ->select('recipes.id', 'recipes.title', 'recipes.timepreparation as time_pr', 'recipes.levelPreparation as level', 'recipes.image', 'users.name', 'users.id as userId')
+        ->paginate(3);
+
         return view("user", [
             'user' => $user,
-            'recipes' => $recipes
+            'recipes' => $recipes,
+            'favories' => $favories,
          ]);
     }
 
