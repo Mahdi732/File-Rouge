@@ -68,4 +68,19 @@ class RecipeController extends Controller
         
         return view('partial.categories_list', compact('categories'));
     }
+
+    public function index()
+    {
+        $recipes = Recipe::with(['user', 'categories'])
+        ->latest() 
+        ->take(3) 
+        ->get();
+    
+        $First_recipe = Recipe::with(['user', 'categories'])
+        ->first();
+
+        $categories = Category::select('id', 'name')->get();
+
+        return view('Biblio', compact('recipes', 'First_recipe', 'categories'));
+    }
 }
