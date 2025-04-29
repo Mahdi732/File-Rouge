@@ -22,7 +22,7 @@ class Recipe extends Model
     ];
 
     protected $casts = [
-        'etap' => 'array', 
+        'etap' => 'array',
         'ingredients' => 'array',
     ];
 
@@ -30,9 +30,9 @@ class Recipe extends Model
     {
         return $this->belongsTo(User::class, 'userId');
     }
-    
+
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_recipe');
-    }  
+    }
 }

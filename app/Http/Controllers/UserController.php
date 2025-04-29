@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -38,7 +39,7 @@ class UserController extends Controller
         if(Auth::check()) {
             return redirect()->route('profile');
         }
-        
+
         $request->validate([
             'email' => 'required|string|max:250',
             'password' => 'required|string|max:250|min:8'
@@ -56,22 +57,22 @@ class UserController extends Controller
             $request->session()->regenerate();
             return redirect("/");
         }
-        
+
         return redirect('/auth/login')->with('email_error', 'Invalid email try another time');
     }
 
     public function logOut(Request $request) {
         Auth::logout();
-        $request->session()->invalidate(); 
-        $request->session()->regenerateToken(); 
-        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect('/auth/login');
     }
-    
+
 
     public function updateProfile(Request $request){
         $user = Auth::user();
-        
+
         if (!$user) {
             return redirect()->route('login.auth')->with('error', 'Unothorized');
         }
@@ -118,7 +119,7 @@ class UserController extends Controller
         return view("partial.updated")
         ->with('update',  'Your profile Picture has been successfully updated!');
     }
-    
+
     public function deleteAccount(Request $request) {
         $user = Auth::user();
         $request->validate([
@@ -145,7 +146,7 @@ class UserController extends Controller
         return view('partial.errorHandler')->with('error', 'Invalid email try another time.');
 
         }
-        
+
         return view('partial.errorHandler')->with('error', "that's not the right email, try again.");
     }
 
@@ -170,7 +171,7 @@ class UserController extends Controller
         $user->update([
             'password' => Hash::make($request->new_password_confirm),
         ]);
-        
+
         return view('partial.updated')->with('update', 'your password has been successfully updated! 🤞🤞🤞');
     }
 
@@ -190,7 +191,6 @@ class UserController extends Controller
             if ($user->background_image && Storage::exists($user->background_image)) {
                 Storage::delete($user->background_image);
             }
-            
         }
 
         $path = $request->file('background_image')->store('background', 'public');
@@ -203,7 +203,13 @@ class UserController extends Controller
 
     public function getUserInfo(){
         $user = Auth::user();
-        return view("user", ['user' => $user]);
+        $recipes = Recipe::with('categories')
+        ->where('userId', $user->id)
+        ->paginate(3);
+        return view("user", [
+            'user' => $user,
+            'recipes' => $recipes
+         ]);
     }
 
 }
