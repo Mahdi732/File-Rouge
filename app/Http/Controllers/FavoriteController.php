@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class FavoriteController extends Controller
 {
     public function addFavorite($id) {
+        if (!Auth::check()) {
+            return redirect()->route('login.auth');
+        }
+
         Favorite::create([
             'userId' => Auth::user()->id,
             'recipeId' => $id,
@@ -19,6 +23,10 @@ class FavoriteController extends Controller
     }
 
     public function removeFavorite($id) {
+        if (!Auth::check()) {
+            return redirect()->route('login.auth');
+        }
+        
         $recipe = Favorite::findOrFail($id);
         $recipe->delete();
 
