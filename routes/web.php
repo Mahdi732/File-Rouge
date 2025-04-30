@@ -90,7 +90,8 @@ Route::prefix('media')->group(function () {
 
 Route::prefix('biblio')->group(function () {
     Route::get('/',  [RecipeController::class, 'index'])->name('library.recipe');
-    Route::post('/create/recipe', [RecipeController::class, 'create'])->name('create.recipe');
+    Route::post('/make/recipe/', [RecipeController::class, 'create'])->name('make.recipe');
+    Route::post('/create/recipe/', [RecipeController::class, 'create'])->name('create.recipe');
     Route::post('/search/categorie', [RecipeController::class, 'searchCategorie'])->name('search.categorie');
     Route::get('/biblio/recipe/{id}', [RecipeController::class, 'SelectRecipe'])->name('get.recipe');
     Route::put('/edit/recipe/{id}', [RecipeController::class, 'editRecipe'])->name('edit.recipe');
@@ -98,6 +99,7 @@ Route::prefix('biblio')->group(function () {
     Route::delete('/delete/recipe/{id}', [RecipeController::class, 'deleteRecipe'])->name('delete.recipe');
     Route::post('/recipe/add/favorite/{id}', [FavoriteController::class, 'addFavorite'])->name('add.favorite.recipe');
     Route::delete('/recipe/delete/favorite/{id}', [FavoriteController::class, 'removeFavorite'])->name('remove.favorite.recipe');
+    Route::post('/search/recipe', [RecipeController::class, 'searchRecipe'])->name('search.recipe');
 });
 
 // Application Routes
