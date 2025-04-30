@@ -4,6 +4,7 @@
     <!-- Keep all existing head content -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>CookNShare - Blog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
@@ -184,7 +185,7 @@
                         </div>
 
                         <!-- Form Body -->
-                        <form class="p-8 space-y-8" method="POST" action="{{route('create.recipe')}}" enctype="multipart/form-data" x-data="{
+                        <form class="p-8 space-y-8" method="POST" action="{{route('make.recipe')}}" enctype="multipart/form-data" x-data="{
                             steps: [
                             ],
                             ingredients: [
@@ -239,6 +240,7 @@
                             }
                         }">
                             @csrf
+                            @method('POST')
 
                             <!-- Basic Information Section -->
                             <div class="space-y-6">
@@ -445,6 +447,7 @@
                                         </label>
                                     </div>
                                 </div>
+                                +
                             </div>
 
                             <!-- Notes -->
@@ -534,9 +537,17 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <i class="fas fa-search text-gray-400"></i>
                 </div>
-                <input type="text"
+                <form
+                hx-post="{{ route('search.recipe') }}"
+                hx-target="#recipe_result"
+                hx-swap="innerHTML"
+                hx-trigger="keyup changed delay:200ms">
+                @csrf
+                    <input type="text"
+                       name="recipeSearch"
                        class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
                        placeholder="Search posts...">
+                </form>
             </div>
 
             <!-- Category Filters -->
@@ -556,7 +567,8 @@
         </div>
 
         <!-- Featured Post -->
-        <div class="mb-16">
+        <div id="recipe_result">
+            <div class="mb-16">
             <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
                 <span class="w-4 h-4 bg-orange-500 rounded-full mr-3"></span>
                 Featured Post
@@ -610,76 +622,75 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Blog Posts Grid -->
-        <div class="mb-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach ($recipes as $recipe)
-                <article class="bg-white rounded-xl overflow-hidden blog-card h-full shadow-sm hover:shadow-md transition-all">
-                    <form action="{{ route('get.recipe', $recipe->id) }}" method="get" class="h-full">
-                        @csrf
-                        <button type="submit" class="w-full h-full text-left focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-opacity-50 rounded-xl">
-                            <div class="relative h-48 overflow-hidden">
-                                @if($recipe->image)
-                                    <img src="{{ asset('storage/' . $recipe->image) }}"
-                                        alt="{{ $recipe->title }}"
-                                        class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
-                                @else
-                                    <div class="w-full h-full bg-gradient-to-r from-orange-100 to-amber-100 flex items-center justify-center">
-                                        <i class="fas fa-utensils text-4xl text-orange-300"></i>
-                                    </div>
-                                @endif
-
-                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                                    <h3 class="text-xl font-bold text-white line-clamp-2">
-                                        {{ $recipe->title }}
-                                    </h3>
-                                </div>
-                            </div>
-
-                            <div class="p-6">
-                                <div class="flex flex-wrap gap-2 mb-3">
-                                    @foreach ($recipe->categories as $index => $category)
-                                        <span class="category-tag {{ $color = $colors[array_rand($colors)] }} px-3 py-1 rounded-full text-sm font-medium">
-                                            {{ $category->name }}
-                                        </span>
-                                    @endforeach
-                                </div>
-
-                                <p class="text-gray-600 mb-4 text-sm line-clamp-3">
-                                    {{ \Illuminate\Support\Str::limit($recipe->description, 120) }}
-                                </p>
-
-                                <div class="flex items-center justify-between pt-3 border-t mt-auto">
-                                    <div class="flex items-center space-x-2">
-                                        @if($recipe->user->profile_picture)
-                                            <img src="{{ asset('storage/' . $recipe->user->profile_picture) }}"
-                                                alt="{{ $recipe->user->name }}"
-                                                class="w-8 h-8 rounded-full object-cover border border-gray-200">
-                                        @else
-                                            <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
-                                                <span class="text-orange-500 font-medium text-sm">{{ substr($recipe->user->name, 0, 1) }}</span>
-                                            </div>
-                                        @endif
-                                        <span class="text-sm font-medium text-gray-700">{{ $recipe->user->name }}</span>
-                                    </div>
-                                    <div class="flex items-center text-xs text-gray-500">
-                                        <i class="far fa-clock mr-1"></i>
-                                        {{ \Carbon\Carbon::parse($recipe->created_at)->diffForHumans() }}
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </form>
-                </article>
-                @endforeach
             </div>
+
+            <!-- Blog Posts Grid -->
+            <div class="mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach ($recipes as $recipe)
+                    <article class="bg-white rounded-xl overflow-hidden blog-card h-full shadow-sm hover:shadow-md transition-all">
+                        <form action="{{ route('get.recipe', $recipe->id) }}" method="get" class="h-full">
+                            @csrf
+                            <button type="submit" class="w-full h-full text-left focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-opacity-50 rounded-xl">
+                                <div class="relative h-48 overflow-hidden">
+                                    @if($recipe->image)
+                                        <img src="{{ asset('storage/' . $recipe->image) }}"
+                                            alt="{{ $recipe->title }}"
+                                            class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                                    @else
+                                        <div class="w-full h-full bg-gradient-to-r from-orange-100 to-amber-100 flex items-center justify-center">
+                                            <i class="fas fa-utensils text-4xl text-orange-300"></i>
+                                        </div>
+                                    @endif
+
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                                        <h3 class="text-xl font-bold text-white line-clamp-2">
+                                            {{ $recipe->title }}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="p-6">
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        @foreach ($recipe->categories as $index => $category)
+                                            <span class="category-tag {{ $color = $colors[array_rand($colors)] }} px-3 py-1 rounded-full text-sm font-medium">
+                                                {{ $category->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+
+                                    <p class="text-gray-600 mb-4 text-sm line-clamp-3">
+                                        {{ \Illuminate\Support\Str::limit($recipe->description, 120) }}
+                                    </p>
+
+                                    <div class="flex items-center justify-between pt-3 border-t mt-auto">
+                                        <div class="flex items-center space-x-2">
+                                            @if($recipe->user->profile_picture)
+                                                <img src="{{ asset('storage/' . $recipe->user->profile_picture) }}"
+                                                    alt="{{ $recipe->user->name }}"
+                                                    class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                                            @else
+                                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
+                                                    <span class="text-orange-500 font-medium text-sm">{{ substr($recipe->user->name, 0, 1) }}</span>
+                                                </div>
+                                            @endif
+                                            <span class="text-sm font-medium text-gray-700">{{ $recipe->user->name }}</span>
+                                        </div>
+                                        <div class="flex items-center text-xs text-gray-500">
+                                            <i class="far fa-clock mr-1"></i>
+                                            {{ \Carbon\Carbon::parse($recipe->created_at)->diffForHumans() }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </form>
+                    </article>
+                    @endforeach
+                </div>
+            </div>
+            <!-- Pagination -->
+            {{$recipes->links()}}
         </div>
-
-        <!-- Pagination -->
-        {{$recipes->links()}}
-
         <!-- Newsletter -->
         <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-8 md:p-12 text-center mb-12">
             <h3 class="text-2xl font-bold text-gray-800 mb-3">Join Our Culinary Community</h3>
