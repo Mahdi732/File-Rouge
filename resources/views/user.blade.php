@@ -246,9 +246,6 @@
                                 <span class="text-sm text-gray-500 mr-3"><i class="far fa-clock mr-1"></i> {{ $favori->time_pr }} mins</span>
                                 <span class="text-sm text-gray-500"><i class="fas fa-signal mr-1"></i> {{ $favori->level }}</span>
                             </div>
-                            <div class="flex mt-3">
-                                <span class="bg-red-300 text-white text-xs px-2 py-1 rounded-full">High Protein</span>
-                            </div>
                         </div>
                     </div>
                     @endforeach

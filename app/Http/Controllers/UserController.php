@@ -211,7 +211,6 @@ class UserController extends Controller
         $favories = DB::table('favorites')
         ->join('recipes', 'favorites.recipeId', '=', 'recipes.id')
         ->join('users', 'favorites.userId', '=', 'users.id')
-        ->join()
         ->where('favorites.userId', Auth::user()->id)
         ->select('recipes.id', 'recipes.title', 'recipes.timepreparation as time_pr', 'recipes.levelPreparation as level', 'recipes.image', 'users.name', 'users.id as userId')
         ->paginate(3);

@@ -135,7 +135,7 @@
                             </div>
 
                             <!-- Recipe Actions Dropdown -->
-                            @if(Auth::user() && (Auth::user()->id == $recipes->userId ))
+
                             <div class="relative" x-data="{ open: false }">
                                 <button
                                     @click="open = !open"
@@ -163,6 +163,7 @@
                                             <i class="fas fa-fav mr-2"></i> Add Favorite
                                         </button>
                                         </form>
+                                        @if(Auth::user() && (Auth::user()->id == $recipes->userId ))
                                         <form action="{{ route('delete.recipe', $recipes->id) }}" method="POST" class="w-full">
                                             @csrf
                                             @method('DELETE')
@@ -170,10 +171,10 @@
                                                 <i class="fas fa-trash-alt mr-2"></i> Delete Recipe
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
-                            @endif
                         </div>
                     </div>
 
