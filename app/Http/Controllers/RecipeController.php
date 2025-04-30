@@ -17,7 +17,7 @@ class RecipeController extends Controller
             'steps' => 'required|array',
             'ingredients' => 'required|array',
             'video' => 'nullable|file|mimes:mp4,mov,avi,webm',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png,gif',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp',
             'difficulty' => 'required|in:easy,medium,hard',
             'notes' => 'nullable|string',
             'prep_time' => 'required|integer',
@@ -85,9 +85,19 @@ class RecipeController extends Controller
 
     public function searchRecipe(Request $request) {
         $recipes = Recipe::with(['user', 'categories'])
-        ->latest()
-        ->Like()
+        ->where('title', 'LIKE', '%' . $request->recipeSearch . '%')
         ->paginate(6);
+
+
+        $First_recipe = Recipe::with(['user', 'categories'])
+        ->where('title', 'LIKE', '%' . $request->recipeSearch . '%')
+        ->first();
+
+        if ($recipes->isEmpty() && is_null($First_recipe)) {
+            return view('partial.notFoundMessage')->with('message', 'We couldn\'t find anything matching 😒😒😒');
+        }
+
+        return view('partial.posts', compact('recipes', 'First_recipe'));
     }
 
     public function SelectRecipe($id) {
@@ -117,6 +127,10 @@ class RecipeController extends Controller
             'categories' => 'required|array',
         ]);
 
+        if (!Auth::check()) {
+            return redirect()->route('login.auth');
+        }
+
         $recipe = Recipe::findOrFail($id);
 
         $recipe->update([
@@ -140,6 +154,10 @@ class RecipeController extends Controller
     }
 
     public function deleteRecipe($id) {
+        if (!Auth::check()) {
+            return redirect()->route('login.auth');
+        }
+
         $recipe = Recipe::findOrFail($id);
         $recipe->delete();
 
