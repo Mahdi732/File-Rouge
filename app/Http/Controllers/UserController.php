@@ -210,7 +210,7 @@ class UserController extends Controller
         ->join('recipes', 'favorites.recipeId', '=', 'recipes.id')
         ->join('users', 'favorites.userId', '=', 'users.id')
         ->where('favorites.userId', Auth::user()->id)
-        ->select('recipes.id', 'recipes.title', 'recipes.timepreparation as time_pr', 'recipes.levelPreparation as level', 'recipes.image', 'users.name', 'users.id as userId')
+        ->select('favorites.id as fevId', 'recipes.id', 'recipes.title', 'recipes.timepreparation as time_pr', 'recipes.levelPreparation as level', 'recipes.image', 'users.name', 'users.id as userId')
         ->paginate(3);
 
         return view("user", [

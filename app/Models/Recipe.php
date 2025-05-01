@@ -39,4 +39,9 @@ class Recipe extends Model
     public function favoritedBy() {
         return $this->belongsToMany(User::class, 'favorites');
     }
+
+    public function Reviews()
+    {
+        return $this->hasMany(Reviews::class, 'recipeId');
+    }
 }

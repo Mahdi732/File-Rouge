@@ -234,9 +234,13 @@
                     @foreach ($favories as $favori)
                     <div class="bg-white rounded-lg overflow-hidden recipe-card relative">
                         <div class="absolute top-2 right-2 z-10">
-                            <button class="bg-white rounded-full p-2 text-red-500 hover:text-red-600">
-                                <i class="fas fa-heart"></i>
-                            </button>
+                            <form action="{{ route('remove.favorite.recipe', $favori->fevId) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="bg-white rounded-full p-2 text-red-500 hover:text-red-600">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </form>
                         </div>
                         <img src="{{asset('storage/' . $favori->image)}}" alt="Recipe" class="w-full h-48 object-cover">
                         <div class="p-4">

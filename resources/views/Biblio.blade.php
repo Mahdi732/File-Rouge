@@ -615,9 +615,12 @@
                                     <p class="text-sm text-gray-500">{{\Carbon\Carbon::parse($First_recipe->created_at)->diffForHumans()}}</p>
                                 </div>
                             </div>
+                            <form action="{{ route('get.recipe', $First_recipe->id) }}" method="get" class="h-full">
+                                @csrf
                             <button class="text-orange-500 hover:text-orange-600 font-medium">
                                 Read More →
                             </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -633,16 +636,9 @@
                             @csrf
                             <button type="submit" class="w-full h-full text-left focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-opacity-50 rounded-xl">
                                 <div class="relative h-48 overflow-hidden">
-                                    @if($recipe->image)
                                         <img src="{{ asset('storage/' . $recipe->image) }}"
                                             alt="{{ $recipe->title }}"
                                             class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
-                                    @else
-                                        <div class="w-full h-full bg-gradient-to-r from-orange-100 to-amber-100 flex items-center justify-center">
-                                            <i class="fas fa-utensils text-4xl text-orange-300"></i>
-                                        </div>
-                                    @endif
-
                                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
                                         <h3 class="text-xl font-bold text-white line-clamp-2">
                                             {{ $recipe->title }}
@@ -652,7 +648,7 @@
 
                                 <div class="p-6">
                                     <div class="flex flex-wrap gap-2 mb-3">
-                                        @foreach ($recipe->categories as $index => $category)
+                                        @foreach ($recipe->categories as $category)
                                             <span class="category-tag {{ $color = $colors[array_rand($colors)] }} px-3 py-1 rounded-full text-sm font-medium">
                                                 {{ $category->name }}
                                             </span>
@@ -665,15 +661,9 @@
 
                                     <div class="flex items-center justify-between pt-3 border-t mt-auto">
                                         <div class="flex items-center space-x-2">
-                                            @if($recipe->user->profile_picture)
                                                 <img src="{{ asset('storage/' . $recipe->user->profile_picture) }}"
                                                     alt="{{ $recipe->user->name }}"
                                                     class="w-8 h-8 rounded-full object-cover border border-gray-200">
-                                            @else
-                                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
-                                                    <span class="text-orange-500 font-medium text-sm">{{ substr($recipe->user->name, 0, 1) }}</span>
-                                                </div>
-                                            @endif
                                             <span class="text-sm font-medium text-gray-700">{{ $recipe->user->name }}</span>
                                         </div>
                                         <div class="flex items-center text-xs text-gray-500">
