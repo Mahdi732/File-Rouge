@@ -8,6 +8,7 @@ use App\Http\Controllers\friendController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ReviewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,6 @@ Route::middleware(['auth.user'])->prefix('profile')->group(function () {
     Route::put('/update', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::patch('/update/password', [UserController::class, 'updatePassword'])->name('password.update');
     Route::delete('/delete', [UserController::class, 'deleteAccount'])->name('profile.delete');
-
 });
 
 // Admin Routes
@@ -100,6 +100,10 @@ Route::prefix('biblio')->group(function () {
     Route::post('/recipe/add/favorite/{id}', [FavoriteController::class, 'addFavorite'])->name('add.favorite.recipe');
     Route::delete('/recipe/delete/favorite/{id}', [FavoriteController::class, 'removeFavorite'])->name('remove.favorite.recipe');
     Route::post('/search/recipe', [RecipeController::class, 'searchRecipe'])->name('search.recipe');
+    Route::delete('/remove/favorite/{id}', [FavoriteController::class, 'removeFavorite'])->name('remove.favorite.recipe');
+    Route::post('/create/reviews/{id}', [ReviewsController::class, 'create'])->name('create.reviews.recipe');
+    Route::put('/edit/review/{id}', [ReviewsController::class, 'edit'])->name('edit.review.recipe');
+    Route::delete('/remove/review/{id}', [ReviewsController::class, 'remove'])->name('remove.review.recipe');
 });
 
 // Application Routes

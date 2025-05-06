@@ -101,7 +101,7 @@ class RecipeController extends Controller
     }
 
     public function SelectRecipe($id) {
-        $recipes = Recipe::with(['user', 'categories'])
+        $recipes = Recipe::with(['user', 'categories', 'reviews.user'])
         ->where('id', $id)
         ->first();
 

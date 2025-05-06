@@ -66,22 +66,33 @@
             flex-direction: column;
             align-items: center;
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #FF6B35;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #e05a2b;
-        }
         [x-cloak] {
             display: none !important;
+        }
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            cursor: pointer;
+            color: #ddd;
+            font-size: 1.5rem;
+            padding: 0 0.1rem;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #FFB800;
+        }
+        .review-stars {
+            color: #ddd;
+        }
+        .review-stars .filled {
+            color: #FFB800;
         }
     </style>
 </head>
@@ -135,7 +146,6 @@
                             </div>
 
                             <!-- Recipe Actions Dropdown -->
-
                             <div class="relative" x-data="{ open: false }">
                                 <button
                                     @click="open = !open"
@@ -159,8 +169,8 @@
                                     <div class="py-1">
                                         <form action="{{ route('add.favorite.recipe', $recipes) }}" method="post">
                                             @csrf
-                                        <button @click="editMode = true" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
-                                            <i class="fas fa-fav mr-2"></i> Add Favorite
+                                        <button type="submit" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
+                                            <i class="fas fa-heart mr-2"></i> Add Favorite
                                         </button>
                                         </form>
                                         @if(Auth::user() && (Auth::user()->id == $recipes->userId ))
@@ -416,7 +426,7 @@
                 </div>
 
                 <!-- Sidebar -->
-                <div class="lg:w-1/3">
+                <div class="lg:w-1/3 space-y-6">
                     <!-- Similar Recipes -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
@@ -434,6 +444,109 @@
                                     <p class="text-sm text-gray-500">{{ $item->timepreparation }} mins · {{ $item->levelPreparation }}</p>
                                 </div>
                             </a>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-star text-orange-500 mr-2"></i>
+                            Reviews
+                        </h2>
+
+                        <!-- Review Stats -->
+                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+                            <div class="flex items-center">
+                                <div class="text-3xl font-bold text-gray-800 mr-2">4</div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                    <i class="fas fa-star-half text-yellow-400"></i>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500">12 reviews </div>
+                        </div>
+
+                        <!-- Add Review Form -->
+                        @auth
+                            <div class="mb-6">
+                                <h3 class="text-lg font-medium text-gray-800 mb-3">Share Your Experience</h3>
+                                <form action="{{ route('create.reviews.recipe', $recipes->id) }}" method="POST" class="space-y-4">
+                                    @csrf
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+                                        <div class="star-rating">
+                                            @for ($i = 5; $i >= 1; $i--)
+                                            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" />
+                                            <label for="star{{ $i }}" title="{{ $i }} stars"><i class="fas fa-star"></i></label>
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
+                                        <textarea
+                                            id="comment"
+                                            name="comment"
+                                            rows="3"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
+                                            placeholder="Share your thoughts about this recipe..."
+                                            required
+                                        ></textarea>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="w-full py-2 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-paper-plane mr-2"></i> Submit Review
+                                    </button>
+                                </form>
+                            </div>
+                        @else
+                            <div class="bg-orange-50 p-4 rounded-lg mb-6">
+                                <p class="text-orange-800 text-sm">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    <a href="{{ route('login') }}" class="font-medium underline">Sign in</a> to leave a review
+                                </p>
+                            </div>
+                        @endauth
+
+                        <!-- Reviews List -->
+                        <div class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                            @foreach($recipes->reviews as $review)
+                            <div class="border-b border-gray-100 pb-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex items-center">
+                                            <img class="w-8 h-8 rounded-full bg-gray-200 mr-2 flex items-center justify-center" src="{{ asset('storage/' . $review->user->profile_picture) }}" alt="">
+                                        <div>
+                                            <p class="font-medium text-gray-800">{{ $review->user->name }}</p>
+                                            <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($review->created_at)->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        @for ($i = 1; $i <= $review->rate; $i++)
+                                        <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                                <p class="text-gray-700 text-sm">{{ $review->content }}</p>
+                                @auth
+                                @if (Auth::id() == $review->user->id)
+                                    <div class="flex justify-end mt-2">
+                                        <form action="{{ route('remove.review.recipe', $review->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="text-xs text-red-500 hover:text-red-700" type="submit">
+                                                <i class="fas fa-trash-alt mr-1"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+                            @endauth
+                            </div>
                             @endforeach
                         </div>
                     </div>

@@ -26,10 +26,10 @@ class FavoriteController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login.auth');
         }
-        
+
         $recipe = Favorite::findOrFail($id);
         $recipe->delete();
 
-        return redirect()->route('library.recipe');
+        return redirect()->route('profile');
     }
 }
